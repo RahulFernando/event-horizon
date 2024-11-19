@@ -1,0 +1,115 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String     @id @default(uuid())
+  name       String
+  contacts   String[]
+  addresses  Address[]
+  account    Account?
+  user_type  UserType   @default(ORGANIZER)
+  organizers Organizer?
+  vendors    Vendor?
+  created_at DateTime   @default(now())
+  created_by String
+  updated_at DateTime   @updatedAt
+  updated_by String
+
+  @@map("users")
+}
+
+model Address {
+  id          String   @id @default(uuid())
+  number      String?
+  line_1      String
+  line_2      String?
+  state       String?
+  country     String
+  postal_code String
+  user        User     @relation(fields: [user_id], references: [id])
+  user_id     String
+  created_at  DateTime @default(now())
+  created_by  String
+  updated_at  DateTime @updatedAt
+  updated_by  String
+
+  @@map("addresses")
+}
+
+model Country {
+  id         String   @id @default(uuid())
+  name       String
+  currency   String
+  created_at DateTime @default(now())
+  created_by String
+  updated_at DateTime @updatedAt
+  updated_by String
+
+  @@map("countries")
+}
+
+model Account {
+  id                  String   @id @default(uuid())
+  email               String   @unique
+  password            String
+  profile_picture_url String?
+  user                User     @relation(fields: [user_id], references: [id])
+  user_id             String   @unique
+  created_at          DateTime @default(now())
+  created_by          String
+  updated_at          DateTime @updatedAt
+  updated_by          String
+
+  @@index([email])
+  @@map("accounts")
+}
+
+model Organizer {
+  id                String   @id @default(uuid())
+  first_name        String
+  last_name         String?
+  national_identity String?  @unique
+  user              User     @relation(fields: [user_id], references: [id])
+  user_id           String   @unique
+  created_at        DateTime @default(now())
+  created_by        String
+  updated_at        DateTime @updatedAt
+  updated_by        String
+
+  @@index([national_identity])
+  @@map("organizers")
+}
+
+model Vendor {
+  id                             String   @id @default(uuid())
+  business_registration          String?  @unique
+  taxpayer_identification_number String?  @unique
+  user                           User     @relation(fields: [user_id], references: [id])
+  user_id                        String   @unique
+  created_at                     DateTime @default(now())
+  created_by                     String
+  updated_at                     DateTime @updatedAt
+  updated_by                     String
+
+  @@index([business_registration, taxpayer_identification_number])
+  @@map("vendors")
+}
+
+enum UserType {
+  ORGANIZER
+  VENDOR
+  ADMIN
+  CUSTOMER_SUPPORT_REPRESENTATIVE
+}
