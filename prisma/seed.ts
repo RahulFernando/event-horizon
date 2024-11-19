@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 async function seedData() {
   // await prisma.address.deleteMany();
   // await prisma.organizer.deleteMany();
+  // await prisma.account.deleteMany();
   // await prisma.user.deleteMany();
   const admin = await prisma.user.upsert({
     where: { id: "af3ba7ca-d9f0-40e8-a863-b36baf4528c4" },
