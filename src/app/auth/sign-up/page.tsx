@@ -100,9 +100,11 @@ const SignUpPage = () => {
 
   useEffect(() => {
     if (data) {
-      router.push(`/auth/sign-up/${userType}`);
+      router.push(`/auth/sign-up/${userType}?userId=${data.account.user_id}`);
     }
   }, [data, router, userType]);
+
+  console.log(data);
 
   const appendNewContact = () => appendContact({ phone: "" });
 
@@ -226,7 +228,7 @@ const SignUpPage = () => {
                   endIcon={<ArrowForwardIcon fontSize="small" />}
                   disabled={isMutating}
                 >
-                  {!isMutating && "Next"}
+                  {!isMutating && "Sign Up"}
                   {isMutating && "Please wait..."}
                 </Button>
               </Stack>
