@@ -1,51 +1,53 @@
 import { alpha, getContrastRatio, PaletteColor } from "@mui/material";
 
-const greenBase = "#00ff55";
-const greenMain = alpha(greenBase, 0.7);
+const englishRedBase = "#AB4459";
+const englishRedMain = alpha(englishRedBase, 0.7);
 
-const greenDarBase = "#005e2f";
-const greenDarMain = alpha(greenDarBase, 0.7);
+const englishRedDarkBase = "#cc7f8f";
+const englishRedDarkMain = alpha(englishRedDarkBase, 0.7);
 
-const pinkBase = "#FF00AA";
-const pinkMain = alpha(pinkBase, 0.7);
+const oceanGreenBase = "#44AB96";
+const oceanGreenMain = alpha(oceanGreenBase, 0.7);
 
-const purpleBase = "#2c003e";
-const purpleMain = alpha(purpleBase, 0.7);
+const oceanGreenDarkBase = "#5bbeaa";
+const oceanGreenDarkMain = alpha(oceanGreenDarkBase, 0.7);
 
 export const getPrimary = (mode: string = "light"): PaletteColor => {
   if (mode === "dark") {
     return {
-      main: greenDarMain,
-      light: alpha(greenDarBase, 0.5),
-      dark: alpha(greenDarBase, 0.9),
+      main: englishRedDarkMain,
+      light: alpha(englishRedDarkBase, 0.5),
+      dark: alpha(englishRedDarkBase, 0.9),
       contrastText:
-        getContrastRatio(greenDarBase, "#fff") > 4.5 ? "#fff" : "#111",
+        getContrastRatio(englishRedDarkBase, "#fff") > 4.5 ? "#fff" : "#111",
     };
   }
 
   return {
-    main: greenMain,
-    light: alpha(greenBase, 0.5),
-    dark: alpha(greenBase, 0.9),
-    contrastText: getContrastRatio(greenBase, "#fff") > 4.5 ? "#fff" : "#111",
+    main: englishRedMain,
+    light: alpha(englishRedBase, 0.5),
+    dark: alpha(englishRedBase, 0.9),
+    contrastText:
+      getContrastRatio(englishRedBase, "#fff") > 4.5 ? "#fff" : "#111",
   };
 };
 
 export const getSecondary = (mode: string = "light"): PaletteColor => {
   if (mode === "dark") {
     return {
-      main: purpleMain,
-      light: alpha(purpleBase, 0.5),
-      dark: alpha(purpleBase, 0.9),
+      main: oceanGreenDarkMain,
+      light: alpha(oceanGreenDarkBase, 0.5),
+      dark: alpha(oceanGreenDarkBase, 0.9),
       contrastText:
-        getContrastRatio(purpleBase, "#fff") > 4.5 ? "#fff" : "#111",
+        getContrastRatio(oceanGreenDarkBase, "#fff") > 4.5 ? "#fff" : "#111",
     };
   }
 
   return {
-    main: pinkMain,
-    light: alpha(pinkBase, 0.5),
-    dark: alpha(pinkBase, 0.9),
-    contrastText: getContrastRatio(pinkBase, "#fff") > 4.5 ? "#fff" : "#111",
+    main: oceanGreenMain,
+    light: alpha(oceanGreenBase, 0.5),
+    dark: alpha(oceanGreenBase, 0.9),
+    contrastText:
+      getContrastRatio(oceanGreenBase, "#fff") > 4.5 ? "#fff" : "#111",
   };
 };

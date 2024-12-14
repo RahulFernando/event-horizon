@@ -4,10 +4,7 @@ import { alpha, Typography } from "@mui/material";
 export default function AppTitle() {
   return (
     <Typography variant="h1">
-      Event{" "}
-      <span style={{ color: alpha("#FF00AA", 0.7), fontStyle: "italic" }}>
-        Horizon
-      </span>
+      Event <span style={{ color: alpha("#44AB96", 0.7) }}>Horizon</span>
     </Typography>
   );
 }
