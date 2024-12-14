@@ -12,3 +12,12 @@ export interface OrganizerFormProps {
   isLoading: boolean;
   firstName?: string;
 }
+
+export interface VendorFormInputs {
+  business_registration: string;
+  taxpayer_identification_number?: string;
+}
+
+export interface VendorArgs extends VendorFormInputs {
+  user_id: string;
+}

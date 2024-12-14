@@ -12,7 +12,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useFieldArray, useForm } from "react-hook-form";
 
 import { SnackbarContext } from "@/app/contexts/snackbar/snackbar-context";
@@ -225,7 +224,6 @@ const SignUpPage = () => {
                   type="submit"
                   variant="contained"
                   size="small"
-                  endIcon={<ArrowForwardIcon fontSize="small" />}
                   disabled={isMutating}
                 >
                   {!isMutating && "Sign Up"}

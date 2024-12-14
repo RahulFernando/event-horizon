@@ -7,6 +7,7 @@ import { Box, Typography } from "@mui/material";
 import SnackBar from "@/app/components/snack-bar";
 import AppTitle from "@/app/components/app-title";
 import OrganizerForm from "./components/organizer-form";
+import VendorForm from "./components/vendor-form";
 
 import { UserType } from "@/app/enum";
 import useSWR from "swr";
@@ -50,6 +51,7 @@ const SignUpWithUserType = () => {
             {userType === UserType.ORGANIZER && (
               <OrganizerForm isLoading={isLoading} firstName={data?.name} />
             )}
+            {userType === UserType.VENDOR && <VendorForm />}
           </Box>
         </Box>
       </Box>
