@@ -1,10 +1,14 @@
 "use client";
-import { alpha, Typography } from "@mui/material";
+import React from "react";
+import { Typography } from "@mui/material";
+import { AppTitleProps } from "./app-title.types";
 
-export default function AppTitle() {
+const AppTitle: React.FC<AppTitleProps> = (props) => {
   return (
-    <Typography variant="h1">
-      Event <span style={{ color: alpha("#44AB96", 0.7) }}>Horizon</span>
+    <Typography variant="h2" fontWeight={600} {...props}>
+      Event Horizon
     </Typography>
   );
-}
+};
+
+export default AppTitle;
