@@ -120,7 +120,7 @@ const SignUpPage = () => {
 
       <Box component="div">
         <Box p="0.8rem">
-          <AppTitle />
+          <AppTitle sx={{ color: "primary.dark" }} />
 
           <Box sx={{ mt: "15%" }}>
             <form
