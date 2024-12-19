@@ -35,7 +35,7 @@ const AppBar = () => {
   };
 
   return (
-    <MuiAppBar position="static">
+    <MuiAppBar position="fixed">
       <Container maxWidth={false} sx={{ bgcolor: "primary.main" }}>
         <Toolbar disableGutters>
           <AppTitle
