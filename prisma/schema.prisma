@@ -87,6 +87,7 @@ model Organizer {
   created_by        String
   updated_at        DateTime @updatedAt
   updated_by        String
+  Event             Event[]
 
   @@index([national_identity])
   @@map("organizers")
@@ -112,4 +113,34 @@ enum UserType {
   VENDOR
   ADMIN
   CUSTOMER_SUPPORT_REPRESENTATIVE
+}
+
+model Event {
+  id            String    @id @default(uuid())
+  title         String
+  duration      String?
+  date_time     DateTime
+  event_type    EventType @relation(fields: [event_type_id], references: [id])
+  event_type_id String
+  venue         String?
+  orgernizer    Organizer @relation(fields: [organizer_id], references: [id])
+  organizer_id  String
+  created_at    DateTime  @default(now())
+  created_by    String
+  updated_at    DateTime  @updatedAt
+  updated_by    String
+
+  @@map("events")
+}
+
+model EventType {
+  id         String   @id @default(uuid())
+  name       String   @unique
+  Event      Event[]
+  created_at DateTime @default(now())
+  created_by String
+  updated_at DateTime @updatedAt
+  updated_by String
+
+  @@map("event_types")
 }
