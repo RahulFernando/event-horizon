@@ -4,6 +4,7 @@ import HeroSection from "./components/hero-section";
 import TopServiceProvidersSection from "./components/top-service-providers-section";
 import HowToBookSection from "./components/how-to-book-section";
 import FAQSection from "./components/faq-section";
+import Footer from "./components/footer";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <TopServiceProvidersSection />
       <HowToBookSection />
       <FAQSection />
+      <Footer />
     </>
   );
 }
