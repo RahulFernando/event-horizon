@@ -79,7 +79,51 @@ async function seedData() {
     },
   });
 
-  console.log({ admin, organizer, janeSmithOrganizer, adminAccount });
+  const eventTypes = await seedEventTypes();
+
+  console.log({
+    admin,
+    organizer,
+    janeSmithOrganizer,
+    adminAccount,
+    eventTypes,
+  });
+}
+
+async function seedEventTypes() {
+  const eventTypes = [
+    { name: "Wedding", created_by: "system", updated_by: "system" },
+    { name: "Corporate Gathering", created_by: "system", updated_by: "system" },
+    { name: "Birthday Party", created_by: "system", updated_by: "system" },
+    {
+      name: "Anniversary Celebration",
+      created_by: "system",
+      updated_by: "system",
+    },
+    { name: "Baby Shower", created_by: "system", updated_by: "system" },
+    { name: "Conference", created_by: "system", updated_by: "system" },
+    { name: "Team Building", created_by: "system", updated_by: "system" },
+    { name: "Fundraiser", created_by: "system", updated_by: "system" },
+    { name: "Festival", created_by: "system", updated_by: "system" },
+    { name: "Sports Event", created_by: "system", updated_by: "system" },
+  ];
+
+  for (const eventType of eventTypes) {
+    await prisma.eventType.upsert({
+      where: { name: eventType.name },
+      update: {
+        updated_by: eventType.updated_by,
+        updated_at: new Date(),
+      },
+      create: {
+        name: eventType.name,
+        created_by: eventType.created_by,
+        updated_by: eventType.updated_by,
+      },
+    });
+  }
+
+  return eventTypes;
 }
 
 seedData()
