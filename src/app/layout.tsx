@@ -4,6 +4,8 @@ import { Nunito_Sans } from "@next/font/google";
 import { createTheme } from "./theme";
 import { ThemeProvider } from "@mui/material";
 import SnackbarProvider from "./contexts/snackbar/snackbar-context";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const nunitoSans = Nunito_Sans({
   subsets: ["latin"],
@@ -21,7 +23,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={nunitoSans.className}>
         <ThemeProvider theme={theme}>
-          <SnackbarProvider>{children}</SnackbarProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <SnackbarProvider>{children}</SnackbarProvider>
+          </LocalizationProvider>
         </ThemeProvider>
       </body>
     </html>
