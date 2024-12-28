@@ -12,17 +12,35 @@ import {
 } from "@mui/material";
 import { EventFormProps } from "../events.type";
 import { DateTimePicker } from "@mui/x-date-pickers";
+import useSWR from "swr";
+import { EventType } from "@prisma/client";
+
+async function fetchEventTypes(url: string) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error?.message || "Something went wrong");
+  }
+
+  return (await response.json()) as EventType[];
+}
 
 const EventForm: React.FC<EventFormProps> = ({
   errors,
   dateTime,
   isMutating,
+  eventTypeId,
+  submitBtnLabel = "Submit",
+  onEventTypeChange,
   register,
   handleSubmit,
   submitHandler,
   onDateChange,
   reset,
 }) => {
+  const { data = [] } = useSWR("/api/event-types", fetchEventTypes);
+
   return (
     <form noValidate onSubmit={handleSubmit(submitHandler)}>
       <Grid container spacing={2}>
@@ -83,11 +101,17 @@ const EventForm: React.FC<EventFormProps> = ({
             <Select
               labelId="event-type"
               label="Event Type"
-              {...register("event_type_id")}
+              value={eventTypeId}
+              onChange={onEventTypeChange}
             >
-              <MenuItem value="234b5430-bf36-4f7b-a8cf-a603aee8d8bb">
-                Birth Day
+              <MenuItem disabled value={undefined}>
+                <em>Select</em>
               </MenuItem>
+              {data.map((eventType) => (
+                <MenuItem key={eventType.id} value={eventType.id}>
+                  {eventType.name}
+                </MenuItem>
+              ))}
             </Select>
             <FormHelperText>{errors.event_type_id?.message}</FormHelperText>
           </FormControl>
@@ -111,7 +135,7 @@ const EventForm: React.FC<EventFormProps> = ({
           size="small"
           disabled={isMutating}
         >
-          {!isMutating && "Submit"}
+          {!isMutating && submitBtnLabel}
           {isMutating && "Pleae wait..."}
         </Button>
       </Stack>

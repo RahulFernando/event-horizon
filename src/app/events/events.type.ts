@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { SelectChangeEvent } from "@mui/material";
 import { Dayjs } from "dayjs";
 import {
+  // Control,
   FieldErrors,
   UseFormHandleSubmit,
   UseFormRegister,
@@ -21,9 +24,13 @@ export interface EventFormProps {
   errors: FieldErrors<EventFormInputs>;
   dateTime: Dayjs | null;
   isMutating: boolean;
+  eventTypeId: string | undefined;
+  submitBtnLabel?: string;
+  // control: Control<EventFormInputs, any>;
   register: UseFormRegister<EventFormInputs>;
   handleSubmit: UseFormHandleSubmit<EventFormInputs, undefined>;
   submitHandler: (values: EventFormInputs) => void;
   onDateChange: (value: Dayjs | null) => void;
   reset: UseFormReset<EventFormInputs>;
+  onEventTypeChange: (value: SelectChangeEvent) => void;
 }
