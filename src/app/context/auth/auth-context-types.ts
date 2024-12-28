@@ -1,14 +1,18 @@
-import { Account } from "@prisma/client";
+import { Account, User } from "@prisma/client";
+
+export interface AuthAccount extends Account {
+  user: User;
+}
 
 export interface IAuthContext {
   token?: string;
-  account?: Account;
+  account?: AuthAccount;
   loginSuccess: ({
     token,
     account,
   }: {
     token: string;
-    account: Account;
+    account: AuthAccount;
   }) => void;
   signOut: () => void;
 }

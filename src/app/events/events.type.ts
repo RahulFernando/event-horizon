@@ -34,3 +34,9 @@ export interface EventFormProps {
   reset: UseFormReset<EventFormInputs>;
   onEventTypeChange: (value: SelectChangeEvent) => void;
 }
+
+export interface EventItemProps {
+  title: string;
+  venue: string | null;
+  date_time: Date;
+}

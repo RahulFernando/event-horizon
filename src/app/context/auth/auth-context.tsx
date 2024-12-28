@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createContext, PropsWithChildren, useEffect, useReducer } from "react";
-import { AuthAction, AuthState, IAuthContext } from "./auth-context-types";
-import { Account } from "@prisma/client";
+import {
+  AuthAccount,
+  AuthAction,
+  AuthState,
+  IAuthContext,
+} from "./auth-context-types";
 import useLocalStorage from "@/app/hooks/use-local-storage";
 import checkTokenValidity from "@/lib/utils/check-token-validity";
 
@@ -59,7 +63,7 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     account,
   }: {
     token: string;
-    account: Account;
+    account: AuthAccount;
   }) => {
     setToken(token);
     setAccount(account);
