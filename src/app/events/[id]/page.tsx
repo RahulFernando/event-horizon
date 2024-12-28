@@ -16,20 +16,21 @@ import EventForm from "../components/event-form";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { eventValidationSchema } from "@/lib/validations/events/validation-schema";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import Image from "next/image";
 import useSWRMutation from "swr/mutation";
 import { SnackbarContext } from "@/app/contexts/snackbar/snackbar-context";
 import { ActionKind } from "@/app/contexts/snackbar/snackbar.types";
 import SnackBar from "@/app/components/snack-bar";
-import { useRouter } from "next/navigation";
+import useSWR from "swr";
+import { useParams } from "next/navigation";
 
-async function createEventAsync(
+async function updateEventAsync(
   url: string,
   { arg }: { arg: EventFormInputs }
 ) {
   const response = await fetch(url, {
-    method: "POST",
+    method: "PUT",
     body: JSON.stringify(arg),
   });
 
@@ -41,15 +42,26 @@ async function createEventAsync(
   return await response.json();
 }
 
-const CreateEventPage = () => {
+async function fetchEventById(url: string) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error?.message || "Something went wrong");
+  }
+
+  return await response.json();
+}
+
+const EventDetailPage = () => {
   const theme = useTheme();
   const isLarge = useMediaQuery(theme.breakpoints.up("xl"));
 
   const { snackbarToggle } = useContext(SnackbarContext);
 
-  const router = useRouter();
+  const [activeTab, setActiveTab] = useState<EventTab>("vendor");
 
-  const [activeTab, setActiveTab] = useState<EventTab>("event");
+  const params = useParams();
 
   const activeTabChangeHandler = (
     event: React.SyntheticEvent,
@@ -64,7 +76,14 @@ const CreateEventPage = () => {
     handleSubmit,
     reset,
   } = useForm<EventFormInputs>({
-    defaultValues: { organizer_id: "20c2af7c-225e-4177-85b2-5bbb69ac0563" },
+    defaultValues: {
+      title: " ",
+      date_time: null,
+      duration: " ",
+      event_type_id: undefined,
+      venue: " ",
+      organizer_id: "20c2af7c-225e-4177-85b2-5bbb69ac0563",
+    },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: yupResolver(eventValidationSchema) as any,
   });
@@ -73,11 +92,26 @@ const CreateEventPage = () => {
     isMutating,
     data,
     error,
-    trigger: createEvent,
+    trigger: updateEvent,
   } = useSWRMutation(
-    "/api/organizers/20c2af7c-225e-4177-85b2-5bbb69ac0563/events",
-    createEventAsync
+    `/api/organizers/20c2af7c-225e-4177-85b2-5bbb69ac0563/events/${params.id}`,
+    updateEventAsync
   );
+
+  const { data: event } = useSWR(`/api/events/${params.id}`, fetchEventById);
+
+  useEffect(() => {
+    if (event) {
+      reset({
+        title: event.title,
+        venue: event.venue,
+        duration: event.duration,
+        date_time: dayjs(event.date_time),
+        event_type_id: event.event_type.id,
+        organizer_id: "20c2af7c-225e-4177-85b2-5bbb69ac0563",
+      });
+    }
+  }, [event, reset]);
 
   useEffect(() => {
     if (error) {
@@ -96,21 +130,20 @@ const CreateEventPage = () => {
         message: "Event created successfully",
         severity: "success",
       });
-      router.push(`/${data.id}`);
     }
-  }, [data, router, snackbarToggle]);
+  }, [data, snackbarToggle]);
 
   const watchDateTime = watch("date_time");
   const watchEventTypeId = watch("event_type_id");
-
-  const eventTypeChangeHandler = (event: SelectChangeEvent) =>
-    setValue("event_type_id", event.target.value);
 
   const dateChangeHandler = (value: Dayjs | null) => {
     setValue("date_time", value);
   };
 
-  const submitHandler = (values: EventFormInputs) => createEvent(values);
+  const eventTypeChangeHandler = (event: SelectChangeEvent) =>
+    setValue("event_type_id", event.target.value);
+
+  const submitHandler = (values: EventFormInputs) => updateEvent(values);
 
   return (
     <>
@@ -133,13 +166,14 @@ const CreateEventPage = () => {
                 errors={errors}
                 dateTime={watchDateTime}
                 isMutating={isMutating}
-                eventTypeId={watchEventTypeId}
-                onEventTypeChange={eventTypeChangeHandler}
+                eventTypeId={`${watchEventTypeId}`}
+                submitBtnLabel="Update"
                 register={register}
                 handleSubmit={handleSubmit}
                 submitHandler={submitHandler}
                 onDateChange={dateChangeHandler}
                 reset={reset}
+                onEventTypeChange={eventTypeChangeHandler}
               />
             </TabPanel>
           </TabContext>
@@ -163,4 +197,4 @@ const CreateEventPage = () => {
   );
 };
 
-export default CreateEventPage;
+export default EventDetailPage;
