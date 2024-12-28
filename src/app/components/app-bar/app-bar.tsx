@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useContext } from "react";
 import {
   Container,
   AppBar as MuiAppBar,
@@ -14,6 +14,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 import AppTitle from "../app-title";
 import Link from "next/link";
+import { AuthContext } from "@/app/context/auth/auth-context";
 
 const pages = [
   { title: "Book Provider", href: "/book-provider" },
@@ -22,6 +23,8 @@ const pages = [
 ];
 
 const AppBar = () => {
+  const { token } = useContext(AuthContext);
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -39,7 +42,10 @@ const AppBar = () => {
       <Container maxWidth={false} sx={{ bgcolor: "primary.main" }}>
         <Toolbar disableGutters>
           <AppTitle
-            sx={{ display: { xs: "none", md: "flex", color: "white" } }}
+            sx={{
+              display: { xs: "none", md: "flex", color: "white" },
+              textDecoration: "none",
+            }}
           />
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -125,21 +131,37 @@ const AppBar = () => {
             >
               Apply as a Provider
             </Button>
-            <Button
-              LinkComponent={Link}
-              href="/auth/sign-in"
-              sx={{
-                my: 2,
-                color: "white",
-                display: "block",
-                fontSize: "15px",
-                bgcolor: "secondary.dark",
-                borderColor: "secondary.dark",
-              }}
-              variant="contained"
-            >
-              Log In
-            </Button>
+            {token && (
+              <Button
+                LinkComponent={Link}
+                href="/events/create"
+                sx={{
+                  my: 2,
+                  color: "white",
+                  display: "block",
+                  fontSize: "15px",
+                }}
+              >
+                My Events
+              </Button>
+            )}
+            {!token && (
+              <Button
+                LinkComponent={Link}
+                href="/auth/sign-in"
+                sx={{
+                  my: 2,
+                  color: "white",
+                  display: "block",
+                  fontSize: "15px",
+                  bgcolor: "secondary.dark",
+                  borderColor: "secondary.dark",
+                }}
+                variant="contained"
+              >
+                Log In
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </Container>

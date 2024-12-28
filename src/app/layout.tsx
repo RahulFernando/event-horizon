@@ -6,6 +6,7 @@ import { ThemeProvider } from "@mui/material";
 import SnackbarProvider from "./contexts/snackbar/snackbar-context";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import AuthProvider from "./context/auth/auth-context";
 
 const nunitoSans = Nunito_Sans({
   subsets: ["latin"],
@@ -22,11 +23,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={nunitoSans.className}>
-        <ThemeProvider theme={theme}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <SnackbarProvider>{children}</SnackbarProvider>
-          </LocalizationProvider>
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider theme={theme}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <SnackbarProvider>{children}</SnackbarProvider>
+            </LocalizationProvider>
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

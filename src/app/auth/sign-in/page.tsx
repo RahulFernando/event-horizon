@@ -8,6 +8,7 @@ import AppTitle from "@/app/components/app-title";
 import SnackBar from "@/app/components/snack-bar";
 
 import { SnackbarContext } from "@/app/contexts/snackbar/snackbar-context";
+import { AuthContext } from "@/app/context/auth/auth-context";
 
 import useSWRMutation from "swr/mutation";
 import { useForm } from "react-hook-form";
@@ -31,6 +32,7 @@ async function userSignIn(url: string, { arg }: { arg: SignInFormInputs }) {
 
 export default function SignInPage() {
   const { snackbarToggle } = useContext(SnackbarContext);
+  const { loginSuccess } = useContext(AuthContext);
 
   const {
     formState: { errors },
@@ -41,6 +43,7 @@ export default function SignInPage() {
   const {
     isMutating,
     error,
+    data: authDetails,
     trigger: signInUser,
   } = useSWRMutation("/api/auth/login", userSignIn);
 
@@ -53,6 +56,12 @@ export default function SignInPage() {
       });
     }
   }, [error, snackbarToggle]);
+
+  useEffect(() => {
+    if (authDetails) {
+      loginSuccess(authDetails);
+    }
+  }, [authDetails, loginSuccess]);
 
   const submitHandler = async (data: SignInFormInputs) =>
     await signInUser(data);
