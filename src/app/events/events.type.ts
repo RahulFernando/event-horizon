@@ -40,3 +40,12 @@ export interface EventItemProps {
   venue: string | null;
   date_time: Date;
 }
+
+export interface FilterToolbarProps {
+  searchTerm?: string;
+  dateTime?: string;
+  onSearchTermChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  onDateTimeChange: (event: SelectChangeEvent) => void;
+}

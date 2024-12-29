@@ -1,11 +1,18 @@
 "use client";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../context/auth/auth-context";
 import useSWR from "swr";
 import { Event, Organizer } from "@prisma/client";
-import { Button, Container, Grid2, Stack } from "@mui/material";
+import {
+  Button,
+  Container,
+  Grid2,
+  SelectChangeEvent,
+  Stack,
+} from "@mui/material";
 import AppBar from "../components/app-bar";
 import EventItem from "./components/event-item";
+import FilterToolbar from "./components/filter-toolbar";
 
 async function fetchOrganizer(url: string) {
   const response = await fetch(url);
@@ -32,6 +39,11 @@ async function fetchEvents(url: string) {
 export default function MyEventsPage() {
   const { account } = useContext(AuthContext);
 
+  const [filters, setFilters] = useState({
+    searchTerm: "",
+    dateTime: "asc",
+  });
+
   const { data: organizer } = useSWR(
     `/api/users/${account?.user.id}/organizers`,
     fetchOrganizer
@@ -42,17 +54,37 @@ export default function MyEventsPage() {
     fetchEvents
   );
 
+  const searchTermChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) =>
+    setFilters((filters) => ({
+      ...filters,
+      [event.target.name]: event.target.value,
+    }));
+
+  const dateTimeChangeHandler = (event: SelectChangeEvent) =>
+    setFilters((filters) => ({
+      ...filters,
+      [event.target.name]: event.target.value,
+    }));
+
   return (
     <>
       <AppBar />
       <Container maxWidth={false} sx={{ mt: 12 }}>
         <Stack
           direction="row"
+          spacing={2}
           sx={{
             justifyContent: "flex-end",
             alignItems: "center",
           }}
         >
+          <FilterToolbar
+            {...filters}
+            onSearchTermChange={searchTermChangeHandler}
+            onDateTimeChange={dateTimeChangeHandler}
+          />
           <Button variant="contained">New Event</Button>
         </Stack>
         <Grid2 container spacing={2} mt={4}>
