@@ -44,13 +44,18 @@ export default function MyEventsPage() {
     dateTime: "asc",
   });
 
+  const searchParams = new URLSearchParams({
+    title: filters.searchTerm,
+    dateTime: filters.dateTime,
+  });
+
   const { data: organizer } = useSWR(
     `/api/users/${account?.user.id}/organizers`,
     fetchOrganizer
   );
 
   const { data: events = [] } = useSWR(
-    `/api/organizers/${organizer?.id}/events`,
+    `/api/organizers/${organizer?.id}/events?${searchParams}`,
     fetchEvents
   );
 
