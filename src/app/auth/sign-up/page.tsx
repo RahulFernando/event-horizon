@@ -103,8 +103,6 @@ const SignUpPage = () => {
     }
   }, [data, router, userType]);
 
-  console.log(data);
-
   const appendNewContact = () => appendContact({ phone: "" });
 
   const removeContact = (index: number) => _removeContact(index);

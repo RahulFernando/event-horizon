@@ -34,3 +34,18 @@ export interface EventFormProps {
   reset: UseFormReset<EventFormInputs>;
   onEventTypeChange: (value: SelectChangeEvent) => void;
 }
+
+export interface EventItemProps {
+  title: string;
+  venue: string | null;
+  date_time: Date;
+}
+
+export interface FilterToolbarProps {
+  searchTerm?: string;
+  dateTime?: string;
+  onSearchTermChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  onDateTimeChange: (event: SelectChangeEvent) => void;
+}

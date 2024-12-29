@@ -1,17 +1,25 @@
 import prisma from "@/lib/prisma";
 import { eventValidationSchema } from "@/lib/validations/events/validation-schema";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ValidationError } from "yup";
 
 export async function GET(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const { id } = await params;
+  const title = req.nextUrl.searchParams.get("title");
+  const dateTimeSort = req.nextUrl.searchParams.get("dateTime");
 
   try {
     const events = await prisma.event.findMany({
-      where: { organizer_id: id },
+      where: {
+        organizer_id: id,
+        ...(title && { title: { contains: title, mode: "insensitive" } }),
+      },
+      orderBy: {
+        date_time: dateTimeSort === "asc" ? "asc" : "desc",
+      },
       select: {
         id: true,
         title: true,
