@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { createContext, PropsWithChildren, useEffect, useReducer } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useReducer,
+} from "react";
 import {
   AuthAccount,
   AuthAction,
@@ -58,23 +64,20 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     }
   }, [account, removeAccont, removeToken, token]);
 
-  const loginSuccessHandler = ({
-    token,
-    account,
-  }: {
-    token: string;
-    account: AuthAccount;
-  }) => {
-    setToken(token);
-    setAccount(account);
-    dispatch({ type: "LOGIN", payload: { token, account } });
-  };
+  const loginSuccessHandler = useCallback(
+    ({ token, account }: { token: string; account: AuthAccount }) => {
+      setToken(token);
+      setAccount(account);
+      dispatch({ type: "LOGIN", payload: { token, account } });
+    },
+    [setAccount, setToken]
+  );
 
-  const signOutHandler = () => {
+  const signOutHandler = useCallback(() => {
     removeToken();
     removeAccont();
     dispatch({ type: "SIGN_OUT" });
-  };
+  }, [removeAccont, removeToken]);
 
   const values = {
     ...authState,
