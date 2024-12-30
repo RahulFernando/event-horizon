@@ -96,7 +96,7 @@ const CreateEventPage = () => {
         message: "Event created successfully",
         severity: "success",
       });
-      router.push(`/${data.id}`);
+      router.push(`/events/${data.id}`);
     }
   }, [data, router, snackbarToggle]);
 

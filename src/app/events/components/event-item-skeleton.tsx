@@ -1,17 +1,8 @@
 import React from "react";
-import { Box, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, IconButton, Skeleton, Tooltip } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { EventItemProps } from "../events.type";
-import dayjs from "dayjs";
 
-const EventItem: React.FC<EventItemProps> = ({
-  id,
-  title,
-  venue,
-  date_time,
-  onDelete,
-}) => {
-  const dateTime = dayjs(date_time).format("LLL");
+const EventItemSkeleton = () => {
   return (
     <Box
       p={1}
@@ -42,8 +33,8 @@ const EventItem: React.FC<EventItemProps> = ({
             flex: 1,
           }}
         >
-          <Typography variant="subtitle1">{title}</Typography>
-          <Typography variant="body1">{venue}</Typography>
+          <Skeleton variant="text" width={100} height={8} />
+          <Skeleton variant="text" width={150} height={8} />
         </Box>
         <Box
           sx={{
@@ -53,16 +44,10 @@ const EventItem: React.FC<EventItemProps> = ({
             flex: 1,
           }}
         >
-          <Typography variant="subtitle2" align="left">
-            {dateTime}
-          </Typography>
+          <Skeleton variant="text" width={80} height={8} />
         </Box>
         <Tooltip title="Delete">
-          <IconButton
-            size="small"
-            color="error"
-            onClick={onDelete.bind(null, id)}
-          >
+          <IconButton size="small" color="error">
             <DeleteOutlineIcon />
           </IconButton>
         </Tooltip>
@@ -71,4 +56,4 @@ const EventItem: React.FC<EventItemProps> = ({
   );
 };
 
-export default EventItem;
+export default EventItemSkeleton;
