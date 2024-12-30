@@ -36,9 +36,11 @@ export interface EventFormProps {
 }
 
 export interface EventItemProps {
+  id: string;
   title: string;
   venue: string | null;
   date_time: Date;
+  onDelete: (id: string) => void;
 }
 
 export interface FilterToolbarProps {
