@@ -62,10 +62,15 @@ export default function SignInPage() {
 
   useEffect(() => {
     if (authDetails) {
+      snackbarToggle(ActionKind.OPEN, {
+        open: true,
+        message: "Loged in successfully",
+        severity: "success",
+      });
       loginSuccess(authDetails);
       router.replace("/");
     }
-  }, [authDetails, loginSuccess, router]);
+  }, [authDetails, loginSuccess, router, snackbarToggle]);
 
   const submitHandler = async (data: SignInFormInputs) =>
     await signInUser(data);
