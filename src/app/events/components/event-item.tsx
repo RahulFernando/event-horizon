@@ -10,6 +10,7 @@ const EventItem: React.FC<EventItemProps> = ({
   venue,
   date_time,
   onDelete,
+  onClick,
 }) => {
   const dateTime = dayjs(date_time).format("LLL");
   return (
@@ -19,10 +20,13 @@ const EventItem: React.FC<EventItemProps> = ({
         bgcolor: "white",
         boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
         ":hover": {
+          cursor: "pointer",
           boxShadow:
             " rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
         },
       }}
+      component="div"
+      onClick={onClick.bind(null, id)}
     >
       <Box
         sx={{

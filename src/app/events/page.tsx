@@ -19,6 +19,7 @@ import Link from "next/link";
 import SnackBar from "../components/snack-bar";
 import { SnackbarContext } from "../contexts/snackbar/snackbar-context";
 import { ActionKind } from "../contexts/snackbar/snackbar.types";
+import { useRouter } from "next/navigation";
 
 async function fetchOrganizer(url: string) {
   const response = await fetch(url);
@@ -56,6 +57,8 @@ async function deleteEvent(url: string, { arg }: { arg: { id: string } }) {
 export default function MyEventsPage() {
   const { account } = useContext(AuthContext);
   const { snackbarToggle } = useContext(SnackbarContext);
+
+  const router = useRouter();
 
   const [filters, setFilters] = useState({
     searchTerm: "",
@@ -135,6 +138,8 @@ export default function MyEventsPage() {
     mutate();
   };
 
+  const eventClickHandler = (id: string) => router.push(`/events/${id}`);
+
   return (
     <>
       <SnackBar />
@@ -179,6 +184,7 @@ export default function MyEventsPage() {
                   venue={event.venue}
                   date_time={event.date_time}
                   onDelete={deleteClickHandler}
+                  onClick={eventClickHandler}
                 />
               </Grid2>
             ))}

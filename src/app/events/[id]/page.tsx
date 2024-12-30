@@ -59,7 +59,7 @@ const EventDetailPage = () => {
 
   const { snackbarToggle } = useContext(SnackbarContext);
 
-  const [activeTab, setActiveTab] = useState<EventTab>("vendor");
+  const [activeTab, setActiveTab] = useState<EventTab>("event");
 
   const params = useParams();
 
