@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,15 +11,15 @@ model User {
   id         String     @id @default(uuid())
   name       String
   contacts   String[]
-  addresses  Address[]
-  account    Account?
   user_type  UserType   @default(ORGANIZER)
-  organizers Organizer?
-  vendors    Vendor?
   created_at DateTime   @default(now())
   created_by String
   updated_at DateTime   @updatedAt
   updated_by String
+  account    Account?
+  addresses  Address[]
+  organizers Organizer?
+  vendors    Vendor?
 
   @@map("users")
 }
@@ -38,12 +32,12 @@ model Address {
   state       String?
   country     String
   postal_code String
-  user        User     @relation(fields: [user_id], references: [id])
   user_id     String
   created_at  DateTime @default(now())
   created_by  String
   updated_at  DateTime @updatedAt
   updated_by  String
+  user        User     @relation(fields: [user_id], references: [id])
 
   @@map("addresses")
 }
@@ -65,12 +59,12 @@ model Account {
   email               String   @unique
   password            String
   profile_picture_url String?
-  user                User     @relation(fields: [user_id], references: [id])
   user_id             String   @unique
   created_at          DateTime @default(now())
   created_by          String
   updated_at          DateTime @updatedAt
   updated_by          String
+  user                User     @relation(fields: [user_id], references: [id])
 
   @@index([email])
   @@map("accounts")
@@ -81,13 +75,13 @@ model Organizer {
   first_name        String
   last_name         String?
   national_identity String?  @unique
-  user              User     @relation(fields: [user_id], references: [id])
   user_id           String   @unique
   created_at        DateTime @default(now())
   created_by        String
   updated_at        DateTime @updatedAt
   updated_by        String
   Event             Event[]
+  user              User     @relation(fields: [user_id], references: [id])
 
   @@index([national_identity])
   @@map("organizers")
@@ -97,15 +91,48 @@ model Vendor {
   id                             String   @id @default(uuid())
   business_registration          String?  @unique
   taxpayer_identification_number String?  @unique
-  user                           User     @relation(fields: [user_id], references: [id])
   user_id                        String   @unique
+  container                      String?
   created_at                     DateTime @default(now())
   created_by                     String
   updated_at                     DateTime @updatedAt
   updated_by                     String
+  user                           User     @relation(fields: [user_id], references: [id])
+  gigs                           Gig[]
 
   @@index([business_registration, taxpayer_identification_number])
   @@map("vendors")
+}
+
+model Event {
+  id            String    @id @default(uuid())
+  title         String
+  duration      String?
+  date_time     DateTime
+  event_type_id String
+  venue         String?
+  organizer_id  String
+  created_at    DateTime  @default(now())
+  created_by    String
+  updated_at    DateTime  @updatedAt
+  updated_by    String
+  event_type    EventType @relation(fields: [event_type_id], references: [id])
+  orgernizer    Organizer @relation(fields: [organizer_id], references: [id])
+
+  @@map("events")
+}
+
+model EventType {
+  id         String   @id @default(uuid())
+  name       String   @unique
+  created_at DateTime @default(now())
+  created_by String
+  updated_at DateTime @updatedAt
+  updated_by String
+  event      Event[]
+  gig        Gig[]
+
+  @@map("event_types")
 }
 
 enum UserType {
@@ -115,32 +142,20 @@ enum UserType {
   CUSTOMER_SUPPORT_REPRESENTATIVE
 }
 
-model Event {
+model Gig {
   id            String    @id @default(uuid())
   title         String
-  duration      String?
-  date_time     DateTime
+  description   String?
+  location      String
+  blob_url      String?
   event_type    EventType @relation(fields: [event_type_id], references: [id])
   event_type_id String
-  venue         String?
-  orgernizer    Organizer @relation(fields: [organizer_id], references: [id])
-  organizer_id  String
+  vendor        Vendor    @relation(fields: [vendor_id], references: [id])
+  vendor_id     String
   created_at    DateTime  @default(now())
   created_by    String
   updated_at    DateTime  @updatedAt
   updated_by    String
 
-  @@map("events")
-}
-
-model EventType {
-  id         String   @id @default(uuid())
-  name       String   @unique
-  Event      Event[]
-  created_at DateTime @default(now())
-  created_by String
-  updated_at DateTime @updatedAt
-  updated_by String
-
-  @@map("event_types")
+  @@map("gigs")
 }
