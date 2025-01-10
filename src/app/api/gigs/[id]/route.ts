@@ -10,8 +10,8 @@ export async function GET(
   const { id } = await params;
 
   try {
-    const gigs = await prisma.gig.findMany({
-      where: { vendor_id: id },
+    const gig = await prisma.gig.findFirst({
+      where: { id },
       select: {
         id: true,
         blob_url: true,
@@ -21,19 +21,18 @@ export async function GET(
           select: { event_type: { select: { id: true, name: true } } },
         },
         location: true,
-        vendor_id: true,
+        vendor: {
+          select: { id: true, user: { select: { id: true, name: true } } },
+        },
       },
     });
-    return NextResponse.json(
-      { count: gigs.length, items: [...gigs] },
-      { status: 200 }
-    );
+    return NextResponse.json(gig, { status: 200 });
   } catch (error) {
     return NextResponse.json({ errors: [error] }, { status: 500 });
   }
 }
 
-export async function POST(
+export async function PUT(
   req: Request,
   { params }: { params: { id: string } }
 ) {
@@ -41,25 +40,33 @@ export async function POST(
   const { id } = await params;
 
   try {
-    await createGigValidationSchema.validate(
-      { ...body, vendor_id: id },
-      { abortEarly: true }
-    );
+    await createGigValidationSchema.validate(body, { abortEarly: true });
 
-    const { event_type_ids } = body;
+    const { event_type_ids, ...otherFields } = body;
 
-    const gig = await prisma.gig.create({
+    if (!id) {
+      return NextResponse.json(
+        { errors: ["Gig ID is required"] },
+        { status: 400 }
+      );
+    }
+
+    const existingGig = await prisma.gig.findUnique({ where: { id } });
+
+    if (!existingGig) {
+      return NextResponse.json({ errors: ["Gig not found"] }, { status: 404 });
+    }
+
+    // Update the gig
+    const updatedGig = await prisma.gig.update({
+      where: { id },
       data: {
-        title: body.title,
-        description: body.description,
-        location: body.location,
-        vendor_id: id,
-        created_by: "unauthorized user",
-        updated_by: "unauthorized user",
+        ...otherFields,
         event_types: {
-          create: event_type_ids.map((id: string) => ({
+          deleteMany: {},
+          create: event_type_ids.map((eventTypeId: string) => ({
             event_type: {
-              connect: { id },
+              connect: { id: eventTypeId },
             },
           })),
         },
@@ -77,7 +84,7 @@ export async function POST(
       },
     });
 
-    return NextResponse.json(gig, { status: 201 });
+    return NextResponse.json(updatedGig, { status: 200 });
   } catch (error) {
     if (error instanceof ValidationError) {
       return NextResponse.json({ errors: error.errors }, { status: 400 });

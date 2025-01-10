@@ -30,7 +30,7 @@ export const createPalette = (): Palette => {
       main: "#7C7B84",
       light: "#96959c",
       dark: "#56565c",
-      contrastText: "FFFFFF",
+      contrastText: "#FFFFFF",
     },
   };
 };

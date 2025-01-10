@@ -123,14 +123,14 @@ model Event {
 }
 
 model EventType {
-  id         String   @id @default(uuid())
-  name       String   @unique
-  created_at DateTime @default(now())
+  id         String             @id @default(uuid())
+  name       String             @unique
+  created_at DateTime           @default(now())
   created_by String
-  updated_at DateTime @updatedAt
+  updated_at DateTime           @updatedAt
   updated_by String
   event      Event[]
-  gig        Gig[]
+  gigs       EventTypesOnGigs[]
 
   @@map("event_types")
 }
@@ -143,19 +143,91 @@ enum UserType {
 }
 
 model Gig {
-  id            String    @id @default(uuid())
-  title         String
-  description   String?
-  location      String
-  blob_url      String?
-  event_type    EventType @relation(fields: [event_type_id], references: [id])
-  event_type_id String
-  vendor        Vendor    @relation(fields: [vendor_id], references: [id])
-  vendor_id     String
-  created_at    DateTime  @default(now())
-  created_by    String
-  updated_at    DateTime  @updatedAt
-  updated_by    String
+  id           String             @id @default(uuid())
+  title        String
+  description  String?
+  location     String
+  blob_url     String?
+  event_types  EventTypesOnGigs[]
+  vendor       Vendor             @relation(fields: [vendor_id], references: [id])
+  pricing_mode PricingModel?
+  vendor_id    String
+  created_at   DateTime           @default(now())
+  created_by   String
+  updated_at   DateTime           @updatedAt
+  updated_by   String
 
   @@map("gigs")
+}
+
+model EventTypesOnGigs {
+  gig           Gig       @relation(fields: [gig_id], references: [id])
+  event_type    EventType @relation(fields: [event_type_id], references: [id])
+  gig_id        String
+  event_type_id String
+
+  @@id([gig_id, event_type_id])
+  @@map("event_types_on_gigs")
+}
+
+model PricingModel {
+  id          String           @id @default(uuid())
+  type        PricingModelType @default(FIXED)
+  fixed_rate  FixedRate?
+  hourly_rate HourlyRate?
+  tiered      Tiered?
+  gig         Gig              @relation(fields: [gig_id], references: [id])
+  gig_id      String           @unique
+  created_at  DateTime         @default(now())
+  created_by  String
+  updated_at  DateTime         @updatedAt
+  updated_by  String
+
+  @@map("pricing_models")
+}
+
+enum PricingModelType {
+  FIXED
+  HOURLY_RATE
+  TIERED
+}
+
+model FixedRate {
+  id               String       @id @default(uuid())
+  price            Float
+  pricing_model    PricingModel @relation(fields: [pricing_model_id], references: [id])
+  pricing_model_id String       @unique
+
+  @@map("fixed_rates")
+}
+
+model HourlyRate {
+  id               String       @id @default(uuid())
+  hour             String
+  price            Float
+  pricing_model    PricingModel @relation(fields: [pricing_model_id], references: [id])
+  pricing_model_id String       @unique
+
+  @@map("hourly_rates")
+}
+
+model Tiered {
+  id               String        @id @default(uuid())
+  pricing_model    PricingModel  @relation(fields: [pricing_model_id], references: [id])
+  pricing_model_id String        @unique
+  pricing_tiers    PricingTier[]
+
+  @@map("tiereds")
+}
+
+model PricingTier {
+  id          String @default(uuid())
+  level       String
+  description String
+  price       Float
+  tiered      Tiered @relation(fields: [tiered_id], references: [id])
+  tiered_id   String
+
+  @@id([id, tiered_id])
+  @@map("pricing_tiers")
 }
