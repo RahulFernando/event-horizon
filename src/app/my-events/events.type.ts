@@ -8,6 +8,7 @@ import {
   UseFormRegister,
   UseFormReset,
 } from "react-hook-form";
+import { IEventTypeOnGig, IVendor } from "../types";
 
 export type EventTab = "event" | "vendor";
 
@@ -51,3 +52,19 @@ export interface FilterToolbarProps {
   ) => void;
   onDateTimeChange: (event: SelectChangeEvent) => void;
 }
+
+export interface GigListProps {
+  eventType?: string;
+}
+
+export interface IGig {
+  id: string;
+  title: string;
+  description: string;
+  location: string;
+  blob_url?: string;
+  event_types: IEventTypeOnGig[];
+  vendor: IVendor;
+}
+
+export type GigCardProps = IGig;

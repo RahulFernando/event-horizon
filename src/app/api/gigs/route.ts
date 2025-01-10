@@ -1,31 +1,44 @@
 import prisma from "@/lib/prisma";
 import { createGigValidationSchema } from "@/lib/validations/gigs/create-validation-schema";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ValidationError } from "yup";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const { id } = await params;
+export async function GET(req: NextRequest) {
+  // const location = req.nextUrl.searchParams.get("location");
+  const eventType = req.nextUrl.searchParams.get("eventType");
 
   try {
     const gigs = await prisma.gig.findMany({
-      where: { vendor_id: id },
+      where: {
+        // ...(location && {
+        //   location: { contains: location, mode: "insensitive" },
+        // }),
+        ...(eventType && {
+          event_types: {
+            some: {
+              event_type: {
+                name: { contains: eventType, mode: "insensitive" },
+              },
+            },
+          },
+        }),
+      },
       select: {
         id: true,
-        blob_url: true,
         title: true,
         description: true,
+        location: true,
+        blob_url: true,
         event_types: {
           select: { event_type: { select: { id: true, name: true } } },
         },
-        location: true,
-        vendor_id: true,
+        vendor: {
+          select: { id: true, user: { select: { id: true, name: true } } },
+        },
       },
     });
     return NextResponse.json(
-      { count: gigs.length, items: [...gigs] },
+      { count: gigs.length, items: gigs },
       { status: 200 }
     );
   } catch (error) {
@@ -33,18 +46,11 @@ export async function GET(
   }
 }
 
-export async function POST(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: Request) {
   const body = await req.json();
-  const { id } = await params;
 
   try {
-    await createGigValidationSchema.validate(
-      { ...body, vendor_id: id },
-      { abortEarly: true }
-    );
+    await createGigValidationSchema.validate(body, { abortEarly: true });
 
     const { event_type_ids } = body;
 
@@ -53,7 +59,7 @@ export async function POST(
         title: body.title,
         description: body.description,
         location: body.location,
-        vendor_id: id,
+        vendor_id: body.vendor_id,
         created_by: "unauthorized user",
         updated_by: "unauthorized user",
         event_types: {
@@ -76,7 +82,6 @@ export async function POST(
         vendor_id: true,
       },
     });
-
     return NextResponse.json(gig, { status: 201 });
   } catch (error) {
     if (error instanceof ValidationError) {

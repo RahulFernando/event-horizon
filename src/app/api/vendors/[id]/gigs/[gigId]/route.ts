@@ -16,7 +16,9 @@ export async function GET(
         blob_url: true,
         title: true,
         description: true,
-        event_type: { select: { id: true, name: true } },
+        event_types: {
+          select: { event_type: { select: { id: true, name: true } } },
+        },
         location: true,
         vendor_id: true,
       },
@@ -40,15 +42,21 @@ export async function PUT(
       { abortEarly: true }
     );
 
+    const { event_type_ids, title, description, location } = body;
+
+    await updateEventTypes(gigId, event_type_ids);
+
     const gig = await prisma.gig.update({
       where: { vendor_id: id, id: gigId },
-      data: { ...body, vendor_id: id },
+      data: { vendor_id: id, title, description, location },
       select: {
         id: true,
         blob_url: true,
         title: true,
         description: true,
-        event_type: { select: { id: true, name: true } },
+        event_types: {
+          select: { event_type: { select: { id: true, name: true } } },
+        },
         location: true,
         vendor_id: true,
       },
@@ -58,6 +66,42 @@ export async function PUT(
     return NextResponse.json({ errors: [error] }, { status: 500 });
   }
 }
+
+const updateEventTypes = async (gigId: string, eventTypeIds: string[]) => {
+  // remove events that are not new list
+  await prisma.eventTypesOnGigs.deleteMany({
+    where: {
+      event_type_id: { notIn: [...eventTypeIds] },
+    },
+  });
+
+  // find existing event type ids
+  const existingRelations = await prisma.eventTypesOnGigs.findMany({
+    where: {
+      gig_id: gigId,
+      event_type_id: { in: eventTypeIds },
+    },
+    select: { event_type_id: true },
+  });
+
+  const existingEventTypeIds = new Set(
+    existingRelations.map((rel) => rel.event_type_id)
+  );
+
+  const eventTypesToAdd = eventTypeIds.filter(
+    (id: string) => !existingEventTypeIds.has(id)
+  );
+
+  // create new event types
+  if (eventTypesToAdd.length > 0) {
+    await prisma.eventTypesOnGigs.createMany({
+      data: eventTypesToAdd.map((id: string) => ({
+        gig_id: gigId,
+        event_type_id: id,
+      })),
+    });
+  }
+};
 
 export async function DELETE(
   req: Request,

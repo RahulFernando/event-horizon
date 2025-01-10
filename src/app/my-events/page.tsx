@@ -156,7 +156,7 @@ export default function MyEventsPage() {
           <Button
             variant="contained"
             LinkComponent={Link}
-            href="/events/create"
+            href="/my-events/create"
           >
             New Event
           </Button>
