@@ -18,7 +18,14 @@ export async function GET(
         type: true,
         fixed_rate: true,
         hourly_rate: true,
-        tiered: true,
+        tiered: {
+          select: {
+            id: true,
+            pricing_tiers: {
+              select: { id: true, level: true, description: true, price: true },
+            },
+          },
+        },
       },
     });
 
@@ -42,8 +49,8 @@ export async function POST(
     const { type, fixed, hourlyRate, tiered } = body;
     let pricingModel;
 
-    const result = await prisma.$transaction(async (primsa) => {
-      pricingModel = await primsa.pricingModel.create({
+    const result = await prisma.$transaction(async (transactionPrisma) => {
+      pricingModel = await transactionPrisma.pricingModel.create({
         data: {
           gig_id: id,
           type,
@@ -53,7 +60,7 @@ export async function POST(
       });
 
       if (type === PricingModelType.FIXED) {
-        await primsa.fixedRate.create({
+        await transactionPrisma.fixedRate.create({
           data: {
             price: fixed.price,
             pricing_model_id: pricingModel.id,
@@ -62,7 +69,7 @@ export async function POST(
       }
 
       if (type === PricingModelType.HOURLY_RATE) {
-        await primsa.hourlyRate.create({
+        await transactionPrisma.hourlyRate.create({
           data: {
             hour: hourlyRate.hour,
             price: hourlyRate.price,
@@ -72,13 +79,13 @@ export async function POST(
       }
 
       if (type === PricingModelType.TIERED) {
-        const tieredModel = await prisma.tiered.create({
+        const tieredModel = await transactionPrisma.tiered.create({
           data: {
             pricing_model_id: pricingModel.id,
           },
         });
         if (tiered.pricingTiers && tiered.pricingTiers.length > 0) {
-          await prisma.pricingTier.createMany({
+          await transactionPrisma.pricingTier.createMany({
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             data: tiered.pricingTiers.map((tier: any) => ({
               level: tier.level,

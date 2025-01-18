@@ -1,10 +1,11 @@
 import { SelectChangeEvent } from "@mui/material";
-import { EventType } from "@prisma/client";
+import { EventType, PricingModelType, PricingTier } from "@prisma/client";
 import {
   UseFormHandleSubmit,
   UseFormRegister,
   UseFormReset,
 } from "react-hook-form";
+import { IPricing } from "../types";
 
 export interface GigFormInputs {
   title: string;
@@ -33,4 +34,61 @@ export interface GigPreviewProps extends Pick<GigFormInputs, "description"> {
   title?: string;
   location?: string;
   event_types?: string[];
+}
+
+export interface ModelSelectorProps {
+  pricingModel: PricingModelType | undefined;
+  isLoading: boolean;
+  onPricingModelChange: (value: PricingModelType) => void;
+}
+
+export interface ITier
+  extends Pick<PricingTier, "level" | "description" | "price"> {
+  index: number;
+  color: string;
+}
+
+export interface IPricingTier extends Pick<PricingTier, "level"> {
+  id?: string;
+  description?: string;
+  price?: string;
+}
+
+export interface PricingTiersProps {
+  tiers?: TierCardProps[];
+}
+
+export type TierCardProps = Omit<ITier, "index">;
+
+export interface FixedPriceFormInputs {
+  price: number;
+}
+
+export interface HourlyRateFormInputs extends FixedPriceFormInputs {
+  hour: string;
+}
+
+export interface FixedPricingModelPayload {
+  type: PricingModelType;
+  fixed: { price: number };
+}
+
+export interface FixedPriceFormProps {
+  price?: IPricing;
+}
+
+export interface HourlyRatePriceModelPayload {
+  type: PricingModelType;
+  hourlyRate: {
+    hour: string;
+    price: number;
+  };
+}
+
+export interface TieredPriceModelPayload
+  extends Pick<FixedPricingModelPayload, "type"> {
+  type: PricingModelType;
+  tiered: {
+    pricingTiers: Pick<PricingTier, "level" | "description" | "price">[];
+  };
 }

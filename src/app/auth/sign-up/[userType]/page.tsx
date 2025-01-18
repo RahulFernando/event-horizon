@@ -40,7 +40,7 @@ const SignUpWithUserType = () => {
 
       <Box component="div">
         <Box p="0.8rem">
-          <AppTitle />
+          <AppTitle sx={{ color: "primary.dark", textDecoration: "none" }} />
 
           <Box sx={{ mt: "15%" }}>
             <Typography variant="subtitle1">
