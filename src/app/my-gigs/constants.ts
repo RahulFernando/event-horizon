@@ -1,3 +1,5 @@
+import { PricingModelType } from "@prisma/client";
+
 export const TABS = [
   { value: "basic", label: "Basic Details" },
   { value: "pricing", label: "Pricing" },
@@ -14,3 +16,9 @@ export const GIG_PREVIEW = {
   location: "Gig preview location",
   event_types: ["Wedding", "Festival"],
 };
+
+export const PRICING_MODEL_TYPES = [
+  { name: PricingModelType.FIXED, src: "/icons/fixed.png" },
+  { name: PricingModelType.HOURLY_RATE, src: "/icons/hourly.png" },
+  { name: PricingModelType.TIERED, src: "/icons/tiered.png" },
+];

@@ -13,9 +13,11 @@ import useSWRMutation from "swr/mutation";
 import { SnackbarContext } from "@/app/contexts/snackbar/snackbar-context";
 import { ActionKind } from "@/app/contexts/snackbar/snackbar.types";
 import useSWR from "swr";
-import { EventType } from "@prisma/client";
-import { IGig } from "@/app/types";
+import { EventType, PricingModelType } from "@prisma/client";
+import { IGig, IPricing } from "@/app/types";
 import SnackBar from "@/app/components/snack-bar";
+import ModelSelector from "../components/pricing-models/pricing-model-selector";
+import withPricingModel from "../components/hoc/with-pricing-model";
 
 async function updateGigAsync(
   url: string,
@@ -56,12 +58,29 @@ async function fetchGigById(url: string) {
   return (await response.json()) as IGig;
 }
 
+async function fetchPricingModel(url: string) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error?.message || "Something went wrong");
+  }
+
+  return (await response.json()) as IPricing;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const PricingComponent = withPricingModel(() => <div />);
+
 const GigPage = () => {
   const params = useParams();
 
   const { snackbarToggle } = useContext(SnackbarContext);
 
-  const [activeTab, setActiveTab] = useState("basic");
+  const [activeTab, setActiveTab] = useState("pricing");
+  const [pricingModelType, setPricingModelType] = useState<
+    PricingModelType | undefined
+  >();
 
   const { register, setValue, watch, handleSubmit, reset } =
     useForm<GigFormInputs>({
@@ -89,6 +108,11 @@ const GigPage = () => {
 
   const { data: gig } = useSWR(`/api/gigs/${params.id}`, fetchGigById);
 
+  const { isLoading: isPricingModelLoading, data: pricingModel } = useSWR(
+    `/api/gigs/${params.id}/pricings`,
+    fetchPricingModel
+  );
+
   useEffect(() => {
     if (gig) {
       const eventTypes = gig.event_types.map((type) => type.event_type.id);
@@ -100,6 +124,12 @@ const GigPage = () => {
       });
     }
   }, [gig, reset]);
+
+  useEffect(() => {
+    if (pricingModel) {
+      setPricingModelType(pricingModel.type);
+    }
+  }, [pricingModel]);
 
   useEffect(() => {
     if (error) {
@@ -141,6 +171,9 @@ const GigPage = () => {
     newValue: string
   ) => setActiveTab(newValue);
 
+  const pricingModelTypeChangeHandler = (value: PricingModelType) =>
+    setPricingModelType(value);
+
   return (
     <>
       <SnackBar />
@@ -170,6 +203,38 @@ const GigPage = () => {
                   onSubmit={submitHandler}
                   reset={reset}
                 />
+              </Grid2>
+              <Grid2 size={{ xs: 12, md: 5 }}>
+                <GigPreview
+                  title={title ? title : GIG_PREVIEW["title"]}
+                  description={
+                    description ? description : GIG_PREVIEW["description"]
+                  }
+                  location={location ? location : GIG_PREVIEW["location"]}
+                  event_types={
+                    selectedEventTypes.length > 0
+                      ? selectedEventTypes
+                      : GIG_PREVIEW["event_types"]
+                  }
+                />
+              </Grid2>
+            </Grid2>
+          </TabPanel>
+          <TabPanel value="pricing" sx={{ pl: 0, pr: 0 }}>
+            <Grid2 container spacing={2}>
+              <Grid2 size={{ xs: 12, md: 7 }}>
+                <Grid2 container spacing={1}>
+                  <Grid2 size={{ xs: 12 }}>
+                    <ModelSelector
+                      isLoading={isPricingModelLoading}
+                      pricingModel={pricingModelType}
+                      onPricingModelChange={pricingModelTypeChangeHandler}
+                    />
+                  </Grid2>
+                  <Grid2 size={{ xs: 12 }} sx={{ mt: 3 }}>
+                    <PricingComponent pricingModel={pricingModelType} />
+                  </Grid2>
+                </Grid2>
               </Grid2>
               <Grid2 size={{ xs: 12, md: 5 }}>
                 <GigPreview

@@ -14,6 +14,7 @@ import { ActionKind } from "@/app/contexts/snackbar/snackbar.types";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import { EventType } from "@prisma/client";
+import SnackBar from "@/app/components/snack-bar";
 
 async function createGigAsync(
   url: string,
@@ -106,10 +107,11 @@ const CreateGigPage = () => {
   };
 
   const submitHandler = (values: GigFormInputs) =>
-    createGig({ ...values, vendor_id: "5cf3c5f6-cbd5-40b8-81e6-0fa6088e95ce" });
+    createGig({ ...values, vendor_id: "pf3b75c5-7765-4c45-8c23-8066e7326100" });
 
   return (
     <>
+      <SnackBar />
       <AppBar />
       <Container maxWidth={false} sx={{ mt: 12 }}>
         <TabContext value={"basic"}>
@@ -119,7 +121,7 @@ const CreateGigPage = () => {
                 key={tab.value}
                 {...tab}
                 sx={{ textTransform: "none", fontWeight: 600 }}
-                disabled={tab.value === "vendor"}
+                disabled={tab.value === "pricing"}
               />
             ))}
           </TabList>

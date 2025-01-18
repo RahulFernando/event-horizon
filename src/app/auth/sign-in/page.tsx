@@ -81,7 +81,7 @@ export default function SignInPage() {
 
       <Box component="div">
         <Box p="0.8rem">
-          <AppTitle sx={{ color: "primary.dark" }} />
+          <AppTitle sx={{ color: "primary.dark", textDecoration: "none" }} />
 
           <Box sx={{ mt: "20%" }}>
             <form onSubmit={handleSubmit(submitHandler)}>
