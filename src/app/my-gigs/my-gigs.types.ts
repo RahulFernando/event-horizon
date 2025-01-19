@@ -31,9 +31,12 @@ export interface GigPostRequestPayload extends GigFormInputs {
 }
 
 export interface GigPreviewProps extends Pick<GigFormInputs, "description"> {
+  id?: string;
   title?: string;
   location?: string;
   event_types?: string[];
+  isActions?: boolean;
+  onClick?: (id: string) => void;
 }
 
 export interface ModelSelectorProps {

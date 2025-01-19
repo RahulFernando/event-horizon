@@ -52,3 +52,8 @@ export interface IPricing {
     }[];
   };
 }
+
+export interface IVendorGigs {
+  count: number;
+  items: IGig[];
+}
