@@ -161,8 +161,8 @@ model Gig {
 }
 
 model EventTypesOnGigs {
-  gig           Gig       @relation(fields: [gig_id], references: [id])
-  event_type    EventType @relation(fields: [event_type_id], references: [id])
+  gig           Gig       @relation(fields: [gig_id], references: [id], onDelete: Cascade)
+  event_type    EventType @relation(fields: [event_type_id], references: [id], onDelete: Cascade)
   gig_id        String
   event_type_id String
 
@@ -176,7 +176,7 @@ model PricingModel {
   fixed_rate  FixedRate?
   hourly_rate HourlyRate?
   tiered      Tiered?
-  gig         Gig              @relation(fields: [gig_id], references: [id])
+  gig         Gig              @relation(fields: [gig_id], references: [id], onDelete: Cascade)
   gig_id      String           @unique
   created_at  DateTime         @default(now())
   created_by  String
@@ -195,7 +195,7 @@ enum PricingModelType {
 model FixedRate {
   id               String       @id @default(uuid())
   price            Float
-  pricing_model    PricingModel @relation(fields: [pricing_model_id], references: [id])
+  pricing_model    PricingModel @relation(fields: [pricing_model_id], references: [id], onDelete: Cascade)
   pricing_model_id String       @unique
 
   @@map("fixed_rates")
@@ -205,7 +205,7 @@ model HourlyRate {
   id               String       @id @default(uuid())
   hour             String
   price            Float
-  pricing_model    PricingModel @relation(fields: [pricing_model_id], references: [id])
+  pricing_model    PricingModel @relation(fields: [pricing_model_id], references: [id], onDelete: Cascade)
   pricing_model_id String       @unique
 
   @@map("hourly_rates")
@@ -213,7 +213,7 @@ model HourlyRate {
 
 model Tiered {
   id               String        @id @default(uuid())
-  pricing_model    PricingModel  @relation(fields: [pricing_model_id], references: [id])
+  pricing_model    PricingModel  @relation(fields: [pricing_model_id], references: [id], onDelete: Cascade)
   pricing_model_id String        @unique
   pricing_tiers    PricingTier[]
 
@@ -225,7 +225,7 @@ model PricingTier {
   level       String
   description String
   price       Float
-  tiered      Tiered @relation(fields: [tiered_id], references: [id])
+  tiered      Tiered @relation(fields: [tiered_id], references: [id], onDelete: Cascade)
   tiered_id   String
 
   @@id([id, tiered_id])
