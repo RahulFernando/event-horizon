@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import AppBar from "@/app/components/app-bar";
 import { Container, Grid2, SelectChangeEvent, Tab } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import GigPreview from "../components/gig-preview";
 import GigForm from "../components/gig-form";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
@@ -74,10 +74,13 @@ const PricingComponent = withPricingModel(() => <div />);
 
 const GigPage = () => {
   const params = useParams();
+  const searchParams = useSearchParams();
+
+  const tab = searchParams.get("activeTab");
 
   const { snackbarToggle } = useContext(SnackbarContext);
 
-  const [activeTab, setActiveTab] = useState("pricing");
+  const [activeTab, setActiveTab] = useState(tab ?? "pricing");
   const [pricingModelType, setPricingModelType] = useState<
     PricingModelType | undefined
   >();
@@ -216,6 +219,7 @@ const GigPage = () => {
                       ? selectedEventTypes
                       : GIG_PREVIEW["event_types"]
                   }
+                  md={3}
                 />
               </Grid2>
             </Grid2>
@@ -248,6 +252,7 @@ const GigPage = () => {
                       ? selectedEventTypes
                       : GIG_PREVIEW["event_types"]
                   }
+                  md={3}
                 />
               </Grid2>
             </Grid2>

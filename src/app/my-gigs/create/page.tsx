@@ -151,6 +151,7 @@ const CreateGigPage = () => {
                       ? selectedEventTypes
                       : GIG_PREVIEW["event_types"]
                   }
+                  md={3}
                 />
               </Grid2>
             </Grid2>

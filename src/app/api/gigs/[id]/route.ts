@@ -93,3 +93,17 @@ export async function PUT(
     return NextResponse.json({ errors: [error] }, { status: 500 });
   }
 }
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  const { id } = await params;
+
+  try {
+    await prisma.gig.delete({ where: { id } });
+    return NextResponse.json({}, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ errors: [error] }, { status: 500 });
+  }
+}
