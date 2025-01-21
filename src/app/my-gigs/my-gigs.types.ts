@@ -35,8 +35,13 @@ export interface GigPreviewProps extends Pick<GigFormInputs, "description"> {
   title?: string;
   location?: string;
   event_types?: string[];
-  isActions?: boolean;
+  xs?: number;
+  md?: number;
   onClick?: (id: string) => void;
+  onDeleteClick?: (
+    { id, title }: { id: string; title: string },
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => void;
 }
 
 export interface ModelSelectorProps {

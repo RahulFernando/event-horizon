@@ -6,8 +6,8 @@ import {
   CardContent,
   CardHeader,
   Chip,
+  Grid2,
   IconButton,
-  Stack,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -21,8 +21,10 @@ const GigPreview: React.FC<GigPreviewProps> = ({
   description = GIG_PREVIEW["description"],
   location = GIG_PREVIEW["location"],
   event_types = GIG_PREVIEW["event_types"],
-  isActions,
+  md = 4,
+  xs = 12,
   onClick,
+  onDeleteClick,
 }) => (
   <Box
     component="div"
@@ -33,9 +35,16 @@ const GigPreview: React.FC<GigPreviewProps> = ({
         title={title}
         subheader={location}
         action={
-          isActions && (
+          onDeleteClick && (
             <Tooltip title="Delete">
-              <IconButton size="small" color="error">
+              <IconButton
+                size="small"
+                color="error"
+                onClick={onDeleteClick.bind(this, {
+                  id: id as string,
+                  title: title as string,
+                })}
+              >
                 <CloseIcon />
               </IconButton>
             </Tooltip>
@@ -44,21 +53,13 @@ const GigPreview: React.FC<GigPreviewProps> = ({
       />
       <CardContent>
         <Typography variant="body1">{description}</Typography>
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{
-            justifyContent: "flex-start",
-            alignItems: "center",
-            mt: 2,
-          }}
-        >
-          {[
-            event_types.map((eventType) => (
+        <Grid2 container spacing={0.5} mt={2}>
+          {event_types.map((eventType) => (
+            <Grid2 key={eventType} size={{ xs, md }}>
               <Chip key={eventType} color="default" label={eventType} />
-            )),
-          ]}
-        </Stack>
+            </Grid2>
+          ))}
+        </Grid2>
       </CardContent>
     </Card>
   </Box>
