@@ -6,7 +6,7 @@ import { ThemeProvider } from "@mui/material";
 import SnackbarProvider from "./contexts/snackbar/snackbar-context";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import AuthProvider from "./context/auth/auth-context";
+import AuthProvider from "./contexts/auth/auth-context";
 
 const nunitoSans = Nunito_Sans({
   subsets: ["latin"],

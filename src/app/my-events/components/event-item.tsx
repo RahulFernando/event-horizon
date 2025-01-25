@@ -42,12 +42,12 @@ const EventItem: React.FC<EventItemProps> = ({
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "flex-start",
-            gap: "2px",
+            gap: "1px",
             flex: 1,
           }}
         >
           <Typography variant="subtitle1">{title}</Typography>
-          <Typography variant="body1">{venue}</Typography>
+          <Typography variant="body2">{venue}</Typography>
         </Box>
         <Box
           sx={{

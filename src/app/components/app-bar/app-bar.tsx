@@ -14,7 +14,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 import AppTitle from "../app-title";
 import Link from "next/link";
-import { AuthContext } from "@/app/context/auth/auth-context";
+import { AuthContext } from "@/app/contexts/auth/auth-context";
 
 const pages = [
   { title: "Book Provider", href: "/book-provider" },

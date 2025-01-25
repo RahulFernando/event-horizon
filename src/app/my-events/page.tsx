@@ -1,6 +1,6 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../context/auth/auth-context";
+import { AuthContext } from "../contexts/auth/auth-context";
 import useSWR from "swr";
 import { Event, Organizer } from "@prisma/client";
 import {
@@ -138,7 +138,7 @@ export default function MyEventsPage() {
     mutate();
   };
 
-  const eventClickHandler = (id: string) => router.push(`/events/${id}`);
+  const eventClickHandler = (id: string) => router.push(`/my-events/${id}`);
 
   return (
     <>

@@ -8,7 +8,7 @@ import AppTitle from "@/app/components/app-title";
 import SnackBar from "@/app/components/snack-bar";
 
 import { SnackbarContext } from "@/app/contexts/snackbar/snackbar-context";
-import { AuthContext } from "@/app/context/auth/auth-context";
+import { AuthContext } from "@/app/contexts/auth/auth-context";
 
 import useSWRMutation from "swr/mutation";
 import { useForm } from "react-hook-form";
@@ -25,7 +25,8 @@ async function userSignIn(url: string, { arg }: { arg: SignInFormInputs }) {
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error?.message || "Something went wrong");
+    const message = error?.message ?? error?.errors[0];
+    throw new Error(message || "Something went wrong");
   }
 
   return await response.json();

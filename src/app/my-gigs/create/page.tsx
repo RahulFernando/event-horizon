@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import { EventType } from "@prisma/client";
 import SnackBar from "@/app/components/snack-bar";
+import { AuthContext } from "@/app/contexts/auth/auth-context";
 
 async function createGigAsync(
   url: string,
@@ -46,6 +47,7 @@ async function fetchEventTypes(url: string) {
 
 const CreateGigPage = () => {
   const { snackbarToggle } = useContext(SnackbarContext);
+  const { account } = useContext(AuthContext);
 
   const router = useRouter();
 
@@ -107,7 +109,7 @@ const CreateGigPage = () => {
   };
 
   const submitHandler = (values: GigFormInputs) =>
-    createGig({ ...values, vendor_id: "pf3b75c5-7765-4c45-8c23-8066e7326100" });
+    createGig({ ...values, vendor_id: account?.user.vendors?.id ?? "" });
 
   return (
     <>
