@@ -5,10 +5,10 @@ import Link from "next/link";
 import React, { useContext } from "react";
 
 const UserActions = () => {
-  const { token, account } = useContext(AuthContext);
+  const { token, account, signOut } = useContext(AuthContext);
 
   const getLinkAndLabel = () => {
-    if (token && account) {
+    if (account) {
       if (account.user.vendors) {
         return {
           href: "/my-gigs",
@@ -29,24 +29,27 @@ const UserActions = () => {
 
   return (
     <>
-      <Button
-        LinkComponent={Link}
-        href={href}
-        sx={{
-          my: 2,
-          color: "white",
-          display: "block",
-          fontSize: "15px",
-        }}
-      >
-        {label}
-      </Button>
+      {token && (
+        <Button
+          LinkComponent={Link}
+          href={href}
+          sx={{
+            my: 2,
+            color: "white",
+            display: "block",
+            fontSize: "15px",
+          }}
+        >
+          {label}
+        </Button>
+      )}
       {!token && (
         <Button
           LinkComponent={Link}
           href="/auth/sign-in"
           sx={{
             my: 2,
+            ml: 1,
             color: "white",
             display: "block",
             fontSize: "15px",
@@ -69,6 +72,7 @@ const UserActions = () => {
             bgcolor: "warning",
           }}
           variant="contained"
+          onClick={signOut}
         >
           Log Out
         </Button>

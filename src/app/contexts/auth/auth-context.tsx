@@ -14,6 +14,7 @@ import {
 } from "./auth-context-types";
 import useLocalStorage from "@/app/hooks/use-local-storage";
 import checkTokenValidity from "@/lib/utils/check-token-validity";
+import { useRouter } from "next/navigation";
 
 export const AuthContext = createContext<IAuthContext>({
   loginSuccess: (val) => {},
@@ -45,6 +46,8 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
 };
 
 const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
+  const router = useRouter();
+
   const [authState, dispatch] = useReducer(authReducer, initialState);
 
   const [token, setToken, removeToken] = useLocalStorage("access-token");
@@ -77,7 +80,8 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     removeToken();
     removeAccont();
     dispatch({ type: "SIGN_OUT" });
-  }, [removeAccont, removeToken]);
+    router.replace("/");
+  }, [removeAccont, removeToken, router]);
 
   const values = {
     ...authState,
