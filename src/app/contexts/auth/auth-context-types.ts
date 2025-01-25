@@ -1,7 +1,12 @@
 import { Account, User } from "@prisma/client";
 
+export interface AuthUser extends User {
+  organizers?: { id: string };
+  vendors?: { id: string };
+}
+
 export interface AuthAccount extends Account {
-  user: User;
+  user: AuthUser;
 }
 
 export interface IAuthContext {

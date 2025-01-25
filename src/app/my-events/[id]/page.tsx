@@ -25,6 +25,7 @@ import SnackBar from "@/app/components/snack-bar";
 import useSWR from "swr";
 import { useParams } from "next/navigation";
 import GigList from "../components/gig-list";
+import { AuthContext } from "@/app/contexts/auth/auth-context";
 
 async function updateEventAsync(
   url: string,
@@ -59,8 +60,9 @@ const EventDetailPage = () => {
   const isLarge = useMediaQuery(theme.breakpoints.up("xl"));
 
   const { snackbarToggle } = useContext(SnackbarContext);
+  const { account } = useContext(AuthContext);
 
-  const [activeTab, setActiveTab] = useState<EventTab>("vendor");
+  const [activeTab, setActiveTab] = useState<EventTab>("event");
 
   const params = useParams();
 
@@ -83,7 +85,7 @@ const EventDetailPage = () => {
       duration: " ",
       event_type_id: undefined,
       venue: " ",
-      organizer_id: "20c2af7c-225e-4177-85b2-5bbb69ac0563",
+      organizer_id: account?.user.organizers?.id,
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: yupResolver(eventValidationSchema) as any,
@@ -95,7 +97,7 @@ const EventDetailPage = () => {
     error,
     trigger: updateEvent,
   } = useSWRMutation(
-    `/api/organizers/20c2af7c-225e-4177-85b2-5bbb69ac0563/events/${params.id}`,
+    `/api/organizers/${account?.user.organizers?.id}/events/${params.id}`,
     updateEventAsync
   );
 
@@ -109,10 +111,10 @@ const EventDetailPage = () => {
         duration: event.duration,
         date_time: dayjs(event.date_time),
         event_type_id: event.event_type.id,
-        organizer_id: "20c2af7c-225e-4177-85b2-5bbb69ac0563",
+        organizer_id: account?.user.organizers?.id,
       });
     }
-  }, [event, reset]);
+  }, [account, event, reset]);
 
   useEffect(() => {
     if (error) {

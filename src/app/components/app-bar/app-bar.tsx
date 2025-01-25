@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext } from "react";
+import React from "react";
 import {
   Container,
   AppBar as MuiAppBar,
@@ -14,7 +14,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 import AppTitle from "../app-title";
 import Link from "next/link";
-import { AuthContext } from "@/app/context/auth/auth-context";
+import UserActions from "./user-actions";
 
 const pages = [
   { title: "Book Provider", href: "/book-provider" },
@@ -23,8 +23,6 @@ const pages = [
 ];
 
 const AppBar = () => {
-  const { token } = useContext(AuthContext);
-
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -131,37 +129,7 @@ const AppBar = () => {
             >
               Apply as a Provider
             </Button>
-            {token && (
-              <Button
-                LinkComponent={Link}
-                href="/my-events"
-                sx={{
-                  my: 2,
-                  color: "white",
-                  display: "block",
-                  fontSize: "15px",
-                }}
-              >
-                My Events
-              </Button>
-            )}
-            {!token && (
-              <Button
-                LinkComponent={Link}
-                href="/auth/sign-in"
-                sx={{
-                  my: 2,
-                  color: "white",
-                  display: "block",
-                  fontSize: "15px",
-                  bgcolor: "secondary.dark",
-                  borderColor: "secondary.dark",
-                }}
-                variant="contained"
-              >
-                Log In
-              </Button>
-            )}
+            <UserActions />
           </Box>
         </Toolbar>
       </Container>

@@ -18,6 +18,7 @@ import { IGig, IPricing } from "@/app/types";
 import SnackBar from "@/app/components/snack-bar";
 import ModelSelector from "../components/pricing-models/pricing-model-selector";
 import withPricingModel from "../components/hoc/with-pricing-model";
+import { AuthContext } from "@/app/contexts/auth/auth-context";
 
 async function updateGigAsync(
   url: string,
@@ -79,6 +80,7 @@ const GigPage = () => {
   const tab = searchParams.get("activeTab");
 
   const { snackbarToggle } = useContext(SnackbarContext);
+  const { account } = useContext(AuthContext);
 
   const [activeTab, setActiveTab] = useState(tab ?? "pricing");
   const [pricingModelType, setPricingModelType] = useState<
@@ -167,7 +169,7 @@ const GigPage = () => {
   };
 
   const submitHandler = (values: GigFormInputs) =>
-    updateGig({ ...values, vendor_id: "5cf3c5f6-cbd5-40b8-81e6-0fa6088e95ce" });
+    updateGig({ ...values, vendor_id: account?.user.vendors?.id ?? "" });
 
   const activeTabChangeHandler = (
     event: React.SyntheticEvent,

@@ -23,6 +23,7 @@ import { SnackbarContext } from "@/app/contexts/snackbar/snackbar-context";
 import { ActionKind } from "@/app/contexts/snackbar/snackbar.types";
 import SnackBar from "@/app/components/snack-bar";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "@/app/contexts/auth/auth-context";
 
 async function createEventAsync(
   url: string,
@@ -46,6 +47,7 @@ const CreateEventPage = () => {
   const isLarge = useMediaQuery(theme.breakpoints.up("xl"));
 
   const { snackbarToggle } = useContext(SnackbarContext);
+  const { account } = useContext(AuthContext);
 
   const router = useRouter();
 
@@ -64,7 +66,7 @@ const CreateEventPage = () => {
     handleSubmit,
     reset,
   } = useForm<EventFormInputs>({
-    defaultValues: { organizer_id: "20c2af7c-225e-4177-85b2-5bbb69ac0563" },
+    defaultValues: { organizer_id: account?.user.organizers?.id },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: yupResolver(eventValidationSchema) as any,
   });
@@ -75,7 +77,7 @@ const CreateEventPage = () => {
     error,
     trigger: createEvent,
   } = useSWRMutation(
-    "/api/organizers/20c2af7c-225e-4177-85b2-5bbb69ac0563/events",
+    `/api/organizers/${account?.user.organizers?.id}/events`,
     createEventAsync
   );
 

@@ -42,6 +42,7 @@ export interface EventItemProps {
   venue: string | null;
   date_time: Date;
   onDelete: (id: string) => void;
+  onClick: (id: string) => void;
 }
 
 export interface FilterToolbarProps {

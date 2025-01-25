@@ -63,6 +63,8 @@ const findAccountByEmail = async (email: string) => {
           id: true,
           user_type: true,
           name: true,
+          organizers: { select: { id: true } },
+          vendors: { select: { id: true } },
         },
       },
     },
