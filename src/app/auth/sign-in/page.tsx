@@ -132,14 +132,14 @@ export default function SignInPage() {
                 }}
               >
                 <Link
-                  href="/auth/reset-password"
+                  href="/auth/sign-up"
                   style={{
                     color: "black",
                     fontSize: "13px",
                     textDecoration: "none",
                   }}
                 >
-                  Forgot password?
+                  New account?
                 </Link>
                 <Button
                   type="submit"
