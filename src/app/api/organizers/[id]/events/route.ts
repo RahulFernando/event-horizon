@@ -29,7 +29,10 @@ export async function GET(
         venue: true,
       },
     });
-    return NextResponse.json(events, { status: 200 });
+    return NextResponse.json(
+      { count: events.length, items: [...events] },
+      { status: 200 }
+    );
   } catch (error) {
     return NextResponse.json({ erros: [error] }, { status: 500 });
   }

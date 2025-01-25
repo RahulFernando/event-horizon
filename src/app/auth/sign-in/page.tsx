@@ -62,10 +62,15 @@ export default function SignInPage() {
 
   useEffect(() => {
     if (authDetails) {
+      snackbarToggle(ActionKind.OPEN, {
+        open: true,
+        message: "Loged in successfully",
+        severity: "success",
+      });
       loginSuccess(authDetails);
       router.replace("/");
     }
-  }, [authDetails, loginSuccess, router]);
+  }, [authDetails, loginSuccess, router, snackbarToggle]);
 
   const submitHandler = async (data: SignInFormInputs) =>
     await signInUser(data);
@@ -76,7 +81,7 @@ export default function SignInPage() {
 
       <Box component="div">
         <Box p="0.8rem">
-          <AppTitle sx={{ color: "primary.dark" }} />
+          <AppTitle sx={{ color: "primary.dark", textDecoration: "none" }} />
 
           <Box sx={{ mt: "20%" }}>
             <form onSubmit={handleSubmit(submitHandler)}>

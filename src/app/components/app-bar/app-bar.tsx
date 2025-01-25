@@ -134,7 +134,7 @@ const AppBar = () => {
             {token && (
               <Button
                 LinkComponent={Link}
-                href="/events"
+                href="/my-events"
                 sx={{
                   my: 2,
                   color: "white",

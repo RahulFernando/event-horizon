@@ -24,6 +24,7 @@ import { ActionKind } from "@/app/contexts/snackbar/snackbar.types";
 import SnackBar from "@/app/components/snack-bar";
 import useSWR from "swr";
 import { useParams } from "next/navigation";
+import GigList from "../components/gig-list";
 
 async function updateEventAsync(
   url: string,
@@ -176,9 +177,12 @@ const EventDetailPage = () => {
                 onEventTypeChange={eventTypeChangeHandler}
               />
             </TabPanel>
+            <TabPanel value="vendor" sx={{ pl: 0 }}>
+              <GigList eventType={event?.event_type.name} />
+            </TabPanel>
           </TabContext>
         </Grid>
-        <Grid size={{ xs: 12, md: 4, xl: 6 }}>
+        <Grid size={{ xs: 12, md: 6, xl: 6 }}>
           <Box
             component="div"
             sx={{ width: "100%", height: "100%", position: "fixed" }}

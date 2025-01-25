@@ -96,7 +96,7 @@ const CreateEventPage = () => {
         message: "Event created successfully",
         severity: "success",
       });
-      router.push(`/events/${data.id}`);
+      router.push(`/my-events/${data.id}`);
     }
   }, [data, router, snackbarToggle]);
 
@@ -125,6 +125,7 @@ const CreateEventPage = () => {
                   key={tab.value}
                   {...tab}
                   sx={{ textTransform: "none", fontWeight: 600 }}
+                  disabled={tab.value === "vendor"}
                 />
               ))}
             </TabList>

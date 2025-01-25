@@ -40,7 +40,7 @@ async function fetchEvents(url: string) {
     throw new Error(error?.message || "Something went wrong");
   }
 
-  return (await response.json()) as Event[];
+  return (await response.json()) as { count: number; items: Event[] };
 }
 
 async function deleteEvent(url: string, { arg }: { arg: { id: string } }) {
@@ -76,7 +76,7 @@ export default function MyEventsPage() {
   );
 
   const {
-    data: events = [],
+    data: events = { count: 0, items: [] },
     isLoading,
     mutate,
   } = useSWR(
@@ -161,7 +161,7 @@ export default function MyEventsPage() {
           <Button
             variant="contained"
             LinkComponent={Link}
-            href="/events/create"
+            href="/my-events/create"
           >
             New Event
           </Button>
@@ -169,14 +169,14 @@ export default function MyEventsPage() {
         <Grid2 container spacing={2} mt={4}>
           {isLoading &&
             isMutating &&
-            events.map((event) => (
+            events.items.map((event) => (
               <Grid2 key={event.id} size={{ xs: 12 }}>
                 <EventItemSkeleton />
               </Grid2>
             ))}
           {!isLoading &&
             !isMutating &&
-            events.map((event) => (
+            events.items.map((event) => (
               <Grid2 key={event.id} size={{ xs: 12 }}>
                 <EventItem
                   id={event.id}
