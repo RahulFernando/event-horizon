@@ -156,8 +156,23 @@ model Gig {
   created_by   String
   updated_at   DateTime           @updatedAt
   updated_by   String
+  category     Category?          @relation(fields: [category_id], references: [id])
+  category_id  String
 
   @@map("gigs")
+}
+
+model Category {
+  id         String   @id @default(uuid())
+  name       String   @unique
+  img_url    String?
+  created_at DateTime @default(now())
+  created_by String
+  updated_at DateTime @updatedAt
+  updated_by String
+  gigs       Gig[]
+
+  @@map("categories")
 }
 
 model EventTypesOnGigs {

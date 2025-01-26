@@ -28,6 +28,7 @@ export async function GET(req: NextRequest) {
         title: true,
         description: true,
         location: true,
+        category: { select: { id: true, name: true } },
         blob_url: true,
         event_types: {
           select: { event_type: { select: { id: true, name: true } } },
@@ -60,6 +61,7 @@ export async function POST(req: Request) {
         description: body.description,
         location: body.location,
         vendor_id: body.vendor_id,
+        category_id: body.category_id,
         created_by: "unauthorized user",
         updated_by: "unauthorized user",
         event_types: {

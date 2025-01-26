@@ -81,12 +81,15 @@ async function seedData() {
 
   const eventTypes = await seedEventTypes();
 
+  const categories = await seedCategories();
+
   console.log({
     admin,
     organizer,
     janeSmithOrganizer,
     adminAccount,
     eventTypes,
+    categories,
   });
 }
 
@@ -124,6 +127,65 @@ async function seedEventTypes() {
   }
 
   return eventTypes;
+}
+
+async function seedCategories() {
+  const categories = [
+    {
+      name: "Catering",
+      img_url: "/images/categories/caterin.jpg",
+      created_by: "system",
+      updated_by: "system",
+    },
+    {
+      name: "Venue",
+      img_url: "/images/categories/venue.jpg",
+      created_by: "system",
+      updated_by: "system",
+    },
+    {
+      name: "Entertainment",
+      img_url: "/images/categories/entertainment.jpg",
+      created_by: "system",
+      updated_by: "system",
+    },
+    {
+      name: "Decoration",
+      img_url: "/images/categories/decoration.jpg",
+      created_by: "system",
+      updated_by: "system",
+    },
+    {
+      name: "Photography & Videography",
+      img_url: "/images/categories/photography.jpg",
+      created_by: "system",
+      updated_by: "system",
+    },
+    {
+      name: "Rentals",
+      img_url: "/images/categories/rental.jpg",
+      created_by: "system",
+      updated_by: "system",
+    },
+  ];
+
+  for (const { name, img_url, created_by, updated_by } of categories) {
+    await prisma.category.upsert({
+      where: { name, img_url, created_by, updated_by },
+      update: {
+        updated_by,
+        updated_at: new Date(),
+      },
+      create: {
+        name,
+        img_url,
+        created_by,
+        updated_by,
+      },
+    });
+  }
+
+  return categories;
 }
 
 seedData()

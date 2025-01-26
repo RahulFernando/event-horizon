@@ -16,6 +16,7 @@ export async function GET(
         blob_url: true,
         title: true,
         description: true,
+        category: { select: { id: true, name: true } },
         event_types: {
           select: { event_type: { select: { id: true, name: true } } },
         },
@@ -42,18 +43,19 @@ export async function PUT(
       { abortEarly: true }
     );
 
-    const { event_type_ids, title, description, location } = body;
+    const { event_type_ids, title, description, location, category_id } = body;
 
     await updateEventTypes(gigId, event_type_ids);
 
     const gig = await prisma.gig.update({
       where: { vendor_id: id, id: gigId },
-      data: { vendor_id: id, title, description, location },
+      data: { vendor_id: id, title, description, location, category_id },
       select: {
         id: true,
         blob_url: true,
         title: true,
         description: true,
+        category: { select: { id: true, name: true } },
         event_types: {
           select: { event_type: { select: { id: true, name: true } } },
         },

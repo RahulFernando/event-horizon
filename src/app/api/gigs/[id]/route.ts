@@ -17,6 +17,7 @@ export async function GET(
         blob_url: true,
         title: true,
         description: true,
+        category: { select: { id: true, name: true } },
         event_types: {
           select: { event_type: { select: { id: true, name: true } } },
         },

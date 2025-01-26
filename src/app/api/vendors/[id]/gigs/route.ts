@@ -17,6 +17,7 @@ export async function GET(
         blob_url: true,
         title: true,
         description: true,
+        category: { select: { id: true, name: true } },
         event_types: {
           select: { event_type: { select: { id: true, name: true } } },
         },
@@ -53,6 +54,7 @@ export async function POST(
         title: body.title,
         description: body.description,
         location: body.location,
+        category_id: body.category_id,
         vendor_id: id,
         created_by: "unauthorized user",
         updated_by: "unauthorized user",
@@ -69,6 +71,7 @@ export async function POST(
         title: true,
         description: true,
         location: true,
+        category_id: true,
         blob_url: true,
         event_types: {
           select: { event_type: { select: { id: true, name: true } } },

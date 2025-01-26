@@ -1,4 +1,3 @@
-export interface CategoryCardProps {
-  title: string;
-  src: string;
-}
+import { Category } from "@prisma/client";
+
+export type CategoryCardProps = Category;

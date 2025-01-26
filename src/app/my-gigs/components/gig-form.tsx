@@ -17,6 +17,8 @@ const GigForm: React.FC<GigFormProps> = ({
   submitBtnLabel = "Submit",
   isMutating,
   eventTypes,
+  categories,
+  categoryId,
   onEventTypesChange,
   register,
   handleSubmit,
@@ -51,8 +53,25 @@ const GigForm: React.FC<GigFormProps> = ({
             size="small"
             label="Location"
             required
-            {...register("location", { required: "Location" })}
+            {...register("location", { required: "Location is required" })}
           />
+        </Grid2>
+        <Grid2 size={{ xs: 12 }}>
+          <FormControl size="small" fullWidth required>
+            <InputLabel id="categories">Gig Category</InputLabel>
+            <Select
+              labelId="categories"
+              input={<OutlinedInput label="Gig Category" />}
+              {...register("category_id", { required: "Category is required" })}
+              value={categoryId}
+            >
+              {categories.map(({ id, name }) => (
+                <MenuItem key={id} value={id}>
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Grid2>
         <Grid2 size={{ xs: 12 }}>
           <FormControl size="small" fullWidth>

@@ -1,5 +1,10 @@
 import { SelectChangeEvent } from "@mui/material";
-import { EventType, PricingModelType, PricingTier } from "@prisma/client";
+import {
+  Category,
+  EventType,
+  PricingModelType,
+  PricingTier,
+} from "@prisma/client";
 import {
   UseFormHandleSubmit,
   UseFormRegister,
@@ -11,6 +16,7 @@ export interface GigFormInputs {
   title: string;
   description?: string;
   location: string;
+  category_id: string;
   event_type_ids: string[];
 }
 
@@ -19,6 +25,8 @@ export interface GigFormProps {
   submitBtnLabel?: string;
   isMutating?: boolean;
   eventTypes: EventType[];
+  categories: Category[];
+  categoryId: string;
   register: UseFormRegister<GigFormInputs>;
   onEventTypesChange: (event: SelectChangeEvent<string[]>) => void;
   handleSubmit: UseFormHandleSubmit<GigFormInputs, undefined>;
