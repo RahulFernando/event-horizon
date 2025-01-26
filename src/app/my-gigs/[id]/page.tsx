@@ -14,7 +14,7 @@ import { SnackbarContext } from "@/app/contexts/snackbar/snackbar-context";
 import { ActionKind } from "@/app/contexts/snackbar/snackbar.types";
 import useSWR from "swr";
 import { EventType, PricingModelType } from "@prisma/client";
-import { IGig, IPricing } from "@/app/types";
+import { ICategories, IGig, IPricing } from "@/app/types";
 import SnackBar from "@/app/components/snack-bar";
 import ModelSelector from "../components/pricing-models/pricing-model-selector";
 import withPricingModel from "../components/hoc/with-pricing-model";
@@ -70,6 +70,17 @@ async function fetchPricingModel(url: string) {
   return (await response.json()) as IPricing;
 }
 
+async function fetchCategories(url: string) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error?.message || "Something went wrong");
+  }
+
+  return (await response.json()) as ICategories;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const PricingComponent = withPricingModel(() => <div />);
 
@@ -93,6 +104,7 @@ const GigPage = () => {
         title: " ",
         description: " ",
         location: " ",
+        category_id: "",
         event_type_ids: [],
       },
     });
@@ -101,6 +113,7 @@ const GigPage = () => {
   const description = watch("description");
   const location = watch("location");
   const eventTypeIds = watch("event_type_ids");
+  const categoryId = watch("category_id");
 
   const {
     isMutating,
@@ -118,6 +131,11 @@ const GigPage = () => {
     fetchPricingModel
   );
 
+  const { data: categories = { count: 0, items: [] } } = useSWR(
+    "/api/categories",
+    fetchCategories
+  );
+
   useEffect(() => {
     if (gig) {
       const eventTypes = gig.event_types.map((type) => type.event_type.id);
@@ -125,6 +143,7 @@ const GigPage = () => {
         title: gig.title,
         description: gig.description ?? "",
         location: gig.location,
+        category_id: gig.category.id,
         event_type_ids: eventTypes,
       });
     }
@@ -197,11 +216,13 @@ const GigPage = () => {
           </TabList>
           <TabPanel value="basic" sx={{ pl: 0, pr: 0 }}>
             <Grid2 container spacing={2}>
-              <Grid2 size={{ xs: 12, md: 7 }}>
+              <Grid2 container size={{ xs: 12, md: 7 }}>
                 <GigForm
                   eventTypes={eventTypes}
                   isMutating={isMutating}
                   eventTypeIds={eventTypeIds}
+                  categories={categories.items}
+                  categoryId={categoryId}
                   onEventTypesChange={eventTypesChangeHandler}
                   register={register}
                   handleSubmit={handleSubmit}
@@ -221,7 +242,7 @@ const GigPage = () => {
                       ? selectedEventTypes
                       : GIG_PREVIEW["event_types"]
                   }
-                  md={3}
+                  md={2}
                 />
               </Grid2>
             </Grid2>

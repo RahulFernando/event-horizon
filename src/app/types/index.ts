@@ -1,4 +1,4 @@
-import { Gig, PricingModelType } from "@prisma/client";
+import { Category, Gig, PricingModelType } from "@prisma/client";
 
 export interface IEventType {
   id: string;
@@ -28,6 +28,7 @@ export interface IEventTypesOnGig {
 }
 
 export interface IGig extends Gig {
+  category: Category;
   event_types: IEventTypesOnGig[];
 }
 
@@ -56,4 +57,9 @@ export interface IPricing {
 export interface IVendorGigs {
   count: number;
   items: IGig[];
+}
+
+export interface ICategories {
+  count: number;
+  items: Category[];
 }

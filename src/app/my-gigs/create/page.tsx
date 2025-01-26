@@ -16,6 +16,7 @@ import useSWR from "swr";
 import { EventType } from "@prisma/client";
 import SnackBar from "@/app/components/snack-bar";
 import { AuthContext } from "@/app/contexts/auth/auth-context";
+import { ICategories } from "@/app/types";
 
 async function createGigAsync(
   url: string,
@@ -45,6 +46,17 @@ async function fetchEventTypes(url: string) {
   return (await response.json()) as EventType[];
 }
 
+async function fetchCategories(url: string) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error?.message || "Something went wrong");
+  }
+
+  return (await response.json()) as ICategories;
+}
+
 const CreateGigPage = () => {
   const { snackbarToggle } = useContext(SnackbarContext);
   const { account } = useContext(AuthContext);
@@ -57,6 +69,7 @@ const CreateGigPage = () => {
         title: "",
         description: "",
         location: "",
+        category_id: "",
         event_type_ids: [],
       },
     });
@@ -65,6 +78,7 @@ const CreateGigPage = () => {
   const description = watch("description");
   const location = watch("location");
   const eventTypeIds = watch("event_type_ids");
+  const categoryId = watch("category_id");
 
   const {
     isMutating,
@@ -74,6 +88,11 @@ const CreateGigPage = () => {
   } = useSWRMutation("/api/gigs", createGigAsync);
 
   const { data: eventTypes = [] } = useSWR("/api/event-types", fetchEventTypes);
+
+  const { data: categories = { count: 0, items: [] } } = useSWR(
+    "/api/categories",
+    fetchCategories
+  );
 
   useEffect(() => {
     if (error) {
@@ -134,6 +153,8 @@ const CreateGigPage = () => {
                   eventTypes={eventTypes}
                   isMutating={isMutating}
                   eventTypeIds={eventTypeIds}
+                  categories={categories.items}
+                  categoryId={categoryId}
                   onEventTypesChange={eventTypesChangeHandler}
                   register={register}
                   handleSubmit={handleSubmit}
