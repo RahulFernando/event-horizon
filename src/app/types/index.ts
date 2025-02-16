@@ -1,4 +1,5 @@
-import { Category, Gig, PricingModelType } from "@prisma/client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Category, Gig, Job, PricingModelType } from "@prisma/client";
 
 export interface IEventType {
   id: string;
@@ -30,6 +31,7 @@ export interface IEventTypesOnGig {
 export interface IGig extends Gig {
   category: Category;
   event_types: IEventTypesOnGig[];
+  vendor: IVendor;
 }
 
 export interface IPricing {
@@ -62,4 +64,19 @@ export interface IVendorGigs {
 export interface ICategories {
   count: number;
   items: Category[];
+}
+
+export interface IJob extends Job {
+  gig: IGig;
+  pricingTier?: {
+    id: string;
+    level: string;
+    description: string;
+    price: number;
+  };
+}
+
+export interface DialogInfo {
+  type: string;
+  data?: any;
 }

@@ -20,6 +20,7 @@ import { useParams } from "next/navigation";
 import { SnackbarContext } from "@/app/contexts/snackbar/snackbar-context";
 import { ActionKind } from "@/app/contexts/snackbar/snackbar.types";
 import SnackBar from "@/app/components/snack-bar";
+import { getColorShade } from "@/lib/utils/get-color-shade";
 
 async function fetchPrice(url: string) {
   const response = await fetch(url);
@@ -78,18 +79,13 @@ const TieredPricingForm = () => {
     fetchPrice
   );
 
-  const getColorShade = (noOfIterations: number) => {
-    const shade = baseShade + noOfIterations * 100;
-    return shade <= 900 ? shade : baseShade;
-  };
-
   useEffect(() => {
     if (pricingModel && pricingModel.tiered) {
       const { pricing_tiers } = pricingModel.tiered;
       setTiers(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         pricing_tiers.map(({ id, ...tier }, index) => {
-          const shade = getColorShade(index);
+          const shade = getColorShade(index, baseShade);
           return {
             index,
             color: indigo[shade as keyof typeof indigo],
@@ -122,7 +118,7 @@ const TieredPricingForm = () => {
 
   const addNewTier = () => {
     const last = tiers[tiers.length - 1];
-    const shade = getColorShade(tiers.length);
+    const shade = getColorShade(tiers.length, baseShade);
     setTiers((prev) => [
       ...prev,
       {

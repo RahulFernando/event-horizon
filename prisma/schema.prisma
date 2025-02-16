@@ -117,7 +117,8 @@ model Event {
   updated_at    DateTime  @updatedAt
   updated_by    String
   event_type    EventType @relation(fields: [event_type_id], references: [id])
-  orgernizer    Organizer @relation(fields: [organizer_id], references: [id])
+  organizer     Organizer @relation(fields: [organizer_id], references: [id])
+  job           Job[]
 
   @@map("events")
 }
@@ -158,6 +159,7 @@ model Gig {
   updated_by   String
   category     Category?          @relation(fields: [category_id], references: [id])
   category_id  String
+  jobs         Job[]
 
   @@map("gigs")
 }
@@ -242,7 +244,26 @@ model PricingTier {
   price       Float
   tiered      Tiered @relation(fields: [tiered_id], references: [id], onDelete: Cascade)
   tiered_id   String
+  jobs        Job[]
 
   @@id([id, tiered_id])
   @@map("pricing_tiers")
+}
+
+model Job {
+  id                     String       @default(uuid())
+  gig                    Gig          @relation(fields: [gig_id], references: [id])
+  event                  Event        @relation(fields: [event_id], references: [id])
+  gig_id                 String       @unique
+  event_id               String       @unique
+  pricingTier            PricingTier? @relation(fields: [pricing_tier_id, pricing_tier_tiered_id], references: [id, tiered_id])
+  pricing_tier_tiered_id String?
+  pricing_tier_id        String?
+  created_at             DateTime     @default(now())
+  created_by             String
+  updated_at             DateTime     @updatedAt
+  updated_by             String
+
+  @@id([id])
+  @@map("jobs")
 }
