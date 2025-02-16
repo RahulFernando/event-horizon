@@ -10,7 +10,7 @@ import {
   UseFormRegister,
   UseFormReset,
 } from "react-hook-form";
-import { IPricing } from "../types";
+import { IPricing } from "../../types";
 
 export interface GigFormInputs {
   title: string;

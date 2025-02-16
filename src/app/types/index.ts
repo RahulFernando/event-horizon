@@ -77,6 +77,6 @@ export interface IJob extends Job {
 }
 
 export interface DialogInfo {
-  type: string;
+  type?: string;
   data?: any;
 }

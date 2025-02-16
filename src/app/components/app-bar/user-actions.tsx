@@ -11,8 +11,8 @@ const UserActions = () => {
     if (account) {
       if (account.user.vendors) {
         return {
-          href: "/my-gigs",
-          label: "My Gigs",
+          href: "/vendor/dashboard",
+          label: "Dashboard",
         };
       }
       if (account.user.organizers) {
