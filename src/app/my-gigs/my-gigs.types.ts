@@ -72,9 +72,15 @@ export interface IPricingTier extends Pick<PricingTier, "level"> {
 
 export interface PricingTiersProps {
   tiers?: TierCardProps[];
+  selectedTierId?: string;
+  onSelect?: (id: string, event: React.MouseEvent) => void;
 }
 
-export type TierCardProps = Omit<ITier, "index">;
+export interface TierCardProps extends Omit<ITier, "index"> {
+  id?: string;
+  selectedTierId?: string;
+  onSelect?: (id: string, event: React.MouseEvent) => void;
+}
 
 export interface FixedPriceFormInputs {
   price: number;

@@ -1,35 +1,72 @@
+"use client";
 import React from "react";
 import {
-  Button,
+  Box,
+  // Button,
   Card,
-  CardActions,
+  // CardActions,
   CardHeader,
   CardMedia,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+// import AddIcon from "@mui/icons-material/Add";
 import { GigCardProps } from "../events.type";
+// import useSWR from "swr";
+// import { IPricing } from "@/app/types";
 
-const GigCard: React.FC<GigCardProps> = ({ title, vendor }) => {
+// async function fetchPricing(url: string) {
+//   const response = await fetch(url);
+
+//   if (!response.ok) {
+//     const error = await response.json();
+//     throw new Error(error?.message || "Something went wrong");
+//   }
+
+//   return (await response.json()) as IPricing;
+// }
+
+const GigCard: React.FC<GigCardProps> = ({
+  id,
+  title,
+  vendor,
+  // onAddClick,
+  onClick,
+}) => {
+  // const { data: pricing } = useSWR(
+  //   id ? `/api/gigs/${id}/pricings` : null,
+  //   fetchPricing
+  // );
+
+  // const isDisable = pricing && pricing.tiered?.id ? true : false;
+
   return (
-    <Card variant="elevation" elevation={2}>
-      <CardHeader title={title} subheader={vendor.user.name} />
-      <CardMedia
-        component="img"
-        height={100}
-        image="/images/no-picture-available.jpg"
-        alt="gig-image"
-      />
-      <CardActions
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "flex-end",
-          alignItems: "center",
-        }}
-      >
-        <Button startIcon={<AddIcon />}>Add</Button>
-      </CardActions>
-    </Card>
+    <Box component="div" onClick={onClick.bind(null, id)}>
+      <Card variant="elevation" elevation={2} sx={{ cursor: "pointer" }}>
+        <CardHeader title={title} subheader={vendor.user.name} />
+        <CardMedia
+          component="img"
+          height={120}
+          image="/images/no-picture-available.jpg"
+          alt="gig-image"
+        />
+        {/* <CardActions
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          <Button
+            disabled={isDisable}
+            startIcon={<AddIcon />}
+            onClick={onAddClick.bind(null, id)}
+          >
+            {!isDisable && "Add"}
+            {isDisable && "Select pricing tier"}
+          </Button>
+        </CardActions> */}
+      </Card>
+    </Box>
   );
 };
 

@@ -56,6 +56,8 @@ export interface FilterToolbarProps {
 
 export interface GigListProps {
   eventType?: string;
+  onClick: (id: string, event: React.MouseEvent) => void;
+  onAddClick: (id: string, event: React.MouseEvent) => void;
 }
 
 export interface IGig {
@@ -68,4 +70,31 @@ export interface IGig {
   vendor: IVendor;
 }
 
-export type GigCardProps = IGig;
+export interface GigCardProps extends IGig {
+  onClick: (id: string, event: React.MouseEvent) => void;
+  onAddClick: (id: string, event: React.MouseEvent) => void;
+}
+
+export interface GigDetailsProps {
+  id: string | undefined;
+  selectedTierId?: string;
+  onTierSelect?: (id: string, event: React.MouseEvent) => void;
+}
+
+export interface BasicDetailsProps {
+  id?: string;
+  title?: string;
+  description?: string | null;
+  location?: string;
+}
+
+export interface PricingDetailsProps extends GigDetailsProps {
+  selectedTierId?: string;
+}
+
+export interface JobFormProps {
+  gig_id: string;
+  event_id: string;
+  pricing_tier_id?: string;
+  pricing_tier_tiered_id?: string;
+}

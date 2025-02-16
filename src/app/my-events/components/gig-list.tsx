@@ -16,7 +16,11 @@ async function fetchGigs(url: string) {
   return (await response.json()) as { count: number; items: IGig[] };
 }
 
-const GigList: React.FC<GigListProps> = ({ eventType }) => {
+const GigList: React.FC<GigListProps> = ({
+  eventType,
+  onClick,
+  onAddClick,
+}) => {
   const searchParams = new URLSearchParams({ eventType: eventType ?? "" });
 
   const { data: gigs = { count: 0, items: [] } } = useSWR(
@@ -28,7 +32,7 @@ const GigList: React.FC<GigListProps> = ({ eventType }) => {
     <Grid container spacing={2}>
       {gigs.items.map((gig) => (
         <Grid key={gig.id} size={{ xs: 12, md: 4, xl: 3 }}>
-          <GigCard {...gig} />
+          <GigCard {...gig} onClick={onClick} onAddClick={onAddClick} />
         </Grid>
       ))}
     </Grid>

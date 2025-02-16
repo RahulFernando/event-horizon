@@ -19,10 +19,15 @@ const Dialog: React.FC<DialogProps> = ({
   open,
   title,
   content,
+  confirmButtonLabel = "Ok, Delete",
+  footerVisible = true,
+  maxWidth = "md",
   onClose,
   onConfirm,
 }) => (
   <MuiDialog
+    maxWidth={maxWidth}
+    fullWidth
     open={open}
     TransitionComponent={Transition}
     keepMounted
@@ -39,14 +44,16 @@ const Dialog: React.FC<DialogProps> = ({
         content
       )}
     </DialogContent>
-    <DialogActions>
-      <Button variant="outlined" onClick={onClose}>
-        Cancel
-      </Button>
-      <Button variant="contained" onClick={onConfirm}>
-        Ok, Delete
-      </Button>
-    </DialogActions>
+    {footerVisible && (
+      <DialogActions>
+        <Button variant="outlined" onClick={onClose}>
+          Cancel
+        </Button>
+        <Button variant="contained" onClick={onConfirm}>
+          {confirmButtonLabel}
+        </Button>
+      </DialogActions>
+    )}
   </MuiDialog>
 );
 
