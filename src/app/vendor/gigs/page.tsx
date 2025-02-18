@@ -14,6 +14,7 @@ import Dialog from "../../components/dialog";
 import { SnackbarContext } from "../../contexts/snackbar/snackbar-context";
 import { ActionKind } from "../../contexts/snackbar/snackbar.types";
 import Navigation from "../dashboard/components/navigation";
+import { AuthContext } from "@/app/contexts/auth/auth-context";
 
 async function fetchGigs(url: string) {
   const response = await fetch(url);
@@ -41,6 +42,7 @@ const MyGigsPage = () => {
   const router = useRouter();
 
   const { snackbarToggle } = useContext(SnackbarContext);
+  const { account } = useContext(AuthContext);
 
   const [selectedGig, setSelectedGig] = useState<
     | {
@@ -50,14 +52,13 @@ const MyGigsPage = () => {
     | undefined
   >();
 
+  const { vendors } = account?.user ?? { vendors: { id: "" } };
+
   const {
     isLoading,
     data: gigs = { count: 0, items: [] },
     mutate,
-  } = useSWR(
-    `/api/vendors/pf3b75c5-7765-4c45-8c23-8066e7326100/gigs`,
-    fetchGigs
-  );
+  } = useSWR(`/api/vendors/${vendors?.id}/gigs`, fetchGigs);
 
   const {
     isMutating,
