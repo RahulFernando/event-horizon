@@ -16,8 +16,6 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log(body);
-
     const newVendor = await prisma.vendor.create({
       data: {
         ...body,

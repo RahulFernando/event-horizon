@@ -1,12 +1,12 @@
 import React from "react";
-import PricingTiers from "@/app/my-gigs/components/pricing-tiers";
+import PricingTiers from "@/app/vendor/gigs/components/pricing-tiers";
 import { getColorShade } from "@/lib/utils/get-color-shade";
 import { indigo } from "@mui/material/colors";
 import { Grid2, Typography } from "@mui/material";
 import { IPricing } from "@/app/types";
 import useSWR from "swr";
 import { PricingDetailsProps } from "../../events.type";
-import { ITier } from "@/app/my-gigs/my-gigs.types";
+import { ITier } from "@/app/vendor/gigs/my-gigs.types";
 
 async function fetchPricing(url: string) {
   const response = await fetch(url);

@@ -1,18 +1,20 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
-import AppBar from "../components/app-bar";
-import { Button, Container, Grid2, Stack } from "@mui/material";
+import AppBar from "../../components/app-bar";
+import { Box, Button, Container, Grid2, Stack } from "@mui/material";
 import Link from "next/link";
-import { IVendorGigs } from "../types";
+import { IVendorGigs } from "../../types";
 import useSWR from "swr";
 import useMutation from "swr/mutation";
 import GigPreview from "./components/gig-preview";
 import { useRouter } from "next/navigation";
 import GigItemSkeleton from "./components/gig-item-skeleton";
-import useDialog from "../hooks/use-dialog";
-import Dialog from "../components/dialog";
-import { SnackbarContext } from "../contexts/snackbar/snackbar-context";
-import { ActionKind } from "../contexts/snackbar/snackbar.types";
+import useDialog from "../../hooks/use-dialog";
+import Dialog from "../../components/dialog";
+import { SnackbarContext } from "../../contexts/snackbar/snackbar-context";
+import { ActionKind } from "../../contexts/snackbar/snackbar.types";
+import Navigation from "../dashboard/components/navigation";
+import { AuthContext } from "@/app/contexts/auth/auth-context";
 
 async function fetchGigs(url: string) {
   const response = await fetch(url);
@@ -40,6 +42,7 @@ const MyGigsPage = () => {
   const router = useRouter();
 
   const { snackbarToggle } = useContext(SnackbarContext);
+  const { account } = useContext(AuthContext);
 
   const [selectedGig, setSelectedGig] = useState<
     | {
@@ -49,14 +52,13 @@ const MyGigsPage = () => {
     | undefined
   >();
 
+  const { vendors } = account?.user ?? { vendors: { id: "" } };
+
   const {
     isLoading,
     data: gigs = { count: 0, items: [] },
     mutate,
-  } = useSWR(
-    `/api/vendors/pf3b75c5-7765-4c45-8c23-8066e7326100/gigs`,
-    fetchGigs
-  );
+  } = useSWR(`/api/vendors/${vendors?.id}/gigs`, fetchGigs);
 
   const {
     isMutating,
@@ -107,7 +109,7 @@ const MyGigsPage = () => {
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.stopPropagation();
-    clickOpenHandler();
+    clickOpenHandler({});
     setSelectedGig({ ...params });
   };
 
@@ -132,39 +134,51 @@ const MyGigsPage = () => {
       <Container maxWidth={false} sx={{ mt: 12 }}>
         <Stack
           direction="row"
-          spacing={2}
+          spacing={4}
           sx={{
-            justifyContent: "flex-end",
-            alignItems: "center",
+            justifyContent: "flex-start",
+            alignItems: "flex-start",
           }}
         >
-          {/* <FilterToolbar
+          <Navigation />
+          <Box sx={{ flexGrow: 1 }}>
+            <Stack
+              direction="row"
+              spacing={2}
+              sx={{
+                justifyContent: "flex-end",
+                alignItems: "center",
+              }}
+            >
+              {/* <FilterToolbar
             {...filters}
             onSearchTermChange={searchTermChangeHandler}
             onDateTimeChange={dateTimeChangeHandler}
           /> */}
-          <Button
-            variant="contained"
-            LinkComponent={Link}
-            href="/my-gigs/create"
-          >
-            New Gig
-          </Button>
+              <Button
+                variant="contained"
+                LinkComponent={Link}
+                href="/my-gigs/create"
+              >
+                New Gig
+              </Button>
+            </Stack>
+            <Grid2 container spacing={2} mt={4}>
+              {isLoading &&
+                [3, 4, 5, 6].map((gig) => <GigItemSkeleton key={gig} />)}
+              {!isLoading &&
+                myGigs.map((gig) => (
+                  <Grid2 key={gig.id} size={{ xs: 12, md: 4, lg: 3 }}>
+                    <GigPreview
+                      {...gig}
+                      onClick={clickHandler}
+                      onDeleteClick={deleteClickHandler}
+                    />
+                  </Grid2>
+                ))}
+            </Grid2>
+          </Box>
         </Stack>
-        <Grid2 container spacing={2} mt={4}>
-          {isLoading &&
-            [3, 4, 5, 6].map((gig) => <GigItemSkeleton key={gig} />)}
-          {!isLoading &&
-            myGigs.map((gig) => (
-              <Grid2 key={gig.id} size={{ xs: 12, md: 4, lg: 3 }}>
-                <GigPreview
-                  {...gig}
-                  onClick={clickHandler}
-                  onDeleteClick={deleteClickHandler}
-                />
-              </Grid2>
-            ))}
-        </Grid2>
       </Container>
 
       <Dialog

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Category, Gig, Job, PricingModelType } from "@prisma/client";
+import { Category, Event, Gig, Job, PricingModelType } from "@prisma/client";
 
 export interface IEventType {
   id: string;
@@ -77,6 +77,11 @@ export interface IJob extends Job {
 }
 
 export interface DialogInfo {
-  type: string;
+  type?: string;
   data?: any;
+}
+
+export interface IVendorJob extends Job {
+  gig: IGig;
+  event: Event;
 }

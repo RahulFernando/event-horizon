@@ -259,6 +259,7 @@ model Job {
   pricingTier            PricingTier? @relation(fields: [pricing_tier_id, pricing_tier_tiered_id], references: [id, tiered_id])
   pricing_tier_tiered_id String?
   pricing_tier_id        String?
+  status                 JobStatus    @default(PENDING)
   created_at             DateTime     @default(now())
   created_by             String
   updated_at             DateTime     @updatedAt
@@ -266,4 +267,12 @@ model Job {
 
   @@id([id])
   @@map("jobs")
+}
+
+enum JobStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  ACTIVE
+  COMPLETED
 }

@@ -4,6 +4,7 @@ export interface DialogProps {
   content?: string | React.ReactNode;
   confirmButtonLabel?: string;
   footerVisible?: boolean;
+  footer?: React.ReactNode;
   maxWidth?: "xs" | "sm" | "md" | "lg" | "xl";
   onClose: () => void;
   onConfirm: () => void;
