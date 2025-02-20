@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { jobValidationSchema } from "@/lib/validations/events/job-validation-schema";
+import { PricingTier } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { ValidationError } from "yup";
 
@@ -46,10 +47,15 @@ export async function POST(
     await jobValidationSchema.validate(body, { abortEarly: true });
 
     const { pricing_tier_id } = body;
+    let pricingTier: PricingTier | null = null;
 
-    const pricingTier = await prisma.pricingTier.findFirst({
-      where: { id: pricing_tier_id },
-    });
+    if (pricing_tier_id) {
+      pricingTier = await prisma.pricingTier.findFirst({
+        where: { id: pricing_tier_id },
+      });
+    }
+
+    console.log(pricingTier);
 
     const newJob = await prisma.job.create({
       data: {

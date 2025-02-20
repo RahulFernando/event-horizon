@@ -27,8 +27,6 @@ const JobDetail: React.FC<JobDetailProps> = ({ id }) => {
   const tabChangeHandler = (event: React.SyntheticEvent, newValue: string) =>
     setActiveTab(newValue as ITab);
 
-  console.log(job?.gig);
-
   return (
     <Box p="0.8rem">
       <TabContext value={activeTab}>
@@ -54,7 +52,7 @@ const JobDetail: React.FC<JobDetailProps> = ({ id }) => {
             <GigDetail
               {...job?.gig}
               pricingTier={job?.pricingTier}
-              pricingModel={job?.pricingModel}
+              pricingModel={job?.priceModel}
             />
           )}
         </TabPanel>
