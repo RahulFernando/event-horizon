@@ -22,6 +22,7 @@ const Dialog: React.FC<DialogProps> = ({
   confirmButtonLabel = "Ok, Delete",
   footerVisible = true,
   maxWidth = "md",
+  footer,
   onClose,
   onConfirm,
 }) => (
@@ -44,7 +45,7 @@ const Dialog: React.FC<DialogProps> = ({
         content
       )}
     </DialogContent>
-    {footerVisible && (
+    {footerVisible && !footer && (
       <DialogActions>
         <Button variant="outlined" onClick={onClose}>
           Cancel
@@ -54,6 +55,7 @@ const Dialog: React.FC<DialogProps> = ({
         </Button>
       </DialogActions>
     )}
+    {footer}
   </MuiDialog>
 );
 

@@ -3,7 +3,13 @@ import { getChipColor } from "../utils/get-chip-color";
 import { JobCardProps } from "../jobs.types";
 import { toTitleCase } from "@/lib/utils/to-title-case";
 
-const JobCard: React.FC<JobCardProps> = ({ eventName, venue, status }) => {
+const JobCard: React.FC<JobCardProps> = ({
+  id,
+  eventName,
+  venue,
+  status,
+  onClick,
+}) => {
   return (
     <Paper elevation={3} sx={{ p: 2 }}>
       <Stack
@@ -34,7 +40,11 @@ const JobCard: React.FC<JobCardProps> = ({ eventName, venue, status }) => {
             />
           </Stack>
           <Stack direction="row" spacing={0} sx={{ alignItems: "center" }}>
-            <Button variant="outlined" size="small">
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={onClick.bind(null, id)}
+            >
               View
             </Button>
           </Stack>
