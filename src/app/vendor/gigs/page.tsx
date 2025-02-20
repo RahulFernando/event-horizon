@@ -102,7 +102,7 @@ const MyGigsPage = () => {
   const { open, clickCloseHandler, clickOpenHandler } = useDialog();
 
   const clickHandler = (id: string) =>
-    router.push(`/my-gigs/${id}?activeTab=basic`);
+    router.push(`/vendor/gigs/${id}?activeTab=basic`);
 
   const deleteClickHandler = (
     params: { id: string; title: string },
@@ -158,7 +158,7 @@ const MyGigsPage = () => {
               <Button
                 variant="contained"
                 LinkComponent={Link}
-                href="/my-gigs/create"
+                href="/vendor/gigs/create"
               >
                 New Gig
               </Button>

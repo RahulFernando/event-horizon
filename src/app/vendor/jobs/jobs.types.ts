@@ -44,7 +44,7 @@ export interface IVendorJob extends Job {
     description: string;
     price: number;
   };
-  pricingModel: FixedRate | HourlyRate | null;
+  priceModel: FixedRate | HourlyRate | null;
 }
 
 export interface DialogFooterProps {
