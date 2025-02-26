@@ -51,6 +51,8 @@ const SelectedGigs: React.FC<SelectedGigsProps> = () => {
     fetchJobs
   );
 
+  console.log(jobs);
+
   const {
     trigger: deleteJobTrigger,
     isMutating: isDeleting,
@@ -113,12 +115,13 @@ const SelectedGigs: React.FC<SelectedGigsProps> = () => {
         <CardContent>
           {jobs.length === 0 && <NoData />}
           <List>
-            {jobs.map(({ id, gig }) => (
+            {jobs.map(({ id, gig, status }) => (
               <SelectedItem
                 key={id}
                 id={id}
                 title={gig.title}
                 name={gig.vendor.user.name}
+                status={status}
                 onDelete={deleteJobHandler}
               />
             ))}

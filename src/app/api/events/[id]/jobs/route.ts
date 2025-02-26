@@ -27,6 +27,7 @@ export async function GET(
         pricingTier: {
           select: { id: true, level: true, description: true, price: true },
         },
+        status: true,
       },
     });
 
