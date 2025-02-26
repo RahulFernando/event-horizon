@@ -88,17 +88,18 @@ model Organizer {
 }
 
 model Vendor {
-  id                             String   @id @default(uuid())
-  business_registration          String?  @unique
-  taxpayer_identification_number String?  @unique
-  user_id                        String   @unique
+  id                             String     @id @default(uuid())
+  business_registration          String?    @unique
+  taxpayer_identification_number String?    @unique
+  user_id                        String     @unique
   container                      String?
-  created_at                     DateTime @default(now())
+  created_at                     DateTime   @default(now())
   created_by                     String
-  updated_at                     DateTime @updatedAt
+  updated_at                     DateTime   @updatedAt
   updated_by                     String
-  user                           User     @relation(fields: [user_id], references: [id])
+  user                           User       @relation(fields: [user_id], references: [id])
   gigs                           Gig[]
+  calendar                       Calendar[]
 
   @@index([business_registration, taxpayer_identification_number])
   @@map("vendors")
@@ -264,6 +265,7 @@ model Job {
   created_by             String
   updated_at             DateTime     @updatedAt
   updated_by             String
+  calendar               Calendar[]
 
   @@id([id])
   @@map("jobs")
@@ -275,4 +277,20 @@ enum JobStatus {
   REJECTED
   ACTIVE
   COMPLETED
+}
+
+model Calendar {
+  id         String   @id @default(uuid())
+  vendor_id  String
+  job_id     String
+  date_time  DateTime
+  created_at DateTime @default(now())
+  created_by String
+  updated_at DateTime @updatedAt
+  updated_by String
+
+  vendor Vendor @relation(fields: [vendor_id], references: [id])
+  job    Job    @relation(fields: [job_id], references: [id])
+
+  @@map("calendars")
 }
