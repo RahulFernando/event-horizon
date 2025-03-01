@@ -52,3 +52,7 @@ export interface DialogFooterProps {
   onSubmit: (value: JobStatus) => void;
   onClose: () => void;
 }
+
+export interface ProgressSectionProps {
+  onCalendarOpen: () => void;
+}
