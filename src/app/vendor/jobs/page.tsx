@@ -1,6 +1,6 @@
 "use client";
 import AppBar from "@/app/components/app-bar";
-import { Box, Container, Stack } from "@mui/material";
+import { Box, Button, Container, DialogActions, Stack } from "@mui/material";
 import Navigation from "../dashboard/components/navigation";
 import ProgressSection from "./components/progress/progress-section";
 import JobList from "./components/job-list";
@@ -17,6 +17,8 @@ import useSWR from "swr";
 import { SnackbarContext } from "@/app/contexts/snackbar/snackbar-context";
 import { ActionKind } from "@/app/contexts/snackbar/snackbar.types";
 import SnackBar from "@/app/components/snack-bar";
+import { DIALOG_INFO_TYPE } from "@/app/constants";
+import Calendar from "./components/calendar";
 
 async function fetchJobs(url: string) {
   const response = await fetch(url);
@@ -58,8 +60,12 @@ const VendorJobsPage = () => {
     fetchJobs
   );
 
+  const dialogTitle =
+    info?.type === DIALOG_INFO_TYPE.CALENDAR ? "Calendar" : "Job Details";
+
   const { isMutating, trigger: updateJobStatus } = useSWRMutation(
     account?.user.vendors?.id &&
+      info?.data &&
       `/api/vendors/${account?.user.vendors?.id}/jobs/${info?.data.id}`,
     updateStatus,
     {
@@ -82,6 +88,16 @@ const VendorJobsPage = () => {
   const changeStatusHandler = (value: JobStatus) =>
     updateJobStatus({ status: value });
 
+  const calendarOpenHandler = () =>
+    clickOpenHandler({ type: DIALOG_INFO_TYPE.CALENDAR });
+
+  const renderDialogContent = () => {
+    if (info?.type === DIALOG_INFO_TYPE.CALENDAR) {
+      return <Calendar />;
+    }
+    return <EventDetail id={info?.data.id} />;
+  };
+
   return (
     <>
       <SnackBar />
@@ -97,7 +113,7 @@ const VendorJobsPage = () => {
         >
           <Navigation />
           <Box sx={{ flexGrow: 1 }}>
-            <ProgressSection />
+            <ProgressSection onCalendarOpen={calendarOpenHandler} />
             <Box sx={{ mt: 2 }}>
               <JobList jobs={jobs} onClick={jobClickHandler} />
             </Box>
@@ -107,14 +123,22 @@ const VendorJobsPage = () => {
 
       <Dialog
         open={open}
-        title="Job Details"
-        content={<EventDetail id={info?.data.id} />}
+        title={dialogTitle}
+        content={renderDialogContent()}
         footer={
-          <DialogFooter
-            isLoading={isMutating}
-            onClose={clickCloseHandler}
-            onSubmit={changeStatusHandler}
-          />
+          info?.type !== DIALOG_INFO_TYPE.CALENDAR ? (
+            <DialogFooter
+              isLoading={isMutating}
+              onClose={clickCloseHandler}
+              onSubmit={changeStatusHandler}
+            />
+          ) : (
+            <DialogActions>
+              <Button variant="outlined" onClick={clickCloseHandler}>
+                Cancel
+              </Button>
+            </DialogActions>
+          )
         }
         confirmButtonLabel="Submit"
         onClose={clickCloseHandler}

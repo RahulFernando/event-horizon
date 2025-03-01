@@ -93,3 +93,10 @@ export interface IVendorJob extends Job {
   gig: IGig;
   event: Event;
 }
+
+export interface ICalendar {
+  id: string;
+  job_id: string;
+  date_time: string;
+  job: IVendorJob;
+}
