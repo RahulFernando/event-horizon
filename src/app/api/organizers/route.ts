@@ -14,7 +14,8 @@ export async function GET() {
         user_id: true,
       },
     });
-    return NextResponse.json(organizers, { status: 200 });
+    const count = await prisma.organizer.count();
+    return NextResponse.json({ items: organizers, count }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ errors: [error] }, { status: 500 });
   }
