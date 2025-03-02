@@ -23,7 +23,7 @@ import { UserRound } from "lucide-react";
 
 const navigationItems = [
   { name: "Home", path: "/admin", icon: <HomeIcon /> },
-  { name: "Vendors", path: "/vendors", icon: <VendorsIcon /> },
+  { name: "Vendors", path: "/admin/vendors", icon: <VendorsIcon /> },
   { name: "Organizers", path: "/organizers", icon: <OrganizersIcon /> },
 ];
 

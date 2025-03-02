@@ -23,3 +23,25 @@ export async function GET(
     return NextResponse.json({ errors: [error] }, { status: 500 });
   }
 }
+
+export async function PATCH(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  const { id } = await params;
+  const { is_deleted } = await req.json();
+
+  try {
+    const updatedVendor = await prisma.vendor.update({
+      where: { id },
+      data: { is_deleted },
+      select: {
+        id: true,
+        is_deleted: true,
+      },
+    });
+    return NextResponse.json(updatedVendor, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ errors: [error] }, { status: 500 });
+  }
+}

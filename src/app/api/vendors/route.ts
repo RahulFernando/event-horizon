@@ -10,6 +10,13 @@ export async function GET() {
         taxpayer_identification_number: true,
         created_at: true,
         updated_at: true,
+        user: {
+          select: {
+            name: true,
+            contacts: true,
+          },
+        },
+        is_deleted: true,
       },
     });
 

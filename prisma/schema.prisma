@@ -71,17 +71,20 @@ model Account {
 }
 
 model Organizer {
-  id                String   @id @default(uuid())
+  id                String    @id @default(uuid())
   first_name        String
   last_name         String?
-  national_identity String?  @unique
-  user_id           String   @unique
-  created_at        DateTime @default(now())
+  national_identity String?   @unique
+  user_id           String    @unique
+  created_at        DateTime  @default(now())
   created_by        String
-  updated_at        DateTime @updatedAt
+  updated_at        DateTime  @updatedAt
   updated_by        String
+  is_deleted        Boolean   @default(false)
+  deleted_at        DateTime?
+  deleted_by        String?
   Event             Event[]
-  user              User     @relation(fields: [user_id], references: [id])
+  user              User      @relation(fields: [user_id], references: [id])
 
   @@index([national_identity])
   @@map("organizers")
@@ -97,6 +100,9 @@ model Vendor {
   created_by                     String
   updated_at                     DateTime   @updatedAt
   updated_by                     String
+  is_deleted                     Boolean    @default(false)
+  deleted_at                     DateTime?
+  deleted_by                     String?
   user                           User       @relation(fields: [user_id], references: [id])
   gigs                           Gig[]
   calendar                       Calendar[]

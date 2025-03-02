@@ -21,11 +21,15 @@ export interface IEventTypeOnGig {
 export interface IUser {
   id: string;
   name: string;
+  contacts?: string[];
 }
 
 export interface IVendor {
   id: string;
+  business_registration?: string;
+  taxpayer_identification_number?: string;
   user: IUser;
+  is_deleted?: boolean;
 }
 
 export interface IEventTypesOnGig {
