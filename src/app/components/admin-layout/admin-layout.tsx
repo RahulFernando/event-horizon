@@ -17,7 +17,6 @@ import {
   Home as HomeIcon,
   People as VendorsIcon,
   Event as OrganizersIcon,
-  Person as PersonIcon,
 } from "@mui/icons-material";
 import AppTitle from "../app-title";
 import { UserRound } from "lucide-react";
