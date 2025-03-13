@@ -8,18 +8,20 @@ datasource db {
 }
 
 model User {
-  id         String     @id @default(uuid())
-  name       String
-  contacts   String[]
-  user_type  UserType   @default(ORGANIZER)
-  created_at DateTime   @default(now())
-  created_by String
-  updated_at DateTime   @updatedAt
-  updated_by String
-  account    Account?
-  addresses  Address[]
-  organizers Organizer?
-  vendors    Vendor?
+  id                        String                    @id @default(uuid())
+  name                      String
+  contacts                  String[]
+  user_type                 UserType                  @default(ORGANIZER)
+  created_at                DateTime                  @default(now())
+  created_by                String
+  updated_at                DateTime                  @updatedAt
+  updated_by                String
+  account                   Account?
+  addresses                 Address[]
+  organizers                Organizer?
+  vendors                   Vendor?
+  conversation_participants ConversationParticipant[]
+  sent_messages             Message[]
 
   @@map("users")
 }
@@ -299,4 +301,81 @@ model Calendar {
   job    Job    @relation(fields: [job_id], references: [id])
 
   @@map("calendars")
+}
+
+model Conversation {
+  id           String                    @id @default(uuid())
+  title        String?
+  created_at   DateTime                  @default(now())
+  created_by   String
+  updated_at   DateTime                  @updatedAt
+  updated_by   String
+  is_deleted   Boolean                   @default(false)
+  deleted_at   DateTime?
+  deleted_by   String?
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  id              String    @id @default(uuid())
+  user_id         String
+  conversation_id String
+  joined_at       DateTime  @default(now())
+  left_at         DateTime?
+  is_active       Boolean   @default(true)
+  created_at      DateTime  @default(now())
+  created_by      String
+  updated_at      DateTime  @updatedAt
+  updated_by      String
+
+  user          User          @relation(fields: [user_id], references: [id])
+  conversation  Conversation  @relation(fields: [conversation_id], references: [id])
+  read_receipts ReadReceipt[]
+
+  @@unique([user_id, conversation_id])
+  @@index([user_id])
+  @@index([conversation_id])
+  @@map("conversation_participants")
+}
+
+model Message {
+  id              String    @id @default(uuid())
+  conversation_id String
+  sender_id       String
+  content         String
+  sent_at         DateTime  @default(now())
+  is_deleted      Boolean   @default(false)
+  deleted_at      DateTime?
+  deleted_by      String?
+  created_at      DateTime  @default(now())
+  created_by      String
+  updated_at      DateTime  @updatedAt
+  updated_by      String
+
+  conversation  Conversation  @relation(fields: [conversation_id], references: [id])
+  sender        User          @relation(fields: [sender_id], references: [id])
+  read_receipts ReadReceipt[]
+
+  @@index([conversation_id])
+  @@index([sender_id])
+  @@map("messages")
+}
+
+model ReadReceipt {
+  id             String   @id @default(uuid())
+  message_id     String
+  participant_id String
+  read_at        DateTime @default(now())
+  created_at     DateTime @default(now())
+
+  message     Message                 @relation(fields: [message_id], references: [id])
+  participant ConversationParticipant @relation(fields: [participant_id], references: [id])
+
+  @@unique([message_id, participant_id])
+  @@index([message_id])
+  @@index([participant_id])
+  @@map("read_receipts")
 }
