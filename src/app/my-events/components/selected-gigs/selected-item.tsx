@@ -1,5 +1,10 @@
 import React from "react";
-import { IconButton, ListItem, ListItemText, Tooltip } from "@mui/material";
+import {
+  IconButton,
+  ListItemButton,
+  ListItemText,
+  Tooltip,
+} from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ChatIcon from "@mui/icons-material/Chat";
 import { SelectedGigItemProps } from "./selected-gigs.types";
@@ -11,36 +16,35 @@ const SelectedGig: React.FC<SelectedGigItemProps> = ({
   name,
   id,
   status = "ACCEPTED",
+  gig,
   onDelete,
+  onClick,
 }) => {
   const router = useRouter();
 
   const chatClickHandler = () => router.push("/chat");
 
   return (
-    <ListItem
-      secondaryAction={
-        <Tooltip
-          title={status === "ACCEPTED" ? "Chat" : "Delete"}
-          placement="left-start"
-        >
-          <IconButton
-            edge="end"
-            color={status === "ACCEPTED" ? "default" : "error"}
-            onClick={
-              status === "ACCEPTED" ? chatClickHandler : onDelete.bind(this, id)
-            }
-          >
-            {status === "ACCEPTED" ? <ChatIcon /> : <DeleteOutlineIcon />}
-          </IconButton>
-        </Tooltip>
-      }
-    >
+    <ListItemButton onClick={onClick.bind(this, gig)}>
       <ListItemText
         primary={<JobTitle title={title} status={status} />}
         secondary={name}
       />
-    </ListItem>
+      <Tooltip
+        title={status === "ACCEPTED" ? "Chat" : "Delete"}
+        placement="left-start"
+      >
+        <IconButton
+          edge="end"
+          color={status === "ACCEPTED" ? "default" : "error"}
+          onClick={
+            status === "ACCEPTED" ? chatClickHandler : onDelete.bind(this, id)
+          }
+        >
+          {status === "ACCEPTED" ? <ChatIcon /> : <DeleteOutlineIcon />}
+        </IconButton>
+      </Tooltip>
+    </ListItemButton>
   );
 };
 

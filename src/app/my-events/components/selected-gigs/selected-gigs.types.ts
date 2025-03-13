@@ -1,4 +1,4 @@
-import { JobStatus } from "@prisma/client";
+import { Gig, JobStatus } from "@prisma/client";
 // import { IGig } from "../../events.type";
 
 export interface SelectedGigItemProps {
@@ -6,7 +6,9 @@ export interface SelectedGigItemProps {
   name: string;
   id: string;
   status?: JobStatus;
+  gig: Gig;
   onDelete: (id: string, event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick: (gig: Gig, event: React.MouseEvent) => void;
 }
 
 // export interface SelectedGigsProps {

@@ -169,6 +169,7 @@ model Gig {
   category     Category?          @relation(fields: [category_id], references: [id])
   category_id  String
   jobs         Job[]
+  user_ratings UserRating[]
 
   @@map("gigs")
 }
@@ -378,4 +379,19 @@ model ReadReceipt {
   @@index([message_id])
   @@index([participant_id])
   @@map("read_receipts")
+}
+
+model UserRating {
+  id         String   @id @default(uuid())
+  rating     Int
+  feedback   String
+  gig_id     String
+  created_by String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  updated_by String
+
+  gig Gig @relation(fields: [gig_id], references: [id])
+
+  @@map("user_ratings")
 }
