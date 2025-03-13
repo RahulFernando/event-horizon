@@ -62,7 +62,7 @@ export async function GET(
         read_receipts: true,
       },
       orderBy: {
-        sent_at: "desc",
+        sent_at: "asc",
       },
       take: limit,
     });

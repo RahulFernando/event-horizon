@@ -26,6 +26,10 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    const conversationTitle = participants.filter(
+      (p) => p.id !== currentUser.id
+    )[0].name;
+
     if (participants.length !== uniqueParticipantIds.length) {
       return NextResponse.json(
         { error: "One or more participants are invalid" },
@@ -35,7 +39,7 @@ export async function POST(req: NextRequest) {
 
     const conversation = await prisma.conversation.create({
       data: {
-        title,
+        title: title ?? conversationTitle,
         created_by: currentUserName,
         updated_by: currentUserName,
         participants: {

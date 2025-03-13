@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Category,
+  Conversation,
   Event,
   Gig,
   Job,
   JobStatus,
+  Message,
   PricingModelType,
 } from "@prisma/client";
 
@@ -103,4 +105,18 @@ export interface ICalendar {
   job_id: string;
   date_time: string;
   job: IVendorJob;
+}
+
+export interface IParticipant {
+  id: string;
+  user_id: string;
+  user: IUser;
+}
+
+export interface IConversation extends Conversation {
+  participants: IParticipant[];
+}
+
+export interface IMessage extends Message {
+  sender: IUser;
 }
