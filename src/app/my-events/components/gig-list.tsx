@@ -18,10 +18,14 @@ async function fetchGigs(url: string) {
 
 const GigList: React.FC<GigListProps> = ({
   eventType,
+  dateTime,
   onClick,
   onAddClick,
 }) => {
-  const searchParams = new URLSearchParams({ eventType: eventType ?? "" });
+  const searchParams = new URLSearchParams({
+    eventType: eventType ?? "",
+    dateTime: dateTime ?? "",
+  });
 
   const { data: gigs = { count: 0, items: [] } } = useSWR(
     `/api/gigs?${searchParams}`,

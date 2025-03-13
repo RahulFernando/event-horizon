@@ -56,6 +56,7 @@ export interface FilterToolbarProps {
 
 export interface GigListProps {
   eventType?: string;
+  dateTime?: string;
   onClick: (id: string, event: React.MouseEvent) => void;
   onAddClick: (id: string, event: React.MouseEvent) => void;
 }
