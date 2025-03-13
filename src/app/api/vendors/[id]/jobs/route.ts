@@ -24,6 +24,11 @@ export async function GET(
           select: {
             id: true,
             title: true,
+            vendor: {
+              include: {
+                user: true,
+              },
+            },
           },
         },
       },

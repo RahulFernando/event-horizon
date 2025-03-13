@@ -14,7 +14,7 @@ import useDialog from "@/app/hooks/use-dialog";
 
 import { IJob } from "@/app/types";
 import { DIALOG_INFO_TYPE } from "@/app/constants";
-import { SelectedGigsProps } from "./selected-gigs.types";
+// import { SelectedGigsProps } from "./selected-gigs.types";
 import { ActionKind } from "@/app/contexts/snackbar/snackbar.types";
 
 async function fetchJobs(url: string) {
@@ -41,7 +41,7 @@ async function deleteJob(url: string, { arg }: { arg: { id: string } }) {
   return response.json();
 }
 
-const SelectedGigs: React.FC<SelectedGigsProps> = () => {
+const SelectedGigs: React.FC = () => {
   const params = useParams();
 
   const { snackbarToggle } = useContext(SnackbarContext);
@@ -50,8 +50,6 @@ const SelectedGigs: React.FC<SelectedGigsProps> = () => {
     `/api/events/${params.id}/jobs`,
     fetchJobs
   );
-
-  console.log(jobs);
 
   const {
     trigger: deleteJobTrigger,

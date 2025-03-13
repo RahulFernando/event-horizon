@@ -1,5 +1,5 @@
 import { JobStatus } from "@prisma/client";
-import { IGig } from "../../events.type";
+// import { IGig } from "../../events.type";
 
 export interface SelectedGigItemProps {
   title: string;
@@ -9,9 +9,9 @@ export interface SelectedGigItemProps {
   onDelete: (id: string, event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export interface SelectedGigsProps {
-  gigs: IGig[];
-}
+// export interface SelectedGigsProps {
+//   gigs: IGig[];
+// }
 
 export interface JobTitleProps {
   title: string;
