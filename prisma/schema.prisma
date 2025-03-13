@@ -332,7 +332,7 @@ model ConversationParticipant {
   updated_by      String
 
   user          User          @relation(fields: [user_id], references: [id])
-  conversation  Conversation  @relation(fields: [conversation_id], references: [id])
+  conversation  Conversation  @relation(fields: [conversation_id], references: [id], onDelete: Cascade)
   read_receipts ReadReceipt[]
 
   @@unique([user_id, conversation_id])
@@ -355,7 +355,7 @@ model Message {
   updated_at      DateTime  @updatedAt
   updated_by      String
 
-  conversation  Conversation  @relation(fields: [conversation_id], references: [id])
+  conversation  Conversation  @relation(fields: [conversation_id], references: [id], onDelete: Cascade)
   sender        User          @relation(fields: [sender_id], references: [id])
   read_receipts ReadReceipt[]
 
@@ -372,7 +372,7 @@ model ReadReceipt {
   created_at     DateTime @default(now())
 
   message     Message                 @relation(fields: [message_id], references: [id])
-  participant ConversationParticipant @relation(fields: [participant_id], references: [id])
+  participant ConversationParticipant @relation(fields: [participant_id], references: [id], onDelete: Cascade)
 
   @@unique([message_id, participant_id])
   @@index([message_id])

@@ -283,7 +283,7 @@ const EventDetailPage = () => {
               />
             </Box>
           )}
-          {activeTab === "vendor" && <SelectedVendors gigs={[]} />}
+          {activeTab === "vendor" && <SelectedVendors />}
         </Grid>
       </Grid>
 

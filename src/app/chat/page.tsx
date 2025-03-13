@@ -19,7 +19,7 @@ const ChatPage = () => {
       <Container maxWidth={false} sx={{ mt: 12 }}>
         <Grid2 container spacing={2}>
           <Grid2 size={{ xs: 4 }}>
-            <Paper sx={{ height: "100vh", padding: 2 }}>
+            <Paper sx={{ height: "75vh", padding: 2 }}>
               <Typography variant="h6">Conversations</Typography>
               <ChatList onSelect={conversationSelectHandler} />
             </Paper>

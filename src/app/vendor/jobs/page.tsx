@@ -33,9 +33,14 @@ async function fetchJobs(url: string) {
 
 async function updateStatus(
   url: string,
+  token: string,
   { arg }: { arg: { status: JobStatus } }
 ) {
   const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
     method: "PATCH",
     body: JSON.stringify(arg),
   });
@@ -49,7 +54,7 @@ async function updateStatus(
 }
 
 const VendorJobsPage = () => {
-  const { account } = useContext(AuthContext);
+  const { token, account } = useContext(AuthContext);
   const { snackbarToggle } = useContext(SnackbarContext);
 
   const { open, info, clickCloseHandler, clickOpenHandler } = useDialog();
@@ -67,7 +72,8 @@ const VendorJobsPage = () => {
     account?.user.vendors?.id &&
       info?.data &&
       `/api/vendors/${account?.user.vendors?.id}/jobs/${info?.data.id}`,
-    updateStatus,
+    (url: string, { arg }: { arg: { status: JobStatus } }) =>
+      updateStatus(url, token as string, { arg }),
     {
       onSuccess: () => {
         refetchJobs();

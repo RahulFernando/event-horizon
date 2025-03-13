@@ -2,6 +2,7 @@ import { Paper, MenuList } from "@mui/material";
 import RoofingOutlinedIcon from "@mui/icons-material/RoofingOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
+import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import MenuItemComponent from "./menu-item";
 
 const Navigation = () => {
@@ -25,6 +26,11 @@ const Navigation = () => {
           icon={AssignmentOutlinedIcon}
           text="Jobs"
           href="/vendor/jobs"
+        />
+        <MenuItemComponent
+          icon={ChatBubbleOutlineOutlinedIcon}
+          text="Chat"
+          href="/vendor/chat"
         />
       </MenuList>
     </Paper>
