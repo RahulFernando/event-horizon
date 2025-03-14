@@ -1,7 +1,10 @@
 import { Box, Stack, Typography } from "@mui/material";
 import JobProgressBar from "./job-progress-bar";
+import { ProgressDisplayProps } from "../../jobs.types";
 
-const ProgressDisplay = () => (
+const ProgressDisplay: React.FC<ProgressDisplayProps> = ({
+  percentage = 0,
+}) => (
   <Stack
     direction="row"
     spacing={2}
@@ -10,9 +13,9 @@ const ProgressDisplay = () => (
     <Typography variant="body1">Progress</Typography>
     <Stack direction="row" spacing={2} alignItems="center">
       <Box sx={{ width: "200px" }}>
-        <JobProgressBar variant="determinate" value={50} />
+        <JobProgressBar variant="determinate" value={percentage} />
       </Box>
-      <Typography variant="body2">50%</Typography>
+      <Typography variant="body2">{percentage}%</Typography>
     </Stack>
   </Stack>
 );
