@@ -56,3 +56,14 @@ export interface DialogFooterProps {
 export interface ProgressSectionProps {
   onCalendarOpen: () => void;
 }
+
+export interface IPercentage {
+  vendor_id: number;
+  total_jobs: number;
+  completed_jobs: number;
+  completion_percentage: string;
+}
+
+export interface ProgressDisplayProps {
+  percentage?: number;
+}
