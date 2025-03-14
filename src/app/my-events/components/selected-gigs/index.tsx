@@ -17,7 +17,7 @@ import { DIALOG_INFO_TYPE } from "@/app/constants";
 // import { SelectedGigsProps } from "./selected-gigs.types";
 import { ActionKind } from "@/app/contexts/snackbar/snackbar.types";
 import RateJob from "../rate-job";
-import { Gig } from "@prisma/client";
+import { Gig, JobStatus } from "@prisma/client";
 import { AuthContext } from "@/app/contexts/auth/auth-context";
 import { RatingFormValues } from "../../events.type";
 
@@ -67,6 +67,28 @@ async function createUserRating(
   return response.json();
 }
 
+async function updateJobStatus(
+  url: string,
+  token: string,
+  { arg }: { arg: { status: JobStatus } }
+) {
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    method: "PATCH",
+    body: JSON.stringify(arg),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error?.message || "Something went wrong");
+  }
+
+  return response.json();
+}
+
 const SelectedGigs: React.FC = () => {
   const params = useParams();
 
@@ -78,7 +100,7 @@ const SelectedGigs: React.FC = () => {
     rating: 0,
   });
 
-  const { data: jobs = [] } = useSWR(
+  const { data: jobs = [], mutate } = useSWR(
     `/api/events/${params.id}/jobs`,
     fetchJobs
   );
@@ -108,6 +130,24 @@ const SelectedGigs: React.FC = () => {
         setUserRating({ feedback: "", rating: 0 });
       },
 
+      onError: (err) => {
+        snackbarToggle(ActionKind.OPEN, {
+          open: true,
+          message: err.message,
+          severity: "error",
+        });
+      },
+    }
+  );
+
+  const { trigger: updateStatus } = useSWRMutation(
+    info && `/api/jobs/${info?.data.jobId}`,
+    (url: string, { arg }: { arg: { status: JobStatus } }) =>
+      updateJobStatus(url, token as string, { arg }),
+    {
+      onSuccess: () => {
+        mutate();
+      },
       onError: (err) => {
         snackbarToggle(ActionKind.OPEN, {
           open: true,
@@ -176,10 +216,22 @@ const SelectedGigs: React.FC = () => {
     clickCloseHandler();
   };
 
-  const clickSelectedGigHandler = (gig: Gig) =>
-    clickOpenHandler({ type: DIALOG_INFO_TYPE.JOB_COMPLETE, data: { ...gig } });
+  const clickSelectedGigHandler = (gig: Gig, jobId: string) => {
+    const job = jobs.find((j) => j.id === jobId);
 
-  const submitRating = () => rateGig({ ...userRating });
+    if (job && job.status === JobStatus.COMPLETED) {
+      return;
+    }
+    clickOpenHandler({
+      type: DIALOG_INFO_TYPE.JOB_COMPLETE,
+      data: { ...gig, jobId },
+    });
+  };
+
+  const submitRating = () => {
+    rateGig({ ...userRating });
+    updateStatus({ status: "COMPLETED" });
+  };
 
   const feedbackChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -236,7 +288,7 @@ const SelectedGigs: React.FC = () => {
             />
           }
           disableSubmitButton={isUserRatingEmpty}
-          confirmButtonLabel="Submit"
+          confirmButtonLabel="Complete"
           onClose={clickCloseHandler}
           onConfirm={submitRating}
         />

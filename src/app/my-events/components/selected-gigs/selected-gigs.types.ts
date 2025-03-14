@@ -8,7 +8,7 @@ export interface SelectedGigItemProps {
   status?: JobStatus;
   gig: Gig;
   onDelete: (id: string, event: React.MouseEvent<HTMLButtonElement>) => void;
-  onClick: (gig: Gig, event: React.MouseEvent) => void;
+  onClick: (gig: Gig, jobId: string, event: React.MouseEvent) => void;
 }
 
 // export interface SelectedGigsProps {
