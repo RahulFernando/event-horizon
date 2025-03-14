@@ -263,6 +263,7 @@ const EventDetailPage = () => {
               <GigList
                 onAddClick={addGigHandler}
                 eventType={event?.event_type.name}
+                dateTime={event?.date_time}
                 onClick={selectGigClickHandler}
               />
             </TabPanel>

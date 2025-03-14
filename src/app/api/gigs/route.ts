@@ -6,6 +6,13 @@ import { ValidationError } from "yup";
 export async function GET(req: NextRequest) {
   // const location = req.nextUrl.searchParams.get("location");
   const eventType = req.nextUrl.searchParams.get("eventType");
+  const dateTime = req.nextUrl.searchParams.get("dateTime");
+
+  let dateFilter: Date | undefined;
+  if (dateTime) {
+    dateFilter = new Date(dateTime);
+    dateFilter.setHours(0, 0, 0, 0);
+  }
 
   try {
     const gigs = await prisma.gig.findMany({
@@ -18,6 +25,20 @@ export async function GET(req: NextRequest) {
             some: {
               event_type: {
                 name: { contains: eventType, mode: "insensitive" },
+              },
+            },
+          },
+        }),
+        ...(dateFilter && {
+          jobs: {
+            none: {
+              calendar: {
+                some: {
+                  date_time: {
+                    gte: dateFilter,
+                    lt: new Date(dateFilter.getTime() + 24 * 60 * 60 * 1000),
+                  },
+                },
               },
             },
           },

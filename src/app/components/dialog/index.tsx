@@ -23,6 +23,7 @@ const Dialog: React.FC<DialogProps> = ({
   footerVisible = true,
   maxWidth = "md",
   footer,
+  disableSubmitButton = false,
   onClose,
   onConfirm,
 }) => (
@@ -50,7 +51,11 @@ const Dialog: React.FC<DialogProps> = ({
         <Button variant="outlined" onClick={onClose}>
           Cancel
         </Button>
-        <Button variant="contained" onClick={onConfirm}>
+        <Button
+          variant="contained"
+          onClick={onConfirm}
+          disabled={disableSubmitButton}
+        >
           {confirmButtonLabel}
         </Button>
       </DialogActions>

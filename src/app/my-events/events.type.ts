@@ -9,6 +9,7 @@ import {
   UseFormReset,
 } from "react-hook-form";
 import { IEventTypeOnGig, IVendor } from "../types";
+import React from "react";
 
 export type EventTab = "event" | "vendor";
 
@@ -56,6 +57,7 @@ export interface FilterToolbarProps {
 
 export interface GigListProps {
   eventType?: string;
+  dateTime?: string;
   onClick: (id: string, event: React.MouseEvent) => void;
   onAddClick: (id: string, event: React.MouseEvent) => void;
 }
@@ -97,4 +99,17 @@ export interface JobFormProps {
   event_id: string;
   pricing_tier_id?: string;
   pricing_tier_tiered_id?: string;
+}
+
+export interface RatingFormValues {
+  feedback: string;
+  rating: number;
+}
+
+export interface RateJobProps {
+  values: RatingFormValues;
+  onFeedbackChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  onRateChange: (event: React.SyntheticEvent, value: number | null) => void;
 }
