@@ -264,8 +264,8 @@ model Job {
   id                     String       @default(uuid())
   gig                    Gig          @relation(fields: [gig_id], references: [id])
   event                  Event        @relation(fields: [event_id], references: [id])
-  gig_id                 String       @unique
-  event_id               String       @unique
+  gig_id                 String
+  event_id               String
   pricingTier            PricingTier? @relation(fields: [pricing_tier_id, pricing_tier_tiered_id], references: [id, tiered_id])
   pricing_tier_tiered_id String?
   pricing_tier_id        String?
@@ -277,6 +277,7 @@ model Job {
   calendar               Calendar[]
 
   @@id([id])
+  @@unique([gig_id, event_id])
   @@map("jobs")
 }
 

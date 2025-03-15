@@ -21,6 +21,7 @@ const options = [
 
 const DialogFooter: React.FC<DialogFooterProps> = ({
   isLoading = false,
+  disabled,
   onSubmit,
   onClose,
 }) => {
@@ -58,7 +59,7 @@ const DialogFooter: React.FC<DialogFooterProps> = ({
         </Button>
         <ButtonGroup
           ref={anchorRef}
-          disabled={isLoading}
+          disabled={isLoading || disabled}
           variant="contained"
           size="small"
         >

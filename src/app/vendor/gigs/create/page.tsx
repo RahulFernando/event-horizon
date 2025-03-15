@@ -111,7 +111,7 @@ const CreateGigPage = () => {
         message: "Gig created successfully",
         severity: "success",
       });
-      router.replace(`/my-gigs/${data.id}`);
+      router.replace(`/vendor/gigs/${data.id}`);
     }
   }, [data, router, snackbarToggle]);
 

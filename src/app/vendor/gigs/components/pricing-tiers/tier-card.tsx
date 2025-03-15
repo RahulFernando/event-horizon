@@ -25,6 +25,10 @@ const TierCard: React.FC<TierCardProps> = ({
       borderRadius: "10px",
       position: "relative",
       minHeight: "150px",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      height: "100%",
       "&::before": {
         content: '""',
         position: "absolute",

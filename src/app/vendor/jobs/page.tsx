@@ -87,6 +87,16 @@ const VendorJobsPage = () => {
     }
   );
 
+  const isActionButtonDisabled = () => {
+    const job = jobs.find((job) => job.id === info?.data.id);
+    if (job) {
+      const availableStatus: JobStatus[] = ["COMPLETED", "REJECTED"];
+      return availableStatus.includes(job.status);
+    }
+
+    return false;
+  };
+
   const jobClickHandler = (id: string) => {
     clickOpenHandler({ data: { id } });
   };
@@ -135,6 +145,7 @@ const VendorJobsPage = () => {
           info?.type !== DIALOG_INFO_TYPE.CALENDAR ? (
             <DialogFooter
               isLoading={isMutating}
+              disabled={isActionButtonDisabled()}
               onClose={clickCloseHandler}
               onSubmit={changeStatusHandler}
             />

@@ -49,6 +49,7 @@ export interface IVendorJob extends Job {
 
 export interface DialogFooterProps {
   isLoading?: boolean;
+  disabled?: boolean;
   onSubmit: (value: JobStatus) => void;
   onClose: () => void;
 }
