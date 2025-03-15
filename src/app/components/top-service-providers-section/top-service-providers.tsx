@@ -8,7 +8,7 @@ import ProviderCardSkeleton from "./provider-card-skeleton";
 
 async function fetchTopServiceProviders(
   url: string,
-  { arg }: { arg: { top: boolean } }
+  { arg }: { arg: { top: number } }
 ) {
   const params = new URLSearchParams({ top: `${arg.top}` }).toString();
   const response = await fetch(url + params);
@@ -27,20 +27,20 @@ async function fetchTopServiceProviders(
 const TopServiceProviders = () => {
   const { isLoading, data: vendors = { count: 0, items: [] } } = useSWR(
     "/api/vendors?",
-    (url: string) => fetchTopServiceProviders(url, { arg: { top: true } })
+    (url: string) => fetchTopServiceProviders(url, { arg: { top: 5 } })
   );
 
-  const getImageUrl = () => {
-    const images = [
-      "/images/users/man-2.jpg",
-      "/images/users/women-2.jpg",
-      "/images/users/man-3.jpg",
-      "/images/users/women-1.jpg",
-      "/images/users/man-1.jpg",
-    ];
+  // const getImageUrl = () => {
+  //   const images = [
+  //     "/images/users/man-2.jpg",
+  //     "/images/users/women-2.jpg",
+  //     "/images/users/man-3.jpg",
+  //     "/images/users/women-1.jpg",
+  //     "/images/users/man-1.jpg",
+  //   ];
 
-    return images[Math.floor(Math.random() * images.length)];
-  };
+  //   return images[Math.floor(Math.random() * images.length)];
+  // };
 
   return (
     <Container maxWidth={false} sx={{ mb: 4 }}>
@@ -69,7 +69,7 @@ const TopServiceProviders = () => {
             <Grid key={id} size={{ xs: 12, md: 12 / vendors.items.length }}>
               <ProviderCard
                 title={user.name}
-                src={getImageUrl()}
+                src={"/images/no-picture-available.jpg"}
                 ratings={averageRating}
               />
             </Grid>

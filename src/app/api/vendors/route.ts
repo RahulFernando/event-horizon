@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { Vendor, VendorWithRating } from "../types/api.type";
@@ -26,70 +27,82 @@ const calculateVendorRatings = (vendors: Vendor[]): VendorWithRating[] => {
   });
 };
 
+const findCategoryByName = async (keyword: string) =>
+  await prisma.category.findFirst({
+    where: { name: { contains: keyword, mode: "insensitive" } },
+  });
+
 export async function GET(req: NextRequest) {
-  const top = req.nextUrl.searchParams.get("top");
+  const searchParams = req.nextUrl.searchParams;
+  const top = searchParams.get("top");
+  const _category = searchParams.get("category");
+
   try {
-    if (top) {
-      const vendorsWithRatings = await prisma.vendor.findMany({
+    const baseSelect = {
+      id: true,
+      business_registration: true,
+      taxpayer_identification_number: true,
+      created_at: true,
+      updated_at: true,
+      user: {
         select: {
-          id: true,
-          business_registration: true,
-          taxpayer_identification_number: true,
-          created_at: true,
-          updated_at: true,
-          user: {
-            select: {
-              name: true,
-              contacts: true,
-            },
-          },
-          is_deleted: true,
-          gigs: {
-            select: {
-              id: true,
-              user_ratings: {
-                select: {
-                  rating: true,
-                },
+          name: true,
+          contacts: true,
+        },
+      },
+      is_deleted: true,
+    };
+
+    const whereClause: any = {};
+
+    if (_category) {
+      const category = await findCategoryByName(_category);
+      if (!category) {
+        return NextResponse.json(
+          { message: "Category not found" },
+          { status: 404 }
+        );
+      }
+      whereClause.gigs = { some: { category_id: category.id } };
+    }
+
+    const vendors = await prisma.vendor.findMany({
+      where: whereClause,
+      select: {
+        ...baseSelect,
+        gigs: {
+          select: {
+            id: true,
+            user_ratings: {
+              select: {
+                rating: true,
               },
             },
           },
         },
-      });
+      },
+    });
+    const vendorsWithAvgRating = calculateVendorRatings(vendors);
 
-      const vendorsWithAvgRating = calculateVendorRatings(vendorsWithRatings);
-
+    if (top) {
       const topVendors = vendorsWithAvgRating
         .sort((a, b) => b.averageRating - a.averageRating)
-        .slice(0, 5);
+        .slice(0, parseInt(top) || 5);
 
       return NextResponse.json(
         { count: topVendors.length, items: topVendors },
         { status: 200 }
       );
+    } else {
+      const count = await prisma.vendor.count({ where: whereClause });
+
+      return NextResponse.json(
+        { items: vendorsWithAvgRating, count },
+        { status: 200 }
+      );
     }
-
-    const vendors = await prisma.vendor.findMany({
-      select: {
-        id: true,
-        business_registration: true,
-        taxpayer_identification_number: true,
-        created_at: true,
-        updated_at: true,
-        user: {
-          select: {
-            name: true,
-            contacts: true,
-          },
-        },
-        is_deleted: true,
-      },
-    });
-
-    const count = await prisma.vendor.count();
-
-    return NextResponse.json({ items: vendors, count }, { status: 200 });
   } catch (error) {
+    console.error("Error filtering vendors:", error);
     return NextResponse.json({ errors: [error] }, { status: 500 });
   }
 }
