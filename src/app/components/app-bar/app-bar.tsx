@@ -119,7 +119,7 @@ const AppBar = () => {
           <Box sx={{ flexGrow: 0, display: "flex" }}>
             <Button
               LinkComponent={Link}
-              href="/apply-as-a-provider"
+              href="/auth/sign-up?userType=VENDOR"
               sx={{
                 my: 2,
                 color: "white",

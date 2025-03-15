@@ -7,6 +7,7 @@ import {
   // CardActions,
   CardHeader,
   CardMedia,
+  Typography,
 } from "@mui/material";
 // import AddIcon from "@mui/icons-material/Add";
 import { GigCardProps } from "../events.type";
@@ -39,12 +40,50 @@ const GigCard: React.FC<GigCardProps> = ({
   // const isDisable = pricing && pricing.tiered?.id ? true : false;
 
   return (
-    <Box component="div" onClick={onClick.bind(null, id)}>
-      <Card variant="elevation" elevation={2} sx={{ cursor: "pointer" }}>
-        <CardHeader title={title} subheader={vendor.user.name} />
+    <Box
+      component="div"
+      onClick={onClick.bind(null, id)}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        justifyContent: "space-between",
+      }}
+    >
+      <Card
+        variant="elevation"
+        elevation={2}
+        sx={{
+          cursor: "pointer",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          maxHeight: "300px",
+          overflow: "hidden",
+        }}
+      >
+        <CardHeader
+          title={
+            <Typography
+              variant="h6"
+              sx={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                maxWidth: "100%",
+              }}
+            >
+              {title}
+            </Typography>
+          }
+          subheader={vendor.user.name}
+        />
         <CardMedia
           component="img"
-          height={120}
+          sx={{
+            height: 120,
+            objectFit: "cover",
+          }}
           image="/images/no-picture-available.jpg"
           alt="gig-image"
         />

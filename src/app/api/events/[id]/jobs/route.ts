@@ -56,8 +56,6 @@ export async function POST(
       });
     }
 
-    console.log(pricingTier);
-
     const newJob = await prisma.job.create({
       data: {
         ...body,
@@ -78,6 +76,7 @@ export async function POST(
 
     return NextResponse.json({ ...newJob }, { status: 201 });
   } catch (error) {
+    console.log(error?.toString());
     if (error instanceof ValidationError) {
       return NextResponse.json({ errors: error.errors }, { status: 400 });
     }

@@ -1,6 +1,6 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import useSWRMutation from "swr/mutation";
 import {
@@ -45,10 +45,15 @@ async function userSignUp(url: string, { arg }: { arg: SignUpFormInputs }) {
 
 const SignUpPage = () => {
   const { snackbarToggle } = useContext(SnackbarContext);
+  const searchParams = useSearchParams();
+
+  const userTypeParam = searchParams.get("userType") as UserTypes;
 
   const router = useRouter();
 
-  const [userType, setUserType] = useState<UserTypes>("ORGANIZER");
+  const [userType, setUserType] = useState<UserTypes>(
+    userTypeParam ?? "ORGANIZER"
+  );
 
   const {
     control,

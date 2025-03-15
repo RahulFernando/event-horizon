@@ -127,7 +127,11 @@ const EventDetailPage = () => {
     error: jobCreateError,
     trigger: createJob,
     reset: jobCreateReset,
-  } = useSWRMutation(`/api/events/${params.id}/jobs`, createJobAsync);
+  } = useSWRMutation(`/api/events/${params.id}/jobs`, createJobAsync, {
+    onSuccess: () => {
+      setSelectedTierId("");
+    },
+  });
 
   const { open, info, clickCloseHandler, clickOpenHandler } = useDialog();
 
