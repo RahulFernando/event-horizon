@@ -12,7 +12,14 @@ import { ProviderCardProps } from "./provider-card.types";
 const ProviderCard: React.FC<ProviderCardProps> = ({ title, src, ratings }) => {
   return (
     <Card variant="elevation" elevation={2}>
-      <CardMedia component="img" alt={title} height="140" image={src} />
+      <CardMedia
+        component="img"
+        alt={title}
+        height="200"
+        width="100%"
+        image={src}
+        style={{ objectFit: "contain", backgroundColor: "#F6F6F6" }}
+      />
       <CardContent>
         <Typography gutterBottom variant="body1">
           {title}
