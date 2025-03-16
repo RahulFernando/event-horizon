@@ -60,16 +60,20 @@ const SignUpPage = () => {
     formState: { errors },
     register,
     handleSubmit,
+    watch,
   } = useForm<SignUpFormInputs>({
     defaultValues: {
       email: "",
       name: "",
+      confirm_password: "",
       contacts: [{ phone: "" }],
       addresses: [
         { number: "", line_1: "", state: "", country: "", postal_code: "" },
       ],
     },
   });
+
+  const watchPassword = watch("password");
 
   const {
     fields: contactFields,
@@ -115,6 +119,7 @@ const SignUpPage = () => {
   const userTypeChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) =>
     setUserType((event.target as HTMLInputElement).value as UserTypes);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const submitHandler = (values: SignUpFormInputs) => registerUser(values);
 
   return (
@@ -172,6 +177,24 @@ const SignUpPage = () => {
                     })}
                     error={!!errors.password}
                     helperText={errors.password?.message}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, md: 12 }}>
+                  <TextField
+                    label="Confirm Password"
+                    size="small"
+                    required
+                    type="password"
+                    fullWidth
+                    {...register("confirm_password", {
+                      required: "Confirm your password",
+                      validate: (value) =>
+                        value !== watchPassword
+                          ? "Password is not matched"
+                          : "",
+                    })}
+                    error={!!errors.confirm_password}
+                    helperText={errors.confirm_password?.message}
                   />
                 </Grid>
                 <Grid size={{ xs: 12 }} />

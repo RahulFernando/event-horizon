@@ -13,6 +13,7 @@ export interface SignUpFormInputs {
   email: string;
   name: string;
   password: string;
+  confirm_password: string;
   contacts: { phone: string }[];
   addresses: {
     number: string;
