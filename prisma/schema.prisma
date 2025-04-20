@@ -120,6 +120,7 @@ model Event {
   date_time     DateTime
   event_type_id String
   venue         String?
+  budget        String?
   organizer_id  String
   created_at    DateTime  @default(now())
   created_by    String

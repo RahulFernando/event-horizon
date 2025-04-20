@@ -21,14 +21,23 @@ import AppTitle from "@/app/components/app-title";
 import ContactDetailsInput from "./components/contact-details-input";
 import AddressDetailsInput from "./components/address-details-input";
 
-import { SignUpFormInputs, UserType as UserTypes } from "./sign-up.types";
+import {
+  SignUpFormInputs,
+  SignUpPayload,
+  UserType as UserTypes,
+} from "./sign-up.types";
 import SnackBar from "@/app/components/snack-bar";
 import { ActionKind } from "@/app/contexts/snackbar/snackbar.types";
 
-async function userSignUp(url: string, { arg }: { arg: SignUpFormInputs }) {
-  const { contacts, name, addresses, ...rest } = arg;
+async function userSignUp(url: string, { arg }: { arg: SignUpPayload }) {
+  const { contacts, name, addresses, user_type, ...rest } = arg;
 
-  const user = { name, contacts: contacts.map((c) => c.phone), addresses };
+  const user = {
+    name,
+    contacts: contacts.map((c) => c.phone),
+    addresses,
+    user_type,
+  };
 
   const response = await fetch(url, {
     method: "POST",
@@ -42,6 +51,9 @@ async function userSignUp(url: string, { arg }: { arg: SignUpFormInputs }) {
 
   return await response.json();
 }
+
+const passwordValidationHelperText =
+  "Password must contain at least 8 characters, including uppercase, lowercase, number, and special character.";
 
 const SignUpPage = () => {
   const { snackbarToggle } = useContext(SnackbarContext);
@@ -60,16 +72,20 @@ const SignUpPage = () => {
     formState: { errors },
     register,
     handleSubmit,
+    watch,
   } = useForm<SignUpFormInputs>({
     defaultValues: {
       email: "",
       name: "",
+      confirm_password: "",
       contacts: [{ phone: "" }],
       addresses: [
         { number: "", line_1: "", state: "", country: "", postal_code: "" },
       ],
     },
   });
+
+  const watchPassword = watch("password");
 
   const {
     fields: contactFields,
@@ -115,7 +131,9 @@ const SignUpPage = () => {
   const userTypeChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) =>
     setUserType((event.target as HTMLInputElement).value as UserTypes);
 
-  const submitHandler = (values: SignUpFormInputs) => registerUser(values);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const submitHandler = (values: SignUpFormInputs) =>
+    registerUser({ ...values, user_type: userType });
 
   return (
     <>
@@ -160,7 +178,7 @@ const SignUpPage = () => {
                     helperText={errors.email?.message}
                   />
                 </Grid>
-                <Grid size={{ xs: 12, md: 12 }}>
+                <Grid size={{ xs: 6, md: 6 }}>
                   <TextField
                     label="Password"
                     size="small"
@@ -171,7 +189,27 @@ const SignUpPage = () => {
                       required: "Password is required",
                     })}
                     error={!!errors.password}
-                    helperText={errors.password?.message}
+                    helperText={
+                      errors.password?.message ?? passwordValidationHelperText
+                    }
+                  />
+                </Grid>
+                <Grid size={{ xs: 6, md: 6 }}>
+                  <TextField
+                    label="Confirm Password"
+                    size="small"
+                    required
+                    type="password"
+                    fullWidth
+                    {...register("confirm_password", {
+                      required: "Confirm your password",
+                      validate: (value) =>
+                        value !== watchPassword
+                          ? "Password is not matched"
+                          : true,
+                    })}
+                    error={!!errors.confirm_password}
+                    helperText={errors.confirm_password?.message}
                   />
                 </Grid>
                 <Grid size={{ xs: 12 }} />

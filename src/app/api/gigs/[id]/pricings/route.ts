@@ -1,17 +1,18 @@
 import prisma from "@/lib/prisma";
 import { createPricingModelValidationSchema } from "@/lib/validations/pricing/create-pricing-model-validation";
 import { PricingModelType } from "@prisma/client";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ValidationError } from "yup";
 
 export async function GET(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const { id } = await params;
+  const budget = req.nextUrl.searchParams.get("budget");
 
   try {
-    const pricingModel = await prisma.pricingModel.findFirst({
+    const _pricingModel = await prisma.pricingModel.findFirst({
       where: { gig_id: id },
       select: {
         id: true,
@@ -28,6 +29,19 @@ export async function GET(
         },
       },
     });
+
+    let pricingModel = { ..._pricingModel };
+
+    // TODO: filter other pricing model as well.
+    if (pricingModel && pricingModel.tiered && budget) {
+      const tiers = pricingModel.tiered.pricing_tiers.filter(
+        (tier) => tier.price <= +budget
+      );
+      pricingModel = {
+        ...pricingModel,
+        tiered: { ...pricingModel.tiered, pricing_tiers: tiers },
+      };
+    }
 
     return NextResponse.json(pricingModel, { status: 200 });
   } catch (error) {

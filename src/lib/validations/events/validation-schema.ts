@@ -5,5 +5,6 @@ export const eventValidationSchema = Yup.object({
   date_time: Yup.date().required("Date Time is required"),
   event_type_id: Yup.string().required("Event Type is required"),
   venue: Yup.string().required("Venue is required"),
+  budget: Yup.number().required("Budget is required"),
   organizer_id: Yup.string().required("Organizer is required"),
 });

@@ -51,9 +51,12 @@ export async function POST(
       { abortEarly: false }
     );
 
+    const { budget, ...values } = body;
+
     const newEvent = await prisma.event.create({
       data: {
-        ...body,
+        ...values,
+        budget: `${budget}`,
         organizer_id: id,
         created_by: "unauthorized user",
         updated_by: "unauthorized user",

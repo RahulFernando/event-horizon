@@ -112,7 +112,11 @@ const CreateEventPage = () => {
     setValue("date_time", value);
   };
 
-  const submitHandler = (values: EventFormInputs) => createEvent(values);
+  const submitHandler = (values: EventFormInputs) =>
+    createEvent({
+      ...values,
+      organizer_id: account?.user.organizers?.id ?? "",
+    });
 
   return (
     <>

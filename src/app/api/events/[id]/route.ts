@@ -20,6 +20,7 @@ export async function GET(
         event_type: { select: { id: true, name: true } },
         organizer_id: true,
         venue: true,
+        budget: true,
       },
     });
 
