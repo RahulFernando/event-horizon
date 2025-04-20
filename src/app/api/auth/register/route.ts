@@ -15,6 +15,8 @@ export async function POST(req: Request) {
       { abortEarly: false }
     );
 
+    console.log("user", user);
+
     const newUser = await createUserWithAddresses(user);
 
     const hashedPassword = await bcrypt.hash(password, 10);

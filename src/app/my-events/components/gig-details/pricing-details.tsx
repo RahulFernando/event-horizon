@@ -22,10 +22,11 @@ async function fetchPricing(url: string) {
 const PricingDetails: React.FC<PricingDetailsProps> = ({
   id,
   selectedTierId,
+  budget,
   onTierSelect,
 }) => {
   const { data: pricing } = useSWR(
-    id ? `/api/gigs/${id}/pricings` : null,
+    id ? `/api/gigs/${id}/pricings?budget=${budget}` : null,
     fetchPricing
   );
 

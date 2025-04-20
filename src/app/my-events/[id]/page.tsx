@@ -105,6 +105,7 @@ const EventDetailPage = () => {
       duration: " ",
       event_type_id: undefined,
       venue: " ",
+      budget: 0,
       organizer_id: account?.user.organizers?.id,
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -146,6 +147,7 @@ const EventDetailPage = () => {
         date_time: dayjs(event.date_time),
         event_type_id: event.event_type.id,
         organizer_id: account?.user.organizers?.id,
+        budget: event.budget,
       });
     }
   }, [account, event, reset]);
@@ -298,6 +300,7 @@ const EventDetailPage = () => {
           content={
             <GigDetails
               id={selectedGigId}
+              budget={event?.budget}
               selectedTierId={selectedTierId}
               onTierSelect={tierSelectHandler}
             />

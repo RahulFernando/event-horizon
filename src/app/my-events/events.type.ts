@@ -18,6 +18,7 @@ export interface EventFormInputs {
   venue?: string;
   date_time: Dayjs | null;
   duration?: string;
+  budget: number;
   event_type_id: string;
   organizer_id?: string;
 }
@@ -80,6 +81,7 @@ export interface GigCardProps extends IGig {
 export interface GigDetailsProps {
   id: string | undefined;
   selectedTierId?: string;
+  budget?: string;
   onTierSelect?: (id: string, event: React.MouseEvent) => void;
 }
 

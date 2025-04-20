@@ -25,6 +25,10 @@ export interface SignUpFormInputs {
   }[];
 }
 
+export interface SignUpPayload extends SignUpFormInputs {
+  user_type: UserType;
+}
+
 export interface ContactDetailsInputProps {
   control: Control<SignUpFormInputs, any>;
   error?: FieldError | undefined;

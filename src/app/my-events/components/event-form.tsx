@@ -92,6 +92,18 @@ const EventForm: React.FC<EventFormProps> = ({
           />
         </Grid>
         <Grid size={{ xs: 12 }}>
+          <TextField
+            label="Your Budget"
+            size="small"
+            type="number"
+            fullWidth
+            required
+            {...register("budget", { required: "Budget is required" })}
+            error={!!errors.budget}
+            helperText={errors.budget?.message}
+          />
+        </Grid>
+        <Grid size={{ xs: 12 }}>
           <FormControl
             required
             size="small"

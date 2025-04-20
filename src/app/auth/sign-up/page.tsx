@@ -21,14 +21,23 @@ import AppTitle from "@/app/components/app-title";
 import ContactDetailsInput from "./components/contact-details-input";
 import AddressDetailsInput from "./components/address-details-input";
 
-import { SignUpFormInputs, UserType as UserTypes } from "./sign-up.types";
+import {
+  SignUpFormInputs,
+  SignUpPayload,
+  UserType as UserTypes,
+} from "./sign-up.types";
 import SnackBar from "@/app/components/snack-bar";
 import { ActionKind } from "@/app/contexts/snackbar/snackbar.types";
 
-async function userSignUp(url: string, { arg }: { arg: SignUpFormInputs }) {
-  const { contacts, name, addresses, ...rest } = arg;
+async function userSignUp(url: string, { arg }: { arg: SignUpPayload }) {
+  const { contacts, name, addresses, user_type, ...rest } = arg;
 
-  const user = { name, contacts: contacts.map((c) => c.phone), addresses };
+  const user = {
+    name,
+    contacts: contacts.map((c) => c.phone),
+    addresses,
+    user_type,
+  };
 
   const response = await fetch(url, {
     method: "POST",
@@ -42,6 +51,9 @@ async function userSignUp(url: string, { arg }: { arg: SignUpFormInputs }) {
 
   return await response.json();
 }
+
+const passwordValidationHelperText =
+  "Password must contain at least 8 characters, including uppercase, lowercase, number, and special character.";
 
 const SignUpPage = () => {
   const { snackbarToggle } = useContext(SnackbarContext);
@@ -120,9 +132,8 @@ const SignUpPage = () => {
     setUserType((event.target as HTMLInputElement).value as UserTypes);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const submitHandler = (values: SignUpFormInputs) => registerUser(values);
-
-  console.log(errors);
+  const submitHandler = (values: SignUpFormInputs) =>
+    registerUser({ ...values, user_type: userType });
 
   return (
     <>
@@ -178,7 +189,9 @@ const SignUpPage = () => {
                       required: "Password is required",
                     })}
                     error={!!errors.password}
-                    helperText={errors.password?.message}
+                    helperText={
+                      errors.password?.message ?? passwordValidationHelperText
+                    }
                   />
                 </Grid>
                 <Grid size={{ xs: 6, md: 6 }}>

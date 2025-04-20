@@ -21,6 +21,7 @@ async function fetchGigById(url: string) {
 const GigDetails: React.FC<GigDetailsProps> = ({
   id,
   selectedTierId,
+  budget,
   onTierSelect,
 }) => {
   const [activeTab, setActiveTab] = useState("basic");
@@ -52,6 +53,7 @@ const GigDetails: React.FC<GigDetailsProps> = ({
       <TabPanel value={"pricing"}>
         <PricingDetails
           id={id}
+          budget={budget}
           selectedTierId={selectedTierId}
           onTierSelect={onTierSelect}
         />

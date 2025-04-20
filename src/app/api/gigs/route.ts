@@ -59,6 +59,7 @@ export async function GET(req: NextRequest) {
         },
       },
     });
+
     return NextResponse.json(
       { count: gigs.length, items: gigs },
       { status: 200 }

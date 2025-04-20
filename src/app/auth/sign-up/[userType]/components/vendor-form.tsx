@@ -92,9 +92,7 @@ const VendorForm = () => {
             fullWidth
             size="small"
             label="Taxpayer Identification Number"
-            {...register("taxpayer_identification_number", {
-              required: "Taxpayer Identification Number is required",
-            })}
+            {...register("taxpayer_identification_number", {})}
             error={!!errors.taxpayer_identification_number}
             helperText={errors.taxpayer_identification_number?.message}
           />
