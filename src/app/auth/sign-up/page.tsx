@@ -122,6 +122,8 @@ const SignUpPage = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const submitHandler = (values: SignUpFormInputs) => registerUser(values);
 
+  console.log(errors);
+
   return (
     <>
       <SnackBar />
@@ -165,7 +167,7 @@ const SignUpPage = () => {
                     helperText={errors.email?.message}
                   />
                 </Grid>
-                <Grid size={{ xs: 12, md: 12 }}>
+                <Grid size={{ xs: 6, md: 6 }}>
                   <TextField
                     label="Password"
                     size="small"
@@ -179,7 +181,7 @@ const SignUpPage = () => {
                     helperText={errors.password?.message}
                   />
                 </Grid>
-                <Grid size={{ xs: 12, md: 12 }}>
+                <Grid size={{ xs: 6, md: 6 }}>
                   <TextField
                     label="Confirm Password"
                     size="small"
@@ -191,7 +193,7 @@ const SignUpPage = () => {
                       validate: (value) =>
                         value !== watchPassword
                           ? "Password is not matched"
-                          : "",
+                          : true,
                     })}
                     error={!!errors.confirm_password}
                     helperText={errors.confirm_password?.message}
