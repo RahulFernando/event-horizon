@@ -1,6 +1,7 @@
 import AppBar from "@/app/components/app-bar";
-import { Container, Stack } from "@mui/material";
+import { Box, Container, Stack } from "@mui/material";
 import Navigation from "./components/navigation";
+import GigPerformance from "./components/gig-performance";
 
 const VendorDashboardPage = () => {
   return (
@@ -16,6 +17,9 @@ const VendorDashboardPage = () => {
           }}
         >
           <Navigation />
+          <Box sx={{ flexGrow: 1 }}>
+            <GigPerformance />
+          </Box>
         </Stack>
       </Container>
     </>

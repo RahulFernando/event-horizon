@@ -5,3 +5,12 @@ export interface MenuItemProps {
   text: string;
   href: string;
 }
+
+export interface IGigPerformance {
+  id: string;
+  title: string;
+  totalJobs: number;
+  completedJobs: number;
+  completionRate: string;
+  earnings: number;
+}
