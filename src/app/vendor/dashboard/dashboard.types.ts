@@ -1,3 +1,4 @@
+import { IGig } from "@/app/types";
 import { SvgIconComponent } from "@mui/icons-material";
 
 export interface MenuItemProps {
@@ -13,4 +14,21 @@ export interface IGigPerformance {
   completedJobs: number;
   completionRate: string;
   earnings: number;
+}
+
+export interface IRating {
+  id: string;
+  ratings: { id: string; rating: number };
+  gig: IGig;
+  averageRating: number;
+}
+
+export interface IAverageRating {
+  averageRating: number | null;
+  ratings?: IRating[];
+}
+
+export interface WhatCustomerThinkProps {
+  rating: number;
+  isLoading?: boolean;
 }
