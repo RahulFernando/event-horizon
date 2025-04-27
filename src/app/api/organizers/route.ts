@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { createOrganizerValidationSchema } from "@/lib/validations/organizers/create-organizer-validation-schema";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ValidationError } from "yup";
 
 export async function GET() {
@@ -46,6 +46,32 @@ export async function POST(req: Request) {
     if (error instanceof ValidationError) {
       return NextResponse.json({ errors: error.errors }, { status: 400 });
     }
+    return NextResponse.json({ errors: [error] }, { status: 500 });
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  const userId = req.nextUrl.searchParams.get("userId");
+  const body = await req.json();
+
+  try {
+    if (!userId) {
+      return NextResponse.json({ errors: "Unauthorized" }, { status: 400 });
+    }
+
+    const updateOrganizer = await prisma.organizer.update({
+      where: { user_id: userId },
+      data: body,
+      select: {
+        id: true,
+        first_name: true,
+        last_name: true,
+        national_identity: true,
+        user_id: true,
+      },
+    });
+    return NextResponse.json({ ...updateOrganizer }, { status: 200 });
+  } catch (error) {
     return NextResponse.json({ errors: [error] }, { status: 500 });
   }
 }

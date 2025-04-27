@@ -120,3 +120,44 @@ export interface IConversation extends Conversation {
 export interface IMessage extends Message {
   sender: IUser;
 }
+
+export interface IMonthlyGig extends Gig {
+  pricing_mode: {
+    type: PricingModelType;
+    fixed_rate: {
+      id: string;
+      price: number;
+    };
+    hourly_rate: {
+      id: string;
+      hour: string;
+      price: number;
+    };
+    tiered: {
+      id: string;
+      pricing_tiers: {
+        id: string;
+        level: string;
+        description: string;
+        price: number;
+      }[];
+    };
+  };
+}
+
+export interface IMonthlyEarningJob extends Job {
+  gig: IMonthlyGig;
+  event: Event;
+  pricingTier?: {
+    id: string;
+    level: string;
+    description: string;
+    price: number;
+  };
+}
+
+export interface IMonthlyEarning {
+  month: string;
+  earnings: number;
+  [key: string]: string | number;
+}

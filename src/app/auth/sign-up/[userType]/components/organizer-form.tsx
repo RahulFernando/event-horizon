@@ -16,7 +16,7 @@ import {
 
 async function saveOrganizer(url: string, { arg }: { arg: OrganizerArgs }) {
   const response = await fetch(url, {
-    method: "POST",
+    method: "PUT",
     body: JSON.stringify(arg),
   });
 
@@ -52,7 +52,7 @@ const OrganizerForm: React.FC<OrganizerFormProps> = ({
     error,
     data,
     trigger: addOrganizer,
-  } = useSWRMutation("/api/organizers", saveOrganizer);
+  } = useSWRMutation(`/api/organizers?userId=${userId}`, saveOrganizer);
 
   // set first name
   useEffect(() => {
