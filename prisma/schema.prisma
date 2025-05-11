@@ -276,6 +276,7 @@ model Job {
   updated_at             DateTime     @updatedAt
   updated_by             String
   calendar               Calendar[]
+  Invoice                Invoice[]
 
   @@id([id])
   @@unique([gig_id, event_id])
@@ -396,4 +397,23 @@ model UserRating {
   gig Gig @relation(fields: [gig_id], references: [id])
 
   @@map("user_ratings")
+}
+
+model Invoice {
+  id           String    @id @default(uuid())
+  job          Job       @relation(fields: [job_id], references: [id])
+  job_id       String
+  payments     Payment[]
+  total_amount Float
+
+  @@map("invoices")
+}
+
+model Payment {
+  id         String  @id @default(uuid())
+  amount     Float
+  invoice    Invoice @relation(fields: [invoice_id], references: [id])
+  invoice_id String
+
+  @@map("payments")
 }

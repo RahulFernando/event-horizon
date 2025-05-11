@@ -115,3 +115,11 @@ export interface RateJobProps {
   ) => void;
   onRateChange: (event: React.SyntheticEvent, value: number | null) => void;
 }
+
+export type PaymentType = "FULL" | "ADVANCE";
+
+export interface PaymentProps {
+  jobId: string;
+  amount: number;
+  setAmount: React.Dispatch<React.SetStateAction<number>>;
+}
