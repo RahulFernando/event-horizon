@@ -4,9 +4,11 @@ import {
   Conversation,
   Event,
   Gig,
+  Invoice,
   Job,
   JobStatus,
   Message,
+  Payment,
   PricingModelType,
 } from "@prisma/client";
 
@@ -160,4 +162,8 @@ export interface IMonthlyEarning {
   month: string;
   earnings: number;
   [key: string]: string | number;
+}
+
+export interface IJobInvoice extends Invoice {
+  payments: Payment[];
 }

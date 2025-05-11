@@ -9,6 +9,11 @@ export interface SelectedGigItemProps {
   gig: Gig;
   onDelete: (id: string, event: React.MouseEvent<HTMLButtonElement>) => void;
   onClick: (gig: Gig, jobId: string, event: React.MouseEvent) => void;
+  onPayClick: (
+    gig: Gig,
+    jobId: string,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => void;
 }
 
 // export interface SelectedGigsProps {

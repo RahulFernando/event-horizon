@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ChatIcon from "@mui/icons-material/Chat";
+import PaymentOutlinedIcon from "@mui/icons-material/PaymentOutlined";
 import { SelectedGigItemProps } from "./selected-gigs.types";
 import JobTitle from "./job-title";
 import { useRouter } from "next/navigation";
@@ -20,6 +21,7 @@ const SelectedGig: React.FC<SelectedGigItemProps> = ({
   gig,
   onDelete,
   onClick,
+  onPayClick,
 }) => {
   const router = useRouter();
 
@@ -30,7 +32,7 @@ const SelectedGig: React.FC<SelectedGigItemProps> = ({
   const isDeleteAllow = !statusArray.includes(status);
 
   return (
-    <ListItemButton onClick={onClick.bind(this, gig, id)}>
+    <ListItemButton onClick={onClick.bind(null, gig, id)}>
       <ListItemText
         primary={<JobTitle title={title} status={status} />}
         secondary={name}
@@ -47,6 +49,17 @@ const SelectedGig: React.FC<SelectedGigItemProps> = ({
           {!isDeleteAllow ? <ChatIcon /> : <DeleteOutlineIcon />}
         </IconButton>
       </Tooltip>
+      {status === "ACCEPTED" && (
+        <Tooltip title="Pay" placement="right-start">
+          <IconButton
+            edge="end"
+            color="primary"
+            onClick={onPayClick.bind(this, gig, id)}
+          >
+            <PaymentOutlinedIcon />
+          </IconButton>
+        </Tooltip>
+      )}
     </ListItemButton>
   );
 };
