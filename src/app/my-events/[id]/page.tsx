@@ -31,6 +31,7 @@ import Dialog from "@/app/components/dialog";
 import GigDetails from "../components/gig-details";
 import useDialog from "@/app/hooks/use-dialog";
 import { DIALOG_INFO_TYPE } from "@/app/constants";
+import AuthGuard from "@/app/guards/auth-guard";
 
 async function updateEventAsync(
   url: string,
@@ -235,7 +236,7 @@ const EventDetailPage = () => {
   };
 
   return (
-    <>
+    <AuthGuard userType="ORGANIZER">
       <SnackBar />
       <AppBar />
       <Grid container spacing={1} mt={8.5} pl={2} pr={2}>
@@ -311,7 +312,7 @@ const EventDetailPage = () => {
           onConfirm={addGigHandler}
         />
       )}
-    </>
+    </AuthGuard>
   );
 };
 

@@ -5,10 +5,11 @@ import Navigation from "./components/navigation";
 import GigPerformance from "./components/gig-performance";
 import MonthlyEarning from "./components/monthly-earning";
 import AverageRating from "./components/average-rating";
+import AuthGuard from "@/app/guards/auth-guard";
 
 const VendorDashboardPage = () => {
   return (
-    <>
+    <AuthGuard userType="VENDOR">
       <AppBar />
       <Container maxWidth={false} sx={{ mt: 12 }}>
         <Stack
@@ -35,7 +36,7 @@ const VendorDashboardPage = () => {
           </Box>
         </Stack>
       </Container>
-    </>
+    </AuthGuard>
   );
 };
 

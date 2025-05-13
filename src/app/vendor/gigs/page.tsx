@@ -15,6 +15,7 @@ import { SnackbarContext } from "../../contexts/snackbar/snackbar-context";
 import { ActionKind } from "../../contexts/snackbar/snackbar.types";
 import Navigation from "../dashboard/components/navigation";
 import { AuthContext } from "@/app/contexts/auth/auth-context";
+import AuthGuard from "@/app/guards/auth-guard";
 
 async function fetchGigs(url: string) {
   const response = await fetch(url);
@@ -129,7 +130,7 @@ const MyGigsPage = () => {
   );
 
   return (
-    <>
+    <AuthGuard userType="VENDOR">
       <AppBar />
       <Container maxWidth={false} sx={{ mt: 12 }}>
         <Stack
@@ -188,7 +189,7 @@ const MyGigsPage = () => {
         onClose={clickCloseHandler}
         onConfirm={confirmHandler}
       />
-    </>
+    </AuthGuard>
   );
 };
 
