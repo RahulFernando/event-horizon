@@ -1,5 +1,6 @@
+import { getAuthUser } from "@/lib/auth-utils";
 import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
@@ -44,6 +45,33 @@ export async function PUT(
       },
     });
     return NextResponse.json({ ...updateOrganizer }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ errors: [error] }, { status: 500 });
+  }
+}
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = await params;
+  const { is_deleted } = await req.json();
+
+  try {
+    const currentUser = await getAuthUser(req);
+    if (!currentUser) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const updatedOrganizer = await prisma.organizer.update({
+      where: { id },
+      data: { is_deleted, updated_by: currentUser.name },
+      select: {
+        id: true,
+        is_deleted: true,
+      },
+    });
+    return NextResponse.json(updatedOrganizer, { status: 200 });
   } catch (error) {
     return NextResponse.json({ errors: [error] }, { status: 500 });
   }

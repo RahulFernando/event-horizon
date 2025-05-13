@@ -13,11 +13,7 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-import {
-  Home as HomeIcon,
-  People as VendorsIcon,
-  Event as OrganizersIcon,
-} from "@mui/icons-material";
+import { Home as HomeIcon, People as VendorsIcon } from "@mui/icons-material";
 import AppTitle from "../app-title";
 import { UserRound } from "lucide-react";
 import AuthGuard from "@/app/guards/auth-guard";
@@ -25,7 +21,7 @@ import AuthGuard from "@/app/guards/auth-guard";
 const navigationItems = [
   { name: "Home", path: "/admin", icon: <HomeIcon /> },
   { name: "Vendors", path: "/admin/vendors", icon: <VendorsIcon /> },
-  { name: "Organizers", path: "/organizers", icon: <OrganizersIcon /> },
+  { name: "Organizers", path: "/admin/organizers", icon: <VendorsIcon /> },
 ];
 
 const drawerWidth = 240;
