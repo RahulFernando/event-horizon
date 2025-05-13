@@ -1,6 +1,7 @@
+import { getAuthUser } from "@/lib/auth-utils";
 import prisma from "@/lib/prisma";
 import { eventValidationSchema } from "@/lib/validations/events/validation-schema";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ValidationError } from "yup";
 
 export async function GET(
@@ -59,6 +60,36 @@ export async function PUT(
     if (error instanceof ValidationError) {
       return NextResponse.json({ errors: error.errors }, { status: 400 });
     }
+    return NextResponse.json({ errors: [error] }, { status: 500 });
+  }
+}
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = await params;
+  const { enabled } = await req.json();
+
+  try {
+    const currentUser = await getAuthUser(req);
+
+    if (!currentUser) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const updatedEvent = await prisma.event.update({
+      where: {
+        id,
+      },
+      data: {
+        enabled,
+        updated_by: currentUser.name,
+      },
+    });
+
+    return NextResponse.json({ ...updatedEvent }, { status: 200 });
+  } catch (error) {
     return NextResponse.json({ errors: [error] }, { status: 500 });
   }
 }

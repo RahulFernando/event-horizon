@@ -129,6 +129,7 @@ model Event {
   event_type    EventType @relation(fields: [event_type_id], references: [id])
   organizer     Organizer @relation(fields: [organizer_id], references: [id])
   job           Job[]
+  enabled       Boolean?  @default(true)
 
   @@map("events")
 }

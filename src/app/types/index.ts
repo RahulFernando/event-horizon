@@ -173,3 +173,7 @@ export interface IJobInvoice extends Invoice {
 export interface IOrganizer extends Organizer {
   user: User;
 }
+
+export interface IEvent extends Event {
+  event_type: IEventType;
+}
