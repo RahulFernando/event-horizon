@@ -43,6 +43,7 @@ export interface EventItemProps {
   title: string;
   venue: string | null;
   date_time: Date;
+  enabled: boolean;
   onDelete: (id: string) => void;
   onClick: (id: string) => void;
 }

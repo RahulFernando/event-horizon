@@ -184,6 +184,7 @@ export default function MyEventsPage() {
                   title={event.title}
                   venue={event.venue}
                   date_time={event.date_time}
+                  enabled={event.enabled ?? true}
                   onDelete={deleteClickHandler}
                   onClick={eventClickHandler}
                 />
