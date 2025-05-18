@@ -8,8 +8,10 @@ import {
   Job,
   JobStatus,
   Message,
+  Organizer,
   Payment,
   PricingModelType,
+  User,
 } from "@prisma/client";
 
 export interface IEventType {
@@ -166,4 +168,12 @@ export interface IMonthlyEarning {
 
 export interface IJobInvoice extends Invoice {
   payments: Payment[];
+}
+
+export interface IOrganizer extends Organizer {
+  user: User;
+}
+
+export interface IEvent extends Event {
+  event_type: IEventType;
 }

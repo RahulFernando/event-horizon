@@ -24,6 +24,7 @@ export async function GET(
         },
         location: true,
         vendor_id: true,
+        enabled: true,
       },
     });
     return NextResponse.json(

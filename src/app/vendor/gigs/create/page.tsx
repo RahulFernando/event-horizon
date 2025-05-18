@@ -17,6 +17,7 @@ import { EventType } from "@prisma/client";
 import SnackBar from "@/app/components/snack-bar";
 import { AuthContext } from "@/app/contexts/auth/auth-context";
 import { ICategories } from "@/app/types";
+import AuthGuard from "@/app/guards/auth-guard";
 
 async function createGigAsync(
   url: string,
@@ -131,7 +132,7 @@ const CreateGigPage = () => {
     createGig({ ...values, vendor_id: account?.user.vendors?.id ?? "" });
 
   return (
-    <>
+    <AuthGuard userType="VENDOR">
       <SnackBar />
       <AppBar />
       <Container maxWidth={false} sx={{ mt: 12 }}>
@@ -174,14 +175,14 @@ const CreateGigPage = () => {
                       ? selectedEventTypes
                       : GIG_PREVIEW["event_types"]
                   }
-                  md={3}
+                  cardHeight="300px"
                 />
               </Grid2>
             </Grid2>
           </TabPanel>
         </TabContext>
       </Container>
-    </>
+    </AuthGuard>
   );
 };
 

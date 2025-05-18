@@ -43,6 +43,7 @@ export interface EventItemProps {
   title: string;
   venue: string | null;
   date_time: Date;
+  enabled: boolean;
   onDelete: (id: string) => void;
   onClick: (id: string) => void;
 }
@@ -71,6 +72,7 @@ export interface IGig {
   blob_url?: string;
   event_types: IEventTypeOnGig[];
   vendor: IVendor;
+  enabled: true;
 }
 
 export interface GigCardProps extends IGig {

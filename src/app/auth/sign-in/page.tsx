@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 
 import { SignInFormInputs } from "./sign-in.types";
 import { ActionKind } from "@/app/contexts/snackbar/snackbar.types";
+import { UserType } from "@prisma/client";
 
 async function userSignIn(url: string, { arg }: { arg: SignInFormInputs }) {
   const response = await fetch(url, {
@@ -69,6 +70,13 @@ export default function SignInPage() {
         severity: "success",
       });
       loginSuccess(authDetails);
+      const { account } = authDetails;
+
+      if (account.user.user_type === UserType.ADMIN) {
+        router.replace("/admin");
+        return;
+      }
+
       router.replace("/");
     }
   }, [authDetails, loginSuccess, router, snackbarToggle]);

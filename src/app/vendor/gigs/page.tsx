@@ -15,6 +15,7 @@ import { SnackbarContext } from "../../contexts/snackbar/snackbar-context";
 import { ActionKind } from "../../contexts/snackbar/snackbar.types";
 import Navigation from "../dashboard/components/navigation";
 import { AuthContext } from "@/app/contexts/auth/auth-context";
+import AuthGuard from "@/app/guards/auth-guard";
 
 async function fetchGigs(url: string) {
   const response = await fetch(url);
@@ -119,17 +120,18 @@ const MyGigsPage = () => {
   };
 
   const myGigs = gigs.items.map(
-    ({ id, title, description, location, event_types }) => ({
+    ({ id, title, description, location, event_types, enabled }) => ({
       id,
       title,
       description: description ?? "",
       location,
       event_types: event_types.map((type) => type.event_type.name),
+      enabled: enabled ?? true,
     })
   );
 
   return (
-    <>
+    <AuthGuard userType="VENDOR">
       <AppBar />
       <Container maxWidth={false} sx={{ mt: 12 }}>
         <Stack
@@ -168,7 +170,7 @@ const MyGigsPage = () => {
                 [3, 4, 5, 6].map((gig) => <GigItemSkeleton key={gig} />)}
               {!isLoading &&
                 myGigs.map((gig) => (
-                  <Grid2 key={gig.id} size={{ xs: 12, md: 4, lg: 3 }}>
+                  <Grid2 key={gig.id} size={{ xs: 12, md: 4, xl: 3 }}>
                     <GigPreview
                       {...gig}
                       onClick={clickHandler}
@@ -188,7 +190,7 @@ const MyGigsPage = () => {
         onClose={clickCloseHandler}
         onConfirm={confirmHandler}
       />
-    </>
+    </AuthGuard>
   );
 };
 

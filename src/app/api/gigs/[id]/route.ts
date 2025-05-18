@@ -1,6 +1,7 @@
+import { getAuthUser } from "@/lib/auth-utils";
 import prisma from "@/lib/prisma";
 import { createGigValidationSchema } from "@/lib/validations/gigs/create-validation-schema";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ValidationError } from "yup";
 
 export async function GET(
@@ -91,6 +92,33 @@ export async function PUT(
       return NextResponse.json({ errors: error.errors }, { status: 400 });
     }
 
+    return NextResponse.json({ errors: [error] }, { status: 500 });
+  }
+}
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = await params;
+  const { enabled } = await req.json();
+
+  try {
+    const currentUser = await getAuthUser(req);
+
+    if (!currentUser) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const currentUserName = currentUser.name;
+
+    const updatedGig = await prisma.gig.update({
+      where: { id },
+      data: { enabled, updated_by: currentUserName },
+    });
+
+    return NextResponse.json(updatedGig, { status: 200 });
+  } catch (error) {
     return NextResponse.json({ errors: [error] }, { status: 500 });
   }
 }

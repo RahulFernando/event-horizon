@@ -1,3 +1,4 @@
+import { getAuthUser } from "@/lib/auth-utils";
 import prisma from "@/lib/prisma";
 import { createGigValidationSchema } from "@/lib/validations/gigs/create-validation-schema";
 import { NextRequest, NextResponse } from "next/server";
@@ -57,6 +58,7 @@ export async function GET(req: NextRequest) {
         vendor: {
           select: { id: true, user: { select: { id: true, name: true } } },
         },
+        enabled: true,
       },
     });
 
@@ -69,10 +71,18 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const body = await req.json();
 
   try {
+    const currentUser = await getAuthUser(req);
+
+    if (!currentUser) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const currentUserName = currentUser.name;
+
     await createGigValidationSchema.validate(body, { abortEarly: true });
 
     const { event_type_ids } = body;
@@ -84,8 +94,8 @@ export async function POST(req: Request) {
         location: body.location,
         vendor_id: body.vendor_id,
         category_id: body.category_id,
-        created_by: "unauthorized user",
-        updated_by: "unauthorized user",
+        created_by: currentUserName,
+        updated_by: currentUserName,
         event_types: {
           create: event_type_ids.map((id: string) => ({
             event_type: {

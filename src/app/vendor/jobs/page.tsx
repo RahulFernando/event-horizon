@@ -19,6 +19,7 @@ import { ActionKind } from "@/app/contexts/snackbar/snackbar.types";
 import SnackBar from "@/app/components/snack-bar";
 import { DIALOG_INFO_TYPE } from "@/app/constants";
 import Calendar from "./components/calendar";
+import AuthGuard from "@/app/guards/auth-guard";
 
 async function fetchJobs(url: string) {
   const response = await fetch(url);
@@ -115,7 +116,7 @@ const VendorJobsPage = () => {
   };
 
   return (
-    <>
+    <AuthGuard userType="VENDOR">
       <SnackBar />
       <AppBar />
       <Container maxWidth={false} sx={{ mt: 12 }}>
@@ -161,7 +162,7 @@ const VendorJobsPage = () => {
         onClose={clickCloseHandler}
         onConfirm={() => {}}
       />
-    </>
+    </AuthGuard>
   );
 };
 

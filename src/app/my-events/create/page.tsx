@@ -24,6 +24,7 @@ import { ActionKind } from "@/app/contexts/snackbar/snackbar.types";
 import SnackBar from "@/app/components/snack-bar";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/app/contexts/auth/auth-context";
+import AuthGuard from "@/app/guards/auth-guard";
 
 async function createEventAsync(
   url: string,
@@ -119,7 +120,7 @@ const CreateEventPage = () => {
     });
 
   return (
-    <>
+    <AuthGuard userType="ORGANIZER">
       <SnackBar />
       <AppBar />
       <Grid container spacing={1} mt={8.5} pl={2} pr={2}>
@@ -166,7 +167,7 @@ const CreateEventPage = () => {
           </Box>
         </Grid>
       </Grid>
-    </>
+    </AuthGuard>
   );
 };
 

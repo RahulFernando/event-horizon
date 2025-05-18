@@ -13,6 +13,7 @@ export async function GET() {
         duration: true,
         event_type: { select: { id: true, name: true } },
         venue: true,
+        enabled: true,
       },
     });
     return NextResponse.json(events, { status: 200 });

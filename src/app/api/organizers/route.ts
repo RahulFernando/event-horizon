@@ -12,6 +12,13 @@ export async function GET() {
         last_name: true,
         national_identity: true,
         user_id: true,
+        user: {
+          select: {
+            id: true,
+            addresses: true,
+            contacts: true,
+          },
+        },
       },
     });
     const count = await prisma.organizer.count();

@@ -19,6 +19,7 @@ import SnackBar from "@/app/components/snack-bar";
 import ModelSelector from "../components/pricing-models/pricing-model-selector";
 import withPricingModel from "../components/hoc/with-pricing-model";
 import { AuthContext } from "@/app/contexts/auth/auth-context";
+import AuthGuard from "@/app/guards/auth-guard";
 
 async function updateGigAsync(
   url: string,
@@ -199,7 +200,7 @@ const GigPage = () => {
     setPricingModelType(value);
 
   return (
-    <>
+    <AuthGuard userType="VENDOR">
       <SnackBar />
       <AppBar />
       <Container maxWidth={false} sx={{ mt: 12 }}>
@@ -282,7 +283,7 @@ const GigPage = () => {
           </TabPanel>
         </TabContext>
       </Container>
-    </>
+    </AuthGuard>
   );
 };
 

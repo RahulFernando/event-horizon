@@ -6,6 +6,7 @@ import AppBar from "@/app/components/app-bar";
 import ChatList from "@/app/chat/components/chat-list";
 import ChatBox from "@/app/chat/components/chat-box";
 import Navigation from "../dashboard/components/navigation";
+import AuthGuard from "@/app/guards/auth-guard";
 
 const ChatPage = () => {
   const [selectedConversationId, setSelectedConversationId] = useState("");
@@ -14,7 +15,7 @@ const ChatPage = () => {
     setSelectedConversationId(id);
 
   return (
-    <>
+    <AuthGuard userType="VENDOR">
       <SnackBar />
       <AppBar />
       <Container maxWidth={false} sx={{ mt: 12 }}>
@@ -49,7 +50,7 @@ const ChatPage = () => {
           </Box>
         </Stack>
       </Container>
-    </>
+    </AuthGuard>
   );
 };
 

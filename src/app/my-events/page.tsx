@@ -20,6 +20,7 @@ import SnackBar from "../components/snack-bar";
 import { SnackbarContext } from "../contexts/snackbar/snackbar-context";
 import { ActionKind } from "../contexts/snackbar/snackbar.types";
 import { useRouter } from "next/navigation";
+import AuthGuard from "../guards/auth-guard";
 
 async function fetchOrganizer(url: string) {
   const response = await fetch(url);
@@ -141,7 +142,7 @@ export default function MyEventsPage() {
   const eventClickHandler = (id: string) => router.push(`/my-events/${id}`);
 
   return (
-    <>
+    <AuthGuard userType="ORGANIZER">
       <SnackBar />
       <AppBar />
       <Container maxWidth={false} sx={{ mt: 12 }}>
@@ -183,6 +184,7 @@ export default function MyEventsPage() {
                   title={event.title}
                   venue={event.venue}
                   date_time={event.date_time}
+                  enabled={event.enabled ?? true}
                   onDelete={deleteClickHandler}
                   onClick={eventClickHandler}
                 />
@@ -190,6 +192,6 @@ export default function MyEventsPage() {
             ))}
         </Grid2>
       </Container>
-    </>
+    </AuthGuard>
   );
 }
