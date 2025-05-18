@@ -72,6 +72,7 @@ export interface IGig {
   blob_url?: string;
   event_types: IEventTypeOnGig[];
   vendor: IVendor;
+  enabled: true;
 }
 
 export interface GigCardProps extends IGig {

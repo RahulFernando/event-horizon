@@ -17,6 +17,7 @@ import {
   Home as HomeIcon,
   People as VendorsIcon,
   LocalActivity as EventIcon,
+  Category as CategoryIcon,
 } from "@mui/icons-material";
 import AppTitle from "../app-title";
 import { UserRound } from "lucide-react";
@@ -27,6 +28,7 @@ const navigationItems = [
   { name: "Vendors", path: "/admin/vendors", icon: <VendorsIcon /> },
   { name: "Organizers", path: "/admin/organizers", icon: <VendorsIcon /> },
   { name: "Events", path: "/admin/events", icon: <EventIcon /> },
+  { name: "Gigs", path: "/admin/gigs", icon: <CategoryIcon /> },
 ];
 
 const drawerWidth = 240;

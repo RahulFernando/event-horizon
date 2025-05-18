@@ -172,6 +172,7 @@ model Gig {
   category_id  String
   jobs         Job[]
   user_ratings UserRating[]
+  enabled      Boolean?           @default(true)
 
   @@map("gigs")
 }

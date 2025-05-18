@@ -6,12 +6,13 @@ import {
   CardContent,
   CardHeader,
   Chip,
-  Grid2,
   IconButton,
+  Stack,
   Tooltip,
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import BlockIcon from "@mui/icons-material/Block";
 import { GigPreviewProps } from "../my-gigs.types";
 import { GIG_PREVIEW } from "../constants";
 
@@ -21,21 +22,66 @@ const GigPreview: React.FC<GigPreviewProps> = ({
   description = GIG_PREVIEW["description"],
   location = GIG_PREVIEW["location"],
   event_types = GIG_PREVIEW["event_types"],
-  md = 4,
-  xs = 12,
+  enabled = true,
+  cardHeight = "200px",
   onClick,
   onDeleteClick,
 }) => (
   <Box
     component="div"
-    onClick={onClick && id ? onClick.bind(null, id) : () => {}}
+    onClick={onClick && id && enabled ? onClick.bind(null, id) : () => {}}
+    sx={{ position: "relative", height: cardHeight }}
   >
-    <Card>
+    <Card
+      sx={{
+        height: "100%",
+        position: "relative",
+        transition: "all 0.2s ease-in-out",
+        ":hover": {
+          cursor: enabled ? "pointer" : "default",
+          ...(onClick && { boxShadow: 5 }),
+        },
+      }}
+    >
+      {!enabled && (
+        <Tooltip
+          title="Please contact administrator"
+          placement="left-start"
+          arrow
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: 12,
+              right: 0,
+              zIndex: 1,
+            }}
+          >
+            <Chip
+              label="Disabled"
+              size="small"
+              color="error"
+              icon={<BlockIcon fontSize="small" />}
+              sx={{
+                borderTopLeftRadius: 16,
+                borderBottomLeftRadius: 16,
+                borderTopRightRadius: 0,
+                borderBottomRightRadius: 0,
+                pl: 0.5,
+                "& .MuiChip-label": {
+                  fontWeight: 500,
+                },
+              }}
+            />
+          </Box>
+        </Tooltip>
+      )}
       <CardHeader
         title={title}
         subheader={location}
         action={
-          onDeleteClick && (
+          onDeleteClick &&
+          enabled && (
             <Tooltip title="Delete">
               <IconButton
                 size="small"
@@ -51,15 +97,40 @@ const GigPreview: React.FC<GigPreviewProps> = ({
           )
         }
       />
-      <CardContent>
-        <Typography variant="body1">{description}</Typography>
-        <Grid2 container spacing={0.5} mt={2}>
+      <CardContent
+        sx={{
+          flexGrow: 1,
+          overflow: "auto",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
+        <Typography
+          variant="body1"
+          sx={{
+            flexGrow: 1,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: 4,
+            WebkitBoxOrient: "vertical",
+          }}
+        >
+          {description}
+        </Typography>
+        <Stack
+          direction="row"
+          spacing={0.8}
+          sx={{
+            justifyContent: "flex-start",
+            alignItems: "center",
+          }}
+        >
           {event_types.map((eventType) => (
-            <Grid2 key={eventType} size={{ xs, md }}>
-              <Chip key={eventType} color="default" label={eventType} />
-            </Grid2>
+            <Chip key={eventType} color="default" label={eventType} />
           ))}
-        </Grid2>
+        </Stack>
       </CardContent>
     </Card>
   </Box>

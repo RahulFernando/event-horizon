@@ -32,9 +32,11 @@ const GigList: React.FC<GigListProps> = ({
     fetchGigs
   );
 
+  const items = gigs.items.filter((gig) => gig.enabled);
+
   return (
     <Grid container spacing={2}>
-      {gigs.items.map((gig) => (
+      {items.map((gig) => (
         <Grid key={gig.id} size={{ xs: 12, md: 4, xl: 3 }}>
           <GigCard {...gig} onClick={onClick} onAddClick={onAddClick} />
         </Grid>

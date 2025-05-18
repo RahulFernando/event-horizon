@@ -43,8 +43,8 @@ export interface GigPreviewProps extends Pick<GigFormInputs, "description"> {
   title?: string;
   location?: string;
   event_types?: string[];
-  xs?: number;
-  md?: number;
+  enabled?: boolean;
+  cardHeight?: string;
   onClick?: (id: string) => void;
   onDeleteClick?: (
     { id, title }: { id: string; title: string },

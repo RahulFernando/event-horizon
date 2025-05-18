@@ -175,7 +175,7 @@ const CreateGigPage = () => {
                       ? selectedEventTypes
                       : GIG_PREVIEW["event_types"]
                   }
-                  md={3}
+                  cardHeight="300px"
                 />
               </Grid2>
             </Grid2>
