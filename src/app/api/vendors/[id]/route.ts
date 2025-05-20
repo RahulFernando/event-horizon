@@ -1,5 +1,6 @@
+import { getAuthUser } from "@/lib/auth-utils";
 import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
@@ -41,6 +42,35 @@ export async function PATCH(
       },
     });
     return NextResponse.json(updatedVendor, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ errors: [error] }, { status: 500 });
+  }
+}
+
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = await params;
+  const body = await req.json();
+
+  try {
+    const currentUser = await getAuthUser(req);
+
+    if (!currentUser) {
+      return NextResponse.json({ errors: "Unauthorized" }, { status: 401 });
+    }
+
+    const vendor = await prisma.vendor.update({
+      where: {
+        id,
+      },
+      data: {
+        ...body,
+        updated_by: currentUser.name,
+      },
+    });
+    return NextResponse.json(vendor, { status: 200 });
   } catch (error) {
     return NextResponse.json({ errors: [error] }, { status: 500 });
   }

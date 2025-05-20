@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  Account,
+  Address,
   Category,
   Conversation,
   Event,
@@ -12,6 +14,7 @@ import {
   Payment,
   PricingModelType,
   User,
+  UserType,
 } from "@prisma/client";
 
 export interface IEventType {
@@ -27,7 +30,15 @@ export interface IEventTypeOnGig {
 export interface IUser {
   id: string;
   name: string;
+  user_type: UserType;
   contacts?: string[];
+}
+
+export interface IUserInfo extends User {
+  addresses: Address[];
+  account: Account;
+  vendors?: IVendor;
+  organizers?: IOrganizer;
 }
 
 export interface IVendor {

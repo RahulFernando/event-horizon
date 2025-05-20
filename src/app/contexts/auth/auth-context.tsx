@@ -77,10 +77,10 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
   );
 
   const signOutHandler = useCallback(() => {
+    router.replace("/");
     removeToken();
     removeAccont();
     dispatch({ type: "SIGN_OUT" });
-    router.replace("/");
   }, [removeAccont, removeToken, router]);
 
   const values = {

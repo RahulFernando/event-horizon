@@ -26,16 +26,22 @@ export async function GET(
 }
 
 export async function PUT(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const { id } = await params;
   const body = await req.json();
 
   try {
+    const currentUser = await getAuthUser(req);
+
+    if (!currentUser) {
+      return NextResponse.json({ errors: "Unauthorized" }, { status: 401 });
+    }
+
     const updateOrganizer = await prisma.organizer.update({
       where: { id },
-      data: body,
+      data: { ...body, updated_by: currentUser.name },
       select: {
         id: true,
         first_name: true,

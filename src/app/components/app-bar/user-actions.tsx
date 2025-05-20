@@ -1,11 +1,36 @@
 "use client";
+import React, { MouseEvent, useContext, useState } from "react";
 import { AuthContext } from "@/app/contexts/auth/auth-context";
-import { Button } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  useTheme,
+} from "@mui/material";
+import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import Link from "next/link";
-import React, { useContext } from "react";
+import MenuItem from "./menu-item";
+import { useRouter } from "next/navigation";
 
 const UserActions = () => {
   const { token, account, signOut } = useContext(AuthContext);
+  const theme = useTheme();
+  const router = useRouter();
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: MouseEvent<HTMLDivElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const getLinkAndLabel = () => {
     if (account) {
@@ -26,6 +51,8 @@ const UserActions = () => {
   };
 
   const { href, label } = getLinkAndLabel();
+
+  const profileClickHandler = () => router.push("/profile");
 
   return (
     <>
@@ -62,21 +89,46 @@ const UserActions = () => {
         </Button>
       )}
       {token && (
-        <Button
-          sx={{
-            my: 2,
-            ml: 1,
-            color: "white",
-            display: "block",
-            fontSize: "15px",
-            bgcolor: "warning",
-          }}
-          variant="contained"
-          onClick={signOut}
-        >
-          Log Out
-        </Button>
+        <Box component="div" onClick={handleClick}>
+          <Avatar
+            sx={{
+              mt: 1.5,
+              ml: 1,
+              border: `2px solid ${theme.palette.background.default}`,
+              boxShadow: theme.shadows[3],
+              bgcolor: theme.palette.primary.light,
+              "&:hover": {
+                boxShadow: theme.shadows[6],
+                cursor: "pointer",
+              },
+            }}
+          >
+            {account?.user.name.charAt(0)}
+          </Avatar>
+        </Box>
       )}
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={profileClickHandler}>
+          <ListItemIcon>
+            <PermIdentityOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText sx={{ ml: -1 }}>Profile</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={signOut}>
+          <ListItemIcon>
+            <LogoutOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText sx={{ ml: -1 }}>Logout</ListItemText>
+        </MenuItem>
+      </Menu>
     </>
   );
 };
