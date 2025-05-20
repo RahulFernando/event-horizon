@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { MouseEvent, useContext, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   AppBar,
@@ -10,8 +10,10 @@ import {
   ListItemIcon,
   ListItemText,
   Box,
-  IconButton,
-  Tooltip,
+  Avatar,
+  useTheme,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import {
   Home as HomeIcon,
@@ -19,9 +21,11 @@ import {
   LocalActivity as EventIcon,
   Category as CategoryIcon,
 } from "@mui/icons-material";
+import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import AppTitle from "../app-title";
-import { UserRound } from "lucide-react";
 import AuthGuard from "@/app/guards/auth-guard";
+import { AuthContext } from "@/app/contexts/auth/auth-context";
 
 const navigationItems = [
   { name: "Home", path: "/admin", icon: <HomeIcon /> },
@@ -34,8 +38,25 @@ const navigationItems = [
 const drawerWidth = 240;
 
 const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { account, signOut } = useContext(AuthContext);
+
   const router = useRouter();
   const pathname = usePathname();
+
+  const theme = useTheme();
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: MouseEvent<HTMLDivElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const profileClickHandler = () => router.push("/admin/profile");
 
   return (
     <AuthGuard userType="ADMIN">
@@ -48,11 +69,21 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           }}
         >
           <Toolbar sx={{ justifyContent: "flex-end" }}>
-            <Tooltip title="Profile" placement="left" arrow>
-              <IconButton color="inherit" edge="end">
-                <UserRound />
-              </IconButton>
-            </Tooltip>
+            <Box component="div" onClick={handleClick}>
+              <Avatar
+                sx={{
+                  border: `2px solid ${theme.palette.background.default}`,
+                  boxShadow: theme.shadows[3],
+                  bgcolor: theme.palette.primary.light,
+                  "&:hover": {
+                    boxShadow: theme.shadows[6],
+                    cursor: "pointer",
+                  },
+                }}
+              >
+                {account?.user.name.charAt(0)}
+              </Avatar>
+            </Box>
           </Toolbar>
         </AppBar>
 
@@ -122,6 +153,29 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           {children}
         </Box>
       </Box>
+
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={profileClickHandler}>
+          <ListItemIcon>
+            <PermIdentityOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText sx={{ ml: -1 }}>Profile</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={signOut}>
+          <ListItemIcon>
+            <LogoutOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText sx={{ ml: -1 }}>Logout</ListItemText>
+        </MenuItem>
+      </Menu>
     </AuthGuard>
   );
 };
