@@ -243,7 +243,6 @@ const GigPage = () => {
                       ? selectedEventTypes
                       : GIG_PREVIEW["event_types"]
                   }
-                  md={2}
                 />
               </Grid2>
             </Grid2>
@@ -276,7 +275,6 @@ const GigPage = () => {
                       ? selectedEventTypes
                       : GIG_PREVIEW["event_types"]
                   }
-                  md={3}
                 />
               </Grid2>
             </Grid2>

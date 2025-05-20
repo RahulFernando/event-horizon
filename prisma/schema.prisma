@@ -35,6 +35,7 @@ model Address {
   country     String
   postal_code String
   user_id     String
+  is_default  Boolean? @default(true)
   created_at  DateTime @default(now())
   created_by  String
   updated_at  DateTime @updatedAt
