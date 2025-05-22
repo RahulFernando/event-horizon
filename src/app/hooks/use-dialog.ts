@@ -18,6 +18,7 @@ const useDialog = () => {
   return {
     open,
     info,
+    setInfo,
     clickOpenHandler,
     clickCloseHandler,
   };
