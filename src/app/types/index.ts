@@ -13,6 +13,7 @@ import {
   Organizer,
   Payment,
   PricingModelType,
+  Ticket,
   User,
   UserType,
 } from "@prisma/client";
@@ -187,4 +188,8 @@ export interface IOrganizer extends Organizer {
 
 export interface IEvent extends Event {
   event_type: IEventType;
+}
+
+export interface ITicket extends Ticket {
+  user: IUser;
 }

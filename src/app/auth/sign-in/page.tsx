@@ -77,6 +77,11 @@ export default function SignInPage() {
         return;
       }
 
+      if (account.user.user_type === UserType.CUSTOMER_SUPPORT_REPRESENTATIVE) {
+        router.replace("/customer-support/tickets");
+        return;
+      }
+
       router.replace("/");
     }
   }, [authDetails, loginSuccess, router, snackbarToggle]);

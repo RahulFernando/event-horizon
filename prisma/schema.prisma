@@ -22,6 +22,7 @@ model User {
   vendors                   Vendor?
   conversation_participants ConversationParticipant[]
   sent_messages             Message[]
+  Ticket                    Ticket[]
 
   @@map("users")
 }
@@ -419,4 +420,41 @@ model Payment {
   invoice_id String
 
   @@map("payments")
+}
+
+model Ticket {
+  id          String          @id @default(uuid())
+  title       String
+  description String?
+  status      TicketStatus    @default(OPEN)
+  user        User            @relation(fields: [user_id], references: [id])
+  user_id     String
+  comments    TicketComment[]
+  created_by  String
+  created_at  DateTime        @default(now())
+  updated_by  String
+  updated_at  DateTime        @updatedAt
+
+  @@map("tickets")
+}
+
+enum TicketStatus {
+  OPEN
+  PENDING
+  ON_HOLD
+  SOLVED
+  CLOSED
+}
+
+model TicketComment {
+  id         String   @id @default(uuid())
+  body       String
+  ticket     Ticket?  @relation(fields: [ticket_id], references: [id])
+  ticket_id  String?
+  created_by String
+  created_at DateTime @default(now())
+  updated_by String
+  updated_at DateTime @updatedAt
+
+  @@map("ticket_comments")
 }

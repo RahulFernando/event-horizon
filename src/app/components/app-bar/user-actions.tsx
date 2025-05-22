@@ -70,6 +70,20 @@ const UserActions = () => {
           {label}
         </Button>
       )}
+      {token && (
+        <Button
+          LinkComponent={Link}
+          href="/tickets"
+          sx={{
+            my: 2,
+            color: "white",
+            display: "block",
+            fontSize: "15px",
+          }}
+        >
+          Tickets
+        </Button>
+      )}
       {!token && (
         <Button
           LinkComponent={Link}
