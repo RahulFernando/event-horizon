@@ -101,18 +101,18 @@ const createUserProfile = async (
       },
     });
   }
-  if (userType === UserType.VENDOR) {
-    return await prisma.vendor.create({
-      data: {
-        user_id: userId,
-        created_by: "unauthorized user",
-        updated_by: "unauthorized user",
-      },
-      select: {
-        id: true,
-      },
-    });
-  }
+  // if (userType === UserType.VENDOR) {
+  //   return await prisma.vendor.create({
+  //     data: {
+  //       user_id: userId,
+  //       created_by: "unauthorized user",
+  //       updated_by: "unauthorized user",
+  //     },
+  //     select: {
+  //       id: true,
+  //     },
+  //   });
+  // }
   if (userType === UserType.ADMIN) {
     return await prisma.vendor.create({
       data: {

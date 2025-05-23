@@ -193,3 +193,7 @@ export interface IEvent extends Event {
 export interface ITicket extends Ticket {
   user: IUser;
 }
+
+export interface IInvoice extends Invoice {
+  payments: Payment[];
+}
