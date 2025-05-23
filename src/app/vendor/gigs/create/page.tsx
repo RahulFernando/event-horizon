@@ -21,9 +21,14 @@ import AuthGuard from "@/app/guards/auth-guard";
 
 async function createGigAsync(
   url: string,
+  token: string,
   { arg }: { arg: GigPostRequestPayload }
 ) {
   const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
     method: "POST",
     body: JSON.stringify(arg),
   });
@@ -60,7 +65,7 @@ async function fetchCategories(url: string) {
 
 const CreateGigPage = () => {
   const { snackbarToggle } = useContext(SnackbarContext);
-  const { account } = useContext(AuthContext);
+  const { account, token } = useContext(AuthContext);
 
   const router = useRouter();
 
@@ -86,7 +91,11 @@ const CreateGigPage = () => {
     error,
     data,
     trigger: createGig,
-  } = useSWRMutation("/api/gigs", createGigAsync);
+  } = useSWRMutation(
+    "/api/gigs",
+    (url: string, { arg }: { arg: GigPostRequestPayload }) =>
+      createGigAsync(url, token as string, { arg: arg })
+  );
 
   const { data: eventTypes = [] } = useSWR("/api/event-types", fetchEventTypes);
 

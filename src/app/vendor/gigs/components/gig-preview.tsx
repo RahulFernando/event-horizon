@@ -117,7 +117,9 @@ const GigPreview: React.FC<GigPreviewProps> = ({
             WebkitBoxOrient: "vertical",
           }}
         >
-          {description}
+          {description.length > 100
+            ? `${description.slice(0, 100)}...`
+            : description}
         </Typography>
         <Stack
           direction="row"

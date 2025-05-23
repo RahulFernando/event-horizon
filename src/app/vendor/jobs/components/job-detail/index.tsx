@@ -5,8 +5,10 @@ import EventDetail from "./event-detail";
 import { IVendorJob, JobDetailProps } from "../../jobs.types";
 import useSWR from "swr";
 import GigDetail from "./gig-detail";
+import { IInvoice } from "@/app/types";
+import PaymentDetail from "./payment-detail";
 
-type ITab = "event" | "gig";
+type ITab = "event" | "gig" | "payment";
 
 async function fetchJob(url: string) {
   const response = await fetch(url);
@@ -19,10 +21,25 @@ async function fetchJob(url: string) {
   return (await response.json()) as IVendorJob;
 }
 
+async function fetchInvoice(url: string) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error?.message || "Something went wrong");
+  }
+
+  return (await response.json()) as IInvoice;
+}
+
 const JobDetail: React.FC<JobDetailProps> = ({ id }) => {
   const [activeTab, setActiveTab] = useState<ITab>("event");
 
   const { data: job } = useSWR(id && `/api/jobs/${id}`, fetchJob);
+  const { data: invoice } = useSWR(
+    id && `/api/jobs/${id}/payments`,
+    fetchInvoice
+  );
 
   const tabChangeHandler = (event: React.SyntheticEvent, newValue: string) =>
     setActiveTab(newValue as ITab);
@@ -42,6 +59,12 @@ const JobDetail: React.FC<JobDetailProps> = ({ id }) => {
               value={"gig"}
               sx={{ textTransform: "none" }}
             />
+            <Tab
+              label="Payment Details"
+              value={"payment"}
+              sx={{ textTransform: "none" }}
+              disabled={!invoice}
+            />
           </TabList>
         </Box>
         <TabPanel value="event">
@@ -55,6 +78,9 @@ const JobDetail: React.FC<JobDetailProps> = ({ id }) => {
               pricingModel={job?.priceModel}
             />
           )}
+        </TabPanel>
+        <TabPanel value="payment">
+          {invoice && <PaymentDetail invoice={invoice} />}
         </TabPanel>
       </TabContext>
     </Box>
