@@ -182,9 +182,14 @@ const findGigPrice = async (tx: PrismaTransaction, job: IJob) => {
     },
   });
 
-  const hours = event?.duration ?? "1";
+  let hours = "1";
+
+  if (event && event.duration && event.duration.trim() !== "") {
+    hours = event.duration;
+  }
 
   if (pricingModel.hourly_rate) {
+    console.log("pricingModel", hours);
     return pricingModel.hourly_rate.price * +hours;
   }
 

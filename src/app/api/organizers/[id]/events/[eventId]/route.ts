@@ -42,9 +42,11 @@ export async function PUT(
   );
 
   try {
+    const { budget, ...values } = body;
+
     const event = await prisma.event.update({
       where: { id: eventId, organizer_id: id },
-      data: { ...body, organizer_id: id },
+      data: { ...values, budget: `${budget}`, organizer_id: id },
       select: {
         id: true,
         title: true,

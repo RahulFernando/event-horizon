@@ -68,7 +68,7 @@ async function fetchPricingModel(url: string) {
     throw new Error(error?.message || "Something went wrong");
   }
 
-  return (await response.json()) as IPricing;
+  return (await response.json()) as { pricingModel: IPricing };
 }
 
 async function fetchCategories(url: string) {
@@ -152,7 +152,7 @@ const GigPage = () => {
 
   useEffect(() => {
     if (pricingModel) {
-      setPricingModelType(pricingModel.type);
+      setPricingModelType(pricingModel.pricingModel.type);
     }
   }, [pricingModel]);
 

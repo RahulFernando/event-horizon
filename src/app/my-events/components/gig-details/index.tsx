@@ -22,7 +22,10 @@ const GigDetails: React.FC<GigDetailsProps> = ({
   id,
   selectedTierId,
   budget,
+  duration,
   onTierSelect,
+  durationChangeHandler,
+  setAccessToAddJob,
 }) => {
   const [activeTab, setActiveTab] = useState("basic");
 
@@ -54,8 +57,11 @@ const GigDetails: React.FC<GigDetailsProps> = ({
         <PricingDetails
           id={id}
           budget={budget}
+          duration={duration}
           selectedTierId={selectedTierId}
           onTierSelect={onTierSelect}
+          durationChangeHandler={durationChangeHandler}
+          setAccessToAddJob={setAccessToAddJob}
         />
       </TabPanel>
     </TabContext>

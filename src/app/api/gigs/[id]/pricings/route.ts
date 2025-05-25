@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { createPricingModelValidationSchema } from "@/lib/validations/pricing/create-pricing-model-validation";
-import { PricingModelType } from "@prisma/client";
+import { HourlyRate, PricingModelType } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { ValidationError } from "yup";
 
@@ -70,7 +70,13 @@ export async function GET(
           case "FIXED":
             return total + (pricingMode.fixed_rate?.price || 0);
           case "HOURLY_RATE":
-            return total + (pricingMode.hourly_rate?.price || 0);
+            return (
+              total +
+              getTotalExistingCostOfHourlyRateJobs(
+                pricingMode.hourly_rate,
+                job.duration ?? undefined
+              )
+            );
           case "TIERED":
             return total + (job.pricingTier?.price || 0);
           default:
@@ -157,6 +163,11 @@ function hasAffordableOptions(
       return false;
   }
 }
+
+const getTotalExistingCostOfHourlyRateJobs = (
+  hourlyRate: HourlyRate | null,
+  duration = 1
+) => (hourlyRate ? hourlyRate.price * duration : 0);
 
 // export async function GET(
 //   req: NextRequest,

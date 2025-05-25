@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PricingTiers from "@/app/vendor/gigs/components/pricing-tiers";
 import { getColorShade } from "@/lib/utils/get-color-shade";
 import { indigo } from "@mui/material/colors";
-import { Grid2, Typography } from "@mui/material";
+import { Grid2, InputAdornment, TextField, Typography } from "@mui/material";
 import { IPricing } from "@/app/types";
 import useSWR from "swr";
 import { PricingDetailsProps } from "../../events.type";
@@ -24,7 +24,10 @@ const PricingDetails: React.FC<PricingDetailsProps> = ({
   id,
   selectedTierId,
   budget,
+  duration,
   onTierSelect,
+  durationChangeHandler,
+  setAccessToAddJob,
 }) => {
   const params = useParams();
 
@@ -34,6 +37,22 @@ const PricingDetails: React.FC<PricingDetailsProps> = ({
       : null,
     fetchPricing
   );
+
+  const isHourlyRate = pricing && pricing.pricingModel.hourly_rate;
+
+  useEffect(() => {
+    if (
+      pricing &&
+      (pricing.pricingModel.hourly_rate ||
+        pricing.pricingModel.fixed_rate ||
+        (pricing.pricingModel.tiered &&
+          pricing.pricingModel.tiered.pricing_tiers.length > 0))
+    ) {
+      setAccessToAddJob(true);
+    } else {
+      setAccessToAddJob(false);
+    }
+  }, [pricing, setAccessToAddJob]);
 
   const getTiers = (): ITier[] => {
     if (!pricing || !pricing.pricingModel.tiered) return [];
@@ -80,6 +99,25 @@ const PricingDetails: React.FC<PricingDetailsProps> = ({
             </Typography>
           )}
       </Grid2>
+      {isHourlyRate && (
+        <Grid2 size={{ xs: 12 }} sx={{ mt: 4 }}>
+          <TextField
+            fullWidth
+            size="small"
+            label="Duration"
+            type="number"
+            value={duration ?? ""}
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">hrs</InputAdornment>
+                ),
+              },
+            }}
+            onChange={durationChangeHandler}
+          />
+        </Grid2>
+      )}
     </Grid2>
   );
 };

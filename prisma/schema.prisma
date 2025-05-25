@@ -275,12 +275,13 @@ model Job {
   pricing_tier_tiered_id String?
   pricing_tier_id        String?
   status                 JobStatus    @default(PENDING)
+  duration               Int?
   created_at             DateTime     @default(now())
   created_by             String
   updated_at             DateTime     @updatedAt
   updated_by             String
   calendar               Calendar[]
-  Invoice                Invoice[]
+  invoice                Invoice?
 
   @@id([id])
   @@unique([gig_id, event_id])
@@ -406,7 +407,7 @@ model UserRating {
 model Invoice {
   id           String    @id @default(uuid())
   job          Job       @relation(fields: [job_id], references: [id])
-  job_id       String
+  job_id       String    @unique
   payments     Payment[]
   total_amount Float
 

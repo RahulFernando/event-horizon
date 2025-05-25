@@ -9,6 +9,7 @@ import { SnackbarContext } from "@/app/contexts/snackbar/snackbar-context";
 
 import { ActionKind } from "@/app/contexts/snackbar/snackbar.types";
 import { VendorArgs, VendorFormInputs } from "../user-type.types";
+import removeEmptyStrings from "@/lib/utils/remove-empty-strings";
 
 async function saveVendor(url: string, { arg }: { arg: VendorArgs }) {
   const response = await fetch(url, {
@@ -69,7 +70,10 @@ const VendorForm = () => {
   }, [error, snackbarToggle]);
 
   const submitHandler = (values: VendorFormInputs) =>
-    addOrganizer({ ...values, user_id: `${userId}` });
+    addOrganizer({
+      ...(removeEmptyStrings(values) as VendorFormInputs),
+      user_id: `${userId}`,
+    });
 
   return (
     <form noValidate method="POST" onSubmit={handleSubmit(submitHandler)}>

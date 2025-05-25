@@ -30,7 +30,7 @@ async function fetchPrice(url: string) {
     throw new Error(error?.message || "Something went wrong");
   }
 
-  return (await response.json()) as IPricing;
+  return (await response.json()) as { pricingModel: IPricing };
 }
 
 async function createPricingModel(
@@ -75,8 +75,8 @@ const HourlyRateForm = () => {
   useEffect(() => {
     if (pricingModel) {
       reset({
-        hour: pricingModel.hourly_rate?.hour,
-        price: pricingModel.hourly_rate?.price,
+        hour: pricingModel.pricingModel.hourly_rate?.hour,
+        price: pricingModel.pricingModel.hourly_rate?.price,
       });
     }
   }, [pricingModel, reset]);
