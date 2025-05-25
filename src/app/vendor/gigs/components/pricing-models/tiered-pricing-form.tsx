@@ -30,7 +30,7 @@ async function fetchPrice(url: string) {
     throw new Error(error?.message || "Something went wrong");
   }
 
-  return (await response.json()) as IPricing;
+  return (await response.json()) as { pricingModel: IPricing };
 }
 
 async function createPricingModel(
@@ -80,8 +80,8 @@ const TieredPricingForm = () => {
   );
 
   useEffect(() => {
-    if (pricingModel && pricingModel.tiered) {
-      const { pricing_tiers } = pricingModel.tiered;
+    if (pricingModel && pricingModel.pricingModel.tiered) {
+      const { pricing_tiers } = pricingModel.pricingModel.tiered;
       setTiers(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         pricing_tiers.map(({ id, ...tier }, index) => {

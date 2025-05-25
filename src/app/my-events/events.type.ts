@@ -84,7 +84,12 @@ export interface GigDetailsProps {
   id: string | undefined;
   selectedTierId?: string;
   budget?: string;
+  duration?: number | null;
+  setAccessToAddJob: React.Dispatch<React.SetStateAction<boolean>>;
   onTierSelect?: (id: string, event: React.MouseEvent) => void;
+  durationChangeHandler: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
 }
 
 export interface BasicDetailsProps {
@@ -96,6 +101,10 @@ export interface BasicDetailsProps {
 
 export interface PricingDetailsProps extends GigDetailsProps {
   selectedTierId?: string;
+  duration?: number | null;
+  durationChangeHandler: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
 }
 
 export interface JobFormProps {
@@ -103,6 +112,7 @@ export interface JobFormProps {
   event_id: string;
   pricing_tier_id?: string;
   pricing_tier_tiered_id?: string;
+  duration?: number | null;
 }
 
 export interface RatingFormValues {

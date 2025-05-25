@@ -84,6 +84,8 @@ const EventDetailPage = () => {
   const [activeTab, setActiveTab] = useState<EventTab>("event");
   const [selectedGigId, setSelectedGigId] = useState<string | undefined>();
   const [selectedTierId, setSelectedTierId] = useState<string>("");
+  const [duration, setDuration] = useState<number | null>(null);
+  const [accessToAddJob, setAccessToAddJob] = useState<boolean>(false);
 
   const params = useParams();
 
@@ -231,8 +233,18 @@ const EventDetailPage = () => {
     createJob({
       event_id: String(params.id),
       gig_id: selectedGigId ?? "0",
+      duration,
       ...(selectedTierId && { pricing_tier_id: selectedTierId }),
     });
+  };
+
+  const durationChangeHandler = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => setDuration(Number(e.target.value));
+
+  const gigDetailCloseHandler = () => {
+    clickCloseHandler();
+    setAccessToAddJob(false);
   };
 
   return (
@@ -303,12 +315,16 @@ const EventDetailPage = () => {
               id={selectedGigId}
               budget={event?.budget}
               selectedTierId={selectedTierId}
+              duration={duration}
+              durationChangeHandler={durationChangeHandler}
               onTierSelect={tierSelectHandler}
+              setAccessToAddJob={setAccessToAddJob}
             />
           }
           open={open}
+          disableSubmitButton={!accessToAddJob}
           confirmButtonLabel="Add"
-          onClose={clickCloseHandler}
+          onClose={gigDetailCloseHandler}
           onConfirm={addGigHandler}
         />
       )}

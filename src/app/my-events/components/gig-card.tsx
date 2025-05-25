@@ -7,6 +7,7 @@ import {
   // CardActions,
   CardHeader,
   CardMedia,
+  Tooltip,
   Typography,
 } from "@mui/material";
 // import AddIcon from "@mui/icons-material/Add";
@@ -39,6 +40,8 @@ const GigCard: React.FC<GigCardProps> = ({
 
   // const isDisable = pricing && pricing.tiered?.id ? true : false;
 
+  const gigTitle = title.length > 30 ? `${title.slice(0, 30)}...` : title;
+
   return (
     <Box
       component="div"
@@ -64,17 +67,19 @@ const GigCard: React.FC<GigCardProps> = ({
       >
         <CardHeader
           title={
-            <Typography
-              variant="h6"
-              sx={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                maxWidth: "100%",
-              }}
-            >
-              {title}
-            </Typography>
+            <Tooltip title={title} placement="bottom">
+              <Typography
+                variant="h6"
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  maxWidth: "100%",
+                }}
+              >
+                {gigTitle}
+              </Typography>
+            </Tooltip>
           }
           subheader={vendor.user.name}
         />

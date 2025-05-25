@@ -5,13 +5,16 @@ import {
   Category,
   Conversation,
   Event,
+  FixedRate,
   Gig,
+  HourlyRate,
   Invoice,
   Job,
   JobStatus,
   Message,
   Organizer,
   Payment,
+  PricingModel,
   PricingModelType,
   Ticket,
   User,
@@ -57,10 +60,16 @@ export interface IEventTypesOnGig {
   };
 }
 
+export interface IIPricingModel extends PricingModel {
+  hourly_rate?: HourlyRate;
+  fixed_rate?: FixedRate;
+}
+
 export interface IGig extends Gig {
   category: Category;
   event_types: IEventTypesOnGig[];
   vendor: IVendor;
+  pricing_mode: IIPricingModel;
 }
 
 export interface IPricing {
@@ -69,10 +78,12 @@ export interface IPricing {
   fixed_rate?: {
     id: string;
     price: number;
+    discount: number;
   };
   hourly_rate?: {
     hour: string;
     price: number;
+    discount: number;
   };
   tiered?: {
     id: string;

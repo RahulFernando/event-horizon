@@ -33,7 +33,7 @@ async function fetchPrice(url: string) {
     throw new Error(error?.message || "Something went wrong");
   }
 
-  return (await response.json()) as IPricing;
+  return (await response.json()) as { pricingModel: IPricing };
 }
 
 async function createPricingModel(
@@ -77,7 +77,9 @@ const FixedPriceForm = () => {
 
   useEffect(() => {
     if (pricingModel) {
-      reset({ price: pricingModel.fixed_rate?.price });
+      reset({
+        price: pricingModel.pricingModel.fixed_rate?.price,
+      });
     }
   }, [pricingModel, reset]);
 
