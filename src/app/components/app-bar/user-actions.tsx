@@ -54,6 +54,11 @@ const UserActions = () => {
 
   const profileClickHandler = () => router.push("/profile");
 
+  const signOutClickHandler = () => {
+    handleClose();
+    signOut();
+  };
+
   return (
     <>
       {token && (
@@ -136,7 +141,7 @@ const UserActions = () => {
           </ListItemIcon>
           <ListItemText sx={{ ml: -1 }}>Profile</ListItemText>
         </MenuItem>
-        <MenuItem onClick={signOut}>
+        <MenuItem onClick={signOutClickHandler}>
           <ListItemIcon>
             <LogoutOutlinedIcon fontSize="small" />
           </ListItemIcon>
