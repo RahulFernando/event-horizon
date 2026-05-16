@@ -2,7 +2,7 @@
 import React, { useContext, useEffect } from "react";
 
 import Link from "next/link";
-import { Box, Button, Stack, TextField } from "@mui/material";
+import { Box, Button, Stack, TextField, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import AppTitle from "@/app/components/app-title";
 import SnackBar from "@/app/components/snack-bar";
@@ -34,6 +34,8 @@ async function userSignIn(url: string, { arg }: { arg: SignInFormInputs }) {
 }
 
 export default function SignInPage() {
+  const theme = useTheme();
+
   const { snackbarToggle } = useContext(SnackbarContext);
   const { loginSuccess } = useContext(AuthContext);
 
@@ -66,7 +68,7 @@ export default function SignInPage() {
     if (authDetails) {
       snackbarToggle(ActionKind.OPEN, {
         open: true,
-        message: "Loged in successfully",
+        message: "Logged in successfully",
         severity: "success",
       });
       loginSuccess(authDetails);
@@ -146,24 +148,34 @@ export default function SignInPage() {
                 }}
               >
                 <Link
-                  href="/auth/sign-up"
+                  href="/auth/forgot-password"
                   style={{
-                    color: "black",
-                    fontSize: "13px",
+                    color: theme.palette.primary.dark,
+                    fontSize: "12px",
                     textDecoration: "none",
                   }}
                 >
-                  New account?
+                  Forgot Password?
                 </Link>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  size="small"
-                  disabled={isMutating}
-                >
-                  {!isMutating && "Sign In"}
-                  {isMutating && "Sign In..."}
-                </Button>
+                <Box component="div" sx={{ display: "flex", gap: "0.5rem" }}>
+                  <Button
+                    LinkComponent={Link}
+                    href="/auth/sign-up"
+                    variant="outlined"
+                    size="small"
+                  >
+                    Register
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    size="small"
+                    disabled={isMutating}
+                  >
+                    {!isMutating && "Sign In"}
+                    {isMutating && "Sign In..."}
+                  </Button>
+                </Box>
               </Stack>
             </form>
           </Box>
