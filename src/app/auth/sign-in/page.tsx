@@ -68,7 +68,7 @@ export default function SignInPage() {
     if (authDetails) {
       snackbarToggle(ActionKind.OPEN, {
         open: true,
-        message: "Loged in successfully",
+        message: "Logged in successfully",
         severity: "success",
       });
       loginSuccess(authDetails);

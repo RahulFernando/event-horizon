@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       subject: "Password Reset Request",
       html: passwordResetHtml({
         userFirstName: account.user.name,
-        resetLink: "http://localhost:3000/auth/reset-password",
+        resetLink: `http://localhost:3000/auth/reset-password?mail=${account.email}`,
       }),
     };
 
