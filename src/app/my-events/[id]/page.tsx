@@ -35,7 +35,7 @@ import AuthGuard from "@/app/guards/auth-guard";
 
 async function updateEventAsync(
   url: string,
-  { arg }: { arg: EventFormInputs }
+  { arg }: { arg: EventFormInputs },
 ) {
   const response = await fetch(url, {
     method: "PUT",
@@ -91,7 +91,7 @@ const EventDetailPage = () => {
 
   const activeTabChangeHandler = (
     event: React.SyntheticEvent,
-    newValue: string
+    newValue: string,
   ) => setActiveTab(newValue as EventTab);
 
   const {
@@ -122,7 +122,7 @@ const EventDetailPage = () => {
     trigger: updateEvent,
   } = useSWRMutation(
     `/api/organizers/${account?.user.organizers?.id}/events/${params.id}`,
-    updateEventAsync
+    updateEventAsync,
   );
 
   const {
@@ -169,7 +169,7 @@ const EventDetailPage = () => {
     if (data) {
       snackbarToggle(ActionKind.OPEN, {
         open: true,
-        message: "Event created successfully",
+        message: "Event updated successfully",
         severity: "success",
       });
     }
@@ -239,7 +239,7 @@ const EventDetailPage = () => {
   };
 
   const durationChangeHandler = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => setDuration(Number(e.target.value));
 
   const gigDetailCloseHandler = () => {
@@ -303,7 +303,7 @@ const EventDetailPage = () => {
               />
             </Box>
           )}
-          {activeTab === "vendor" && <SelectedVendors />}
+          {activeTab === "vendor" && <SelectedVendors budget={event.budget} />}
         </Grid>
       </Grid>
 

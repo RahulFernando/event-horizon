@@ -35,7 +35,7 @@ const PricingDetails: React.FC<PricingDetailsProps> = ({
     id
       ? `/api/gigs/${id}/pricings?budget=${budget}&eventId=${params.id}`
       : null,
-    fetchPricing
+    fetchPricing,
   );
 
   const isHourlyRate = pricing && pricing.pricingModel.hourly_rate;
@@ -66,26 +66,39 @@ const PricingDetails: React.FC<PricingDetailsProps> = ({
     }));
   };
 
+  const getTitle = () => {
+    if (!pricing) return "";
+
+    if (pricing.pricingModel.hourly_rate) {
+      return (
+        <Typography variant="subtitle1">
+          <span style={{ fontSize: "12px" }}>Hour</span>
+        </Typography>
+      );
+    }
+
+    if (pricing.pricingModel.fixed_rate) {
+      return (
+        <Typography variant="subtitle1">
+          <span style={{ fontSize: "12px" }}>Fixed</span>
+        </Typography>
+      );
+    }
+
+    if (pricing.pricingModel.tiered) {
+      return (
+        <PricingTiers
+          tiers={getTiers()}
+          selectedTierId={selectedTierId}
+          onSelect={onTierSelect}
+        />
+      );
+    }
+  };
+
   return (
     <Grid2 container spacing={0.5}>
-      <Grid2 size={{ xs: 12 }}>
-        {pricing && pricing.pricingModel.tiered && (
-          <PricingTiers
-            tiers={getTiers()}
-            selectedTierId={selectedTierId}
-            onSelect={onTierSelect}
-          />
-        )}
-        {pricing &&
-          (pricing.pricingModel.fixed_rate ||
-            pricing.pricingModel?.hourly_rate) && (
-            <Typography variant="subtitle1">
-              {pricing.pricingModel.hourly_rate &&
-                pricing.pricingModel.hourly_rate.hour}{" "}
-              <span style={{ fontSize: "12px" }}>Hour</span>
-            </Typography>
-          )}
-      </Grid2>
+      <Grid2 size={{ xs: 12 }}>{getTitle()}</Grid2>
       <Grid2 size={{ xs: 12 }}>
         {pricing &&
           (pricing.pricingModel.fixed_rate ||

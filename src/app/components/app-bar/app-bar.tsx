@@ -18,13 +18,13 @@ import UserActions from "./user-actions";
 
 const pages = [
   { title: "Book Provider", href: "/book-provider" },
-  { title: "Clients", href: "/clients" },
-  { title: "About Us", href: "/about-us" },
+  // { title: "Clients", href: "/clients" },
+  // { title: "About Us", href: "/about-us" },
 ];
 
 const AppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
+    null,
   );
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {

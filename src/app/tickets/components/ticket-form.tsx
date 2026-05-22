@@ -18,7 +18,7 @@ import Comment from "./comment";
 async function createTicket(
   url: string,
   token: string,
-  { args }: { args: TicketFormInput }
+  { args }: { args: TicketFormInput },
 ) {
   const response = await fetch(url, {
     headers: {
@@ -40,7 +40,7 @@ async function createTicket(
 async function updateTicket(
   url: string,
   token: string,
-  { args }: { args: TicketFormInput }
+  { args }: { args: TicketFormInput },
 ) {
   const response = await fetch(url, {
     headers: {
@@ -73,7 +73,7 @@ async function fetchComments(url: string) {
 async function createComment(
   url: string,
   token: string,
-  { args }: { args: TicketCommentFormInput }
+  { args }: { args: TicketCommentFormInput },
 ) {
   const response = await fetch(url, {
     headers: {
@@ -95,7 +95,7 @@ async function createComment(
 async function deleteComment(
   url: string,
   token: string,
-  { args }: { args: { id: string } }
+  { args }: { args: { id: string } },
 ) {
   const response = await fetch(`${url}/${args.id}`, {
     headers: {
@@ -151,7 +151,7 @@ const TicketForm: React.FC<TicketFormProps> = ({ ticket }) => {
           severity: "error",
         });
       },
-    }
+    },
   );
 
   const { isMutating: isUpdating, trigger: updateTicketInfo } = useSWRMutation(
@@ -174,7 +174,7 @@ const TicketForm: React.FC<TicketFormProps> = ({ ticket }) => {
           severity: "error",
         });
       },
-    }
+    },
   );
 
   const {
@@ -202,7 +202,7 @@ const TicketForm: React.FC<TicketFormProps> = ({ ticket }) => {
           severity: "error",
         });
       },
-    }
+    },
   );
 
   const { isMutating: isDeletingComment, trigger: removeComment } =
@@ -226,7 +226,7 @@ const TicketForm: React.FC<TicketFormProps> = ({ ticket }) => {
             severity: "error",
           });
         },
-      }
+      },
     );
 
   const { items: comments = [] } = commentResult;

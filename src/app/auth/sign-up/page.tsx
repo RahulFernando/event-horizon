@@ -64,7 +64,7 @@ const SignUpPage = () => {
   const router = useRouter();
 
   const [userType, setUserType] = useState<UserTypes>(
-    userTypeParam ?? "ORGANIZER"
+    userTypeParam ?? "ORGANIZER",
   );
 
   const {
@@ -147,6 +147,7 @@ const SignUpPage = () => {
             <form
               method="POST"
               autoComplete="off"
+              noValidate
               onSubmit={handleSubmit(submitHandler)}
             >
               <Grid container spacing={1}>
@@ -173,7 +174,14 @@ const SignUpPage = () => {
                     size="small"
                     fullWidth
                     required
-                    {...register("email", { required: "Email is required" })}
+                    {...register("email", {
+                      required: "Email is required",
+                      pattern: {
+                        value:
+                          /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                        message: "Please enter a valid email address",
+                      },
+                    })}
                     error={!!errors.email}
                     helperText={errors.email?.message}
                   />

@@ -31,7 +31,7 @@ export interface EventFormProps {
   submitBtnLabel?: string;
   // control: Control<EventFormInputs, any>;
   register: UseFormRegister<EventFormInputs>;
-  handleSubmit: UseFormHandleSubmit<EventFormInputs, undefined>;
+  handleSubmit: UseFormHandleSubmit<EventFormInputs>;
   submitHandler: (values: EventFormInputs) => void;
   onDateChange: (value: Dayjs | null) => void;
   reset: UseFormReset<EventFormInputs>;
@@ -52,7 +52,7 @@ export interface FilterToolbarProps {
   searchTerm?: string;
   dateTime?: string;
   onSearchTermChange: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
   onDateTimeChange: (event: SelectChangeEvent) => void;
 }
@@ -88,7 +88,7 @@ export interface GigDetailsProps {
   setAccessToAddJob: React.Dispatch<React.SetStateAction<boolean>>;
   onTierSelect?: (id: string, event: React.MouseEvent) => void;
   durationChangeHandler: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
 }
 
@@ -103,7 +103,7 @@ export interface PricingDetailsProps extends GigDetailsProps {
   selectedTierId?: string;
   duration?: number | null;
   durationChangeHandler: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
 }
 
@@ -123,7 +123,7 @@ export interface RatingFormValues {
 export interface RateJobProps {
   values: RatingFormValues;
   onFeedbackChange: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
   onRateChange: (event: React.SyntheticEvent, value: number | null) => void;
 }

@@ -72,7 +72,7 @@ async function seedData() {
     update: {},
     create: {
       email: "john.doe@gmail.com",
-      password: "$2a$10$XIq3XObfhQ3rkqhYk1f4G.vkxY2KXbeZh2rKaRj5ddgd0Mq8PoVyK",
+      password: "$2a$10$ljLZnBLtF.PwmPRC6bbkiOTJSqwq6wQfcAf89cH.pAA/1kfQi6Tqe", //johnDoe@123
       user_id: admin.id,
       created_by: "admin",
       updated_by: "admin",
