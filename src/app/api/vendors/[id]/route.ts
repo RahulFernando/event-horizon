@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   const { id } = await params;
 
@@ -17,6 +17,7 @@ export async function GET(
         taxpayer_identification_number: true,
         user_id: true,
         container: true,
+        user: true,
       },
     });
     return NextResponse.json(vendor, { status: 200 });
@@ -27,7 +28,7 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   const { id } = await params;
   const { is_deleted } = await req.json();
@@ -49,7 +50,7 @@ export async function PATCH(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   const { id } = await params;
   const body = await req.json();

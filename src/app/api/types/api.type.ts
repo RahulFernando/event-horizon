@@ -26,7 +26,7 @@ export interface Gig {
 }
 
 export interface Vendor {
-  id: string;
+  id: number;
   business_registration: string | null;
   taxpayer_identification_number: string | null;
   created_at: Date;
