@@ -29,7 +29,7 @@ export interface GigFormProps {
   categoryId: string;
   register: UseFormRegister<GigFormInputs>;
   onEventTypesChange: (event: SelectChangeEvent<string[]>) => void;
-  handleSubmit: UseFormHandleSubmit<GigFormInputs, undefined>;
+  handleSubmit: UseFormHandleSubmit<GigFormInputs, GigFormInputs>;
   onSubmit: (values: GigFormInputs) => void;
   reset: UseFormReset<GigFormInputs>;
 }
@@ -48,7 +48,7 @@ export interface GigPreviewProps extends Pick<GigFormInputs, "description"> {
   onClick?: (id: string) => void;
   onDeleteClick?: (
     { id, title }: { id: string; title: string },
-    event: React.MouseEvent<HTMLButtonElement>
+    event: React.MouseEvent<HTMLButtonElement>,
   ) => void;
 }
 
