@@ -8,7 +8,7 @@ import ProviderCardSkeleton from "./provider-card-skeleton";
 
 async function fetchTopServiceProviders(
   url: string,
-  { arg }: { arg: { top: number } }
+  { arg }: { arg: { top: number } },
 ) {
   const params = new URLSearchParams({ top: `${arg.top}` }).toString();
   const response = await fetch(url + params);
@@ -27,7 +27,7 @@ async function fetchTopServiceProviders(
 const TopServiceProviders = () => {
   const { isLoading, data: vendors = { count: 0, items: [] } } = useSWR(
     "/api/vendors?",
-    (url: string) => fetchTopServiceProviders(url, { arg: { top: 5 } })
+    (url: string) => fetchTopServiceProviders(url, { arg: { top: 5 } }),
   );
 
   // const getImageUrl = () => {
@@ -68,9 +68,11 @@ const TopServiceProviders = () => {
           vendors.items.map(({ id, user, averageRating }) => (
             <Grid key={id} size={{ xs: 12, md: 12 / vendors.items.length }}>
               <ProviderCard
+                id={id}
                 title={user.name}
                 src={"/images/no-picture-available.jpg"}
                 ratings={averageRating}
+                onClick={() => {}}
               />
             </Grid>
           ))}

@@ -114,3 +114,15 @@ export interface TieredPriceModelPayload
     pricingTiers: Pick<PricingTier, "level" | "description" | "price">[];
   };
 }
+
+export interface UpdateFixedPricingModelPayload {
+  fixed: { price: number };
+}
+
+export interface UpdateHourlyRatePriceModelPayload {
+  hourlyRate: { hour: string; price: number };
+}
+
+export interface UpdateTieredPriceModelPayload {
+  tiered: Pick<PricingTier, "level" | "description" | "price">[];
+}

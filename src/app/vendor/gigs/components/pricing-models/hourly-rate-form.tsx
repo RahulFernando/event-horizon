@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import {
   HourlyRateFormInputs,
   HourlyRatePriceModelPayload,
+  UpdateHourlyRatePriceModelPayload,
 } from "../../my-gigs.types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { hourlyPriceValidationSchema } from "@/lib/validations/pricing/hourly-price-validation";
@@ -50,6 +51,23 @@ async function createPricingModel(
   return (await response.json()) as IPricing;
 }
 
+async function updatePricingModel(
+  url: string,
+  { arg }: { arg: UpdateHourlyRatePriceModelPayload }
+) {
+  const response = await fetch(url, {
+    method: "PUT",
+    body: JSON.stringify(arg),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error?.message || "Something went wrong");
+  }
+
+  return (await response.json()) as IPricing;
+}
+
 const HourlyRateForm = () => {
   const params = useParams();
 
@@ -60,17 +78,33 @@ const HourlyRateForm = () => {
     resolver: yupResolver(hourlyPriceValidationSchema),
   });
 
-  const {
-    isMutating,
-    error,
-    data,
-    trigger: createPricing,
-  } = useSWRMutation(`/api/gigs/${params.id}/pricings`, createPricingModel);
-
   const { data: pricingModel } = useSWR(
     `/api/gigs/${params.id}/pricings`,
     fetchPrice
   );
+
+  const pricingModelId = pricingModel?.pricingModel?.id;
+
+  const {
+    isMutating: isCreating,
+    error: createError,
+    data: createData,
+    trigger: createPricing,
+  } = useSWRMutation(`/api/gigs/${params.id}/pricings`, createPricingModel);
+
+  const {
+    isMutating: isUpdating,
+    error: updateError,
+    data: updateData,
+    trigger: updatePricing,
+  } = useSWRMutation(
+    pricingModelId
+      ? `/api/gigs/${params.id}/pricings/${pricingModelId}`
+      : null,
+    updatePricingModel
+  );
+
+  const isMutating = isCreating || isUpdating;
 
   useEffect(() => {
     if (pricingModel) {
@@ -82,27 +116,42 @@ const HourlyRateForm = () => {
   }, [pricingModel, reset]);
 
   useEffect(() => {
-    if (error) {
+    if (createError || updateError) {
       snackbarToggle(ActionKind.OPEN, {
         open: true,
-        message: error.message,
+        message: (createError || updateError)!.message,
         severity: "error",
       });
     }
-  }, [error, snackbarToggle]);
+  }, [createError, updateError, snackbarToggle]);
 
   useEffect(() => {
-    if (data) {
+    if (createData) {
       snackbarToggle(ActionKind.OPEN, {
         open: true,
         message: "Pricing model created",
         severity: "success",
       });
     }
-  }, [data, snackbarToggle]);
+  }, [createData, snackbarToggle]);
 
-  const submitHandler = (values: HourlyRateFormInputs) =>
-    createPricing({ type: "HOURLY_RATE", hourlyRate: { ...values } });
+  useEffect(() => {
+    if (updateData) {
+      snackbarToggle(ActionKind.OPEN, {
+        open: true,
+        message: "Pricing model updated",
+        severity: "success",
+      });
+    }
+  }, [updateData, snackbarToggle]);
+
+  const submitHandler = (values: HourlyRateFormInputs) => {
+    if (pricingModelId) {
+      updatePricing({ hourlyRate: { ...values } });
+    } else {
+      createPricing({ type: "HOURLY_RATE", hourlyRate: { ...values } });
+    }
+  };
 
   return (
     <form noValidate onSubmit={handleSubmit(submitHandler)}>

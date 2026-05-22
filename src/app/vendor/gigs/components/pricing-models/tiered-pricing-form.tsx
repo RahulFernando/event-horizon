@@ -12,7 +12,11 @@ import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddIcon from "@mui/icons-material/Add";
-import { ITier, TieredPriceModelPayload } from "../../my-gigs.types";
+import {
+  ITier,
+  TieredPriceModelPayload,
+  UpdateTieredPriceModelPayload,
+} from "../../my-gigs.types";
 import PricingTiers from "../pricing-tiers";
 import { indigo } from "@mui/material/colors";
 import { IPricing } from "@/app/types";
@@ -50,6 +54,23 @@ async function createPricingModel(
   return (await response.json()) as IPricing;
 }
 
+async function updatePricingModel(
+  url: string,
+  { arg }: { arg: UpdateTieredPriceModelPayload }
+) {
+  const response = await fetch(url, {
+    method: "PUT",
+    body: JSON.stringify(arg),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error?.message || "Something went wrong");
+  }
+
+  return (await response.json()) as IPricing;
+}
+
 const baseShade = 200;
 
 const TieredPricingForm = () => {
@@ -67,17 +88,33 @@ const TieredPricingForm = () => {
     },
   ]);
 
-  const {
-    isMutating,
-    error,
-    data,
-    trigger: createPricing,
-  } = useSWRMutation(`/api/gigs/${params.id}/pricings`, createPricingModel);
-
   const { data: pricingModel } = useSWR(
     `/api/gigs/${params.id}/pricings`,
     fetchPrice
   );
+
+  const pricingModelId = pricingModel?.pricingModel?.id;
+
+  const {
+    isMutating: isCreating,
+    error: createError,
+    data: createData,
+    trigger: createPricing,
+  } = useSWRMutation(`/api/gigs/${params.id}/pricings`, createPricingModel);
+
+  const {
+    isMutating: isUpdating,
+    error: updateError,
+    data: updateData,
+    trigger: updatePricing,
+  } = useSWRMutation(
+    pricingModelId
+      ? `/api/gigs/${params.id}/pricings/${pricingModelId}`
+      : null,
+    updatePricingModel
+  );
+
+  const isMutating = isCreating || isUpdating;
 
   useEffect(() => {
     if (pricingModel && pricingModel.pricingModel.tiered) {
@@ -97,24 +134,34 @@ const TieredPricingForm = () => {
   }, [pricingModel]);
 
   useEffect(() => {
-    if (error) {
+    if (createError || updateError) {
       snackbarToggle(ActionKind.OPEN, {
         open: true,
-        message: error.message,
+        message: (createError || updateError)!.message,
         severity: "error",
       });
     }
-  }, [error, snackbarToggle]);
+  }, [createError, updateError, snackbarToggle]);
 
   useEffect(() => {
-    if (data) {
+    if (createData) {
       snackbarToggle(ActionKind.OPEN, {
         open: true,
         message: "Pricing model created",
         severity: "success",
       });
     }
-  }, [data, snackbarToggle]);
+  }, [createData, snackbarToggle]);
+
+  useEffect(() => {
+    if (updateData) {
+      snackbarToggle(ActionKind.OPEN, {
+        open: true,
+        message: "Pricing model updated",
+        severity: "success",
+      });
+    }
+  }, [updateData, snackbarToggle]);
 
   const addNewTier = () => {
     const last = tiers[tiers.length - 1];
@@ -167,16 +214,20 @@ const TieredPricingForm = () => {
     ]);
 
   const submitHandler = () => {
-    createPricing({
-      type: "TIERED",
-      tiered: {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        pricingTiers: tiers.map(({ color, index, price, ...tier }) => ({
-          ...tier,
-          price: +price,
-        })),
-      },
-    });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const tierData = tiers.map(({ color, index, price, ...tier }) => ({
+      ...tier,
+      price: +price,
+    }));
+
+    if (pricingModelId) {
+      updatePricing({ tiered: tierData });
+    } else {
+      createPricing({
+        type: "TIERED",
+        tiered: { pricingTiers: tierData },
+      });
+    }
   };
 
   return (

@@ -12,9 +12,19 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ errors: "Unauthorized" }, { status: 401 });
     }
 
+    const vendor = await prisma.vendor.findUnique({
+      where: { user_id: currentUser.id },
+      select: { id: true },
+    });
+
+    if (!vendor) {
+      return NextResponse.json({ errors: "Vendor not found" }, { status: 404 });
+    }
+
     const jobs = await prisma.job.findMany({
       where: {
         status: { in: ["COMPLETED"] },
+        gig: { vendor_id: vendor.id },
       },
       include: {
         gig: {
@@ -41,7 +51,7 @@ export async function GET(req: NextRequest) {
     });
 
     const monthlyEarnings = calculateMonthlyEarningsAlternative(
-      jobs as IMonthlyEarningJob[]
+      jobs as IMonthlyEarningJob[],
     );
 
     return NextResponse.json(monthlyEarnings, { status: 200 });
@@ -49,13 +59,13 @@ export async function GET(req: NextRequest) {
     console.error("Error:", error);
     return NextResponse.json(
       { error: "Something went wrong" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export function calculateMonthlyEarnings(
-  jobsWithGigData: IMonthlyEarningJob[]
+  jobsWithGigData: IMonthlyEarningJob[],
 ) {
   const monthlyMap = new Map();
 
@@ -85,7 +95,7 @@ export function calculateMonthlyEarnings(
 }
 
 function calculateMonthlyEarningsAlternative(
-  jobsWithGigData: IMonthlyEarningJob[]
+  jobsWithGigData: IMonthlyEarningJob[],
 ) {
   const monthlyMap = new Map();
 
@@ -100,7 +110,7 @@ function calculateMonthlyEarningsAlternative(
     ) {
       earnings = job.invoice.payments.reduce(
         (sum, payment) => sum + payment.amount,
-        0
+        0,
       );
     } else {
       const pricingMode = job.gig.pricing_mode;

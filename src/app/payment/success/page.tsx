@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AppBar from "@/app/components/app-bar";
 import {
   Box,
@@ -15,7 +15,7 @@ import useSWRMutation from "swr/mutation";
 
 async function createPayment(
   url: string,
-  { arg }: { arg: { amount: number } }
+  { arg }: { arg: { amount: number } },
 ) {
   const response = await fetch(url, {
     headers: {
@@ -37,6 +37,7 @@ const PaymentSuccessPage = () => {
   const searchParams = useSearchParams();
 
   const [isLoading, setIsLoading] = useState(false);
+  const hasPaid = useRef(false);
 
   const amount = searchParams.get("amount");
   const jobId = searchParams.get("jobId");
@@ -48,11 +49,12 @@ const PaymentSuccessPage = () => {
       onSuccess: () => {
         setIsLoading(false);
       },
-    }
+    },
   );
 
   useEffect(() => {
-    if (amount && jobId) {
+    if (amount && jobId && !hasPaid.current) {
+      hasPaid.current = true;
       setIsLoading(true);
       makePayment({ amount: +amount });
     }
