@@ -8,14 +8,22 @@ import { ValidationError } from "yup";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   const { id } = await params;
 
   try {
     const job = await prisma.job.findFirst({
       where: { id },
-      include: { event: true, gig: true, pricingTier: true },
+      include: {
+        event: true,
+        gig: {
+          include: {
+            pricing_mode: { include: { fixed_rate: true, hourly_rate: true } },
+          },
+        },
+        pricingTier: true,
+      },
     });
 
     const priceModel = await getPriceModel(job?.gig_id ?? "");
@@ -45,7 +53,7 @@ const getPriceModel = async (gigId: string) => {
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   return withAuth(req, async (req, user) => {
     const { id } = await params;
@@ -89,7 +97,7 @@ export async function PATCH(
             if (!gigPrice) {
               return NextResponse.json(
                 { error: "Something went wrong" },
-                { status: 500 }
+                { status: 500 },
               );
             }
 
@@ -110,7 +118,7 @@ export async function PATCH(
       }
       return NextResponse.json(
         { error: "Failed to update job status" },
-        { status: 500 }
+        { status: 500 },
       );
     }
   });
@@ -134,13 +142,7 @@ const findGigPrice = async (tx: PrismaTransaction, job: IJob) => {
     return pricingModel.fixed_rate.price;
   }
 
-  const event = await tx.event.findFirst({
-    where: {
-      id: job.event_id,
-    },
-  });
-
-  const hours = event?.duration ?? "1";
+  const hours = job.duration ?? "1";
 
   if (pricingModel.hourly_rate) {
     return pricingModel.hourly_rate.price * +hours;

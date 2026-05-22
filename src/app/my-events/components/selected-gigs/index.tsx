@@ -1,6 +1,6 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, List } from "@mui/material";
+import { Card, CardContent, CardHeader, List, Typography } from "@mui/material";
 import NoData from "@/app/components/no-data";
 import SelectedItem from "./selected-item";
 import Dialog from "@/app/components/dialog";
@@ -20,6 +20,7 @@ import { Gig, JobStatus } from "@prisma/client";
 import { AuthContext } from "@/app/contexts/auth/auth-context";
 import { RatingFormValues } from "../../events.type";
 import Payment from "../payment";
+import JobDetail from "../job-details/job-detail";
 
 async function fetchJobs(url: string) {
   const response = await fetch(url);
@@ -48,7 +49,7 @@ async function deleteJob(url: string, { arg }: { arg: { id: string } }) {
 async function createUserRating(
   url: string,
   token: string,
-  { arg }: { arg: { rating: number; feedback: string } }
+  { arg }: { arg: { rating: number; feedback: string } },
 ) {
   const response = await fetch(url, {
     headers: {
@@ -70,7 +71,7 @@ async function createUserRating(
 async function updateJobStatus(
   url: string,
   token: string,
-  { arg }: { arg: { status: JobStatus } }
+  { arg }: { arg: { status: JobStatus } },
 ) {
   const response = await fetch(url, {
     headers: {
@@ -89,7 +90,11 @@ async function updateJobStatus(
   return response.json();
 }
 
-const SelectedGigs: React.FC = () => {
+interface SelectedGigsProps {
+  budget?: number;
+}
+
+const SelectedGigs: React.FC<SelectedGigsProps> = ({ budget }) => {
   const params = useParams();
   const router = useRouter();
 
@@ -104,7 +109,7 @@ const SelectedGigs: React.FC = () => {
 
   const { data: jobs = [], mutate } = useSWR(
     `/api/events/${params.id}/jobs`,
-    fetchJobs
+    fetchJobs,
   );
 
   const {
@@ -139,7 +144,7 @@ const SelectedGigs: React.FC = () => {
           severity: "error",
         });
       },
-    }
+    },
   );
 
   const { trigger: updateStatus } = useSWRMutation(
@@ -157,7 +162,7 @@ const SelectedGigs: React.FC = () => {
           severity: "error",
         });
       },
-    }
+    },
   );
 
   useEffect(() => {
@@ -207,7 +212,7 @@ const SelectedGigs: React.FC = () => {
 
   const deleteJobHandler = (
     id: string,
-    event: React.MouseEvent<HTMLButtonElement>
+    event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     event.stopPropagation();
     clickOpenHandler({ type: DIALOG_INFO_TYPE.DELETE_JOB, data: { id } });
@@ -227,6 +232,16 @@ const SelectedGigs: React.FC = () => {
         data: { ...gig, jobId },
       });
     }
+
+    if (
+      job &&
+      (job.status === JobStatus.ACCEPTED || job.status === JobStatus.PENDING)
+    ) {
+      clickOpenHandler({
+        type: DIALOG_INFO_TYPE.JOB_DETAILS,
+        data: { ...gig, jobId },
+      });
+    }
   };
 
   const submitRating = () => {
@@ -235,7 +250,7 @@ const SelectedGigs: React.FC = () => {
   };
 
   const feedbackChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) =>
     setUserRating({ ...userRating, [event.target.name]: event.target.value });
 
@@ -245,7 +260,7 @@ const SelectedGigs: React.FC = () => {
   const payClickHandler = (
     gig: Gig,
     jobId: string,
-    event: React.MouseEvent<HTMLButtonElement>
+    event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     event.stopPropagation();
     clickOpenHandler({
@@ -257,10 +272,45 @@ const SelectedGigs: React.FC = () => {
   const submitPayment = () =>
     router.replace(`/payment?jobId=${info?.data.jobId}&amount=${amount}`);
 
+  const remainingAllocation = () => {
+    return jobs.reduce((acc, job) => {
+      if (job.pricingTier) {
+        return acc - job.pricingTier.price;
+      }
+      if (job.gig.pricing_mode.fixed_rate) {
+        return acc - job.gig.pricing_mode.fixed_rate.price;
+      }
+      if (job.gig.pricing_mode.hourly_rate && job.duration) {
+        return acc - job.gig.pricing_mode.hourly_rate.price * job.duration;
+      }
+      return acc;
+    }, budget ?? 0);
+  };
+
   return (
     <>
       <Card variant="outlined" sx={{ mt: 6 }}>
-        <CardHeader title="Selected Vendors" />
+        <CardHeader
+          title="Selected Vendors"
+          subheader={
+            <Typography
+              variant="body2"
+              sx={{
+                mt: 0.5,
+                fontWeight: 600,
+                color:
+                  remainingAllocation() > 0
+                    ? "success.main"
+                    : remainingAllocation() < 0
+                      ? "error.main"
+                      : "text.secondary",
+              }}
+            >
+              Remaining allocation from your budget&nbsp;&mdash;&nbsp;
+              <strong>{remainingAllocation().toLocaleString()}</strong>
+            </Typography>
+          }
+        />
         <CardContent>
           {jobs.length === 0 && <NoData />}
           <List>
@@ -326,6 +376,18 @@ const SelectedGigs: React.FC = () => {
           confirmButtonLabel="Pay"
           onClose={clickCloseHandler}
           onConfirm={submitPayment}
+        />
+      )}
+      {info?.type === DIALOG_INFO_TYPE.JOB_DETAILS && (
+        <Dialog
+          title={info.data.title}
+          open={open}
+          maxWidth="xs"
+          content={<JobDetail id={info.data.id} jobId={info.data.jobId} />}
+          disableSubmitButton
+          confirmButtonLabel="Save"
+          onClose={clickCloseHandler}
+          onConfirm={() => {}}
         />
       )}
     </>

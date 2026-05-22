@@ -114,6 +114,7 @@ export interface IJob extends Job {
     description: string;
     price: number;
   };
+  pricing_mode: { fixed_rate?: FixedRate; hourly_rate?: HourlyRate };
   status: JobStatus;
 }
 

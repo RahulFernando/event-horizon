@@ -6,7 +6,7 @@ import { ValidationError } from "yup";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   const { id } = await params;
 
@@ -22,8 +22,15 @@ export async function GET(
             location: true,
             description: true,
             vendor: { select: { user: { select: { name: true } } } },
+            pricing_mode: {
+              select: {
+                hourly_rate: true,
+                fixed_rate: true,
+              },
+            },
           },
         },
+        duration: true,
         pricingTier: {
           select: { id: true, level: true, description: true, price: true },
         },
@@ -39,7 +46,7 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   const body = await req.json();
   const { id } = await params;

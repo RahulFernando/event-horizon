@@ -25,7 +25,10 @@ const SelectedGig: React.FC<SelectedGigItemProps> = ({
 }) => {
   const router = useRouter();
 
-  const chatClickHandler = () => router.push("/chat");
+  const chatClickHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    router.push("/chat");
+  };
 
   const statusArray: JobStatus[] = ["ACCEPTED", "COMPLETED"];
 
@@ -44,7 +47,11 @@ const SelectedGig: React.FC<SelectedGigItemProps> = ({
         <IconButton
           edge="end"
           color={status === "ACCEPTED" ? "default" : "error"}
-          onClick={!isDeleteAllow ? chatClickHandler : onDelete.bind(this, id)}
+          onClick={
+            !isDeleteAllow
+              ? chatClickHandler.bind(this)
+              : onDelete.bind(this, id)
+          }
         >
           {!isDeleteAllow ? <ChatIcon /> : <DeleteOutlineIcon />}
         </IconButton>
