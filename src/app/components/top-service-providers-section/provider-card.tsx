@@ -9,9 +9,15 @@ import {
 import React from "react";
 import { ProviderCardProps } from "./provider-card.types";
 
-const ProviderCard: React.FC<ProviderCardProps> = ({ title, src, ratings }) => {
+const ProviderCard: React.FC<ProviderCardProps> = ({
+  id,
+  title,
+  src,
+  ratings,
+  onClick,
+}) => {
   return (
-    <Card variant="elevation" elevation={2}>
+    <Card variant="elevation" elevation={2} onClick={onClick.bind(null, id)}>
       <CardMedia
         component="img"
         alt={title}

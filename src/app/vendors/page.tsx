@@ -8,6 +8,9 @@ import ProviderCardSkeleton from "../components/top-service-providers-section/pr
 import ProviderCard from "../components/top-service-providers-section/provider-card";
 import { VendorWithRating } from "../api/types/api.type";
 import NoData from "../components/no-data";
+import Dialog from "../components/dialog";
+import useDialog from "../hooks/use-dialog";
+import VendorDetails from "./components/vendor-details";
 
 async function fetchVendors(url: string) {
   const response = await fetch(url);
@@ -30,6 +33,8 @@ const VendorsPage = () => {
   const [searchTerm, setSearchTerm] = useState(category);
   const [debouncedTerm, setDebouncedTerm] = useState(searchTerm);
 
+  const { open, info, clickCloseHandler, clickOpenHandler } = useDialog();
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedTerm(searchTerm);
@@ -40,8 +45,10 @@ const VendorsPage = () => {
 
   const { isLoading, data: vendors = { count: 0, items: [] } } = useSWR(
     `/api/vendors?category=${debouncedTerm}`,
-    fetchVendors
+    fetchVendors,
   );
+
+  const vendorClickHandler = (id: number) => clickOpenHandler({ data: id });
 
   return (
     <>
@@ -83,9 +90,11 @@ const VendorsPage = () => {
                   size={{ xs: 12, md: 12 / vendors.items.length }}
                 >
                   <ProviderCard
+                    id={id}
                     title={user.name}
                     src={"/images/no-picture-available.jpg"}
                     ratings={averageRating}
+                    onClick={vendorClickHandler}
                   />
                 </Grid2>
               ))}
@@ -97,6 +106,14 @@ const VendorsPage = () => {
           </Grid2>
         </Grid2>
       </Container>
+      <Dialog
+        title="Vendor Details"
+        content={<VendorDetails id={info?.data} />}
+        open={open}
+        confirmButtonLabel="Ok"
+        onClose={clickCloseHandler}
+        onConfirm={() => {}}
+      />
     </>
   );
 };

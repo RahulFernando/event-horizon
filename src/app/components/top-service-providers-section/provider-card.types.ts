@@ -1,6 +1,7 @@
 export interface ProviderCardProps {
-    title: string;
-    src: string;
-    ratings: number;
-  }
-  
+  id: number;
+  title: string;
+  src: string;
+  ratings: number;
+  onClick: (id: number) => void;
+}
