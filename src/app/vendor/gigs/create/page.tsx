@@ -22,7 +22,7 @@ import AuthGuard from "@/app/guards/auth-guard";
 async function createGigAsync(
   url: string,
   token: string,
-  { arg }: { arg: GigPostRequestPayload }
+  { arg }: { arg: GigPostRequestPayload },
 ) {
   const response = await fetch(url, {
     headers: {
@@ -94,14 +94,14 @@ const CreateGigPage = () => {
   } = useSWRMutation(
     "/api/gigs",
     (url: string, { arg }: { arg: GigPostRequestPayload }) =>
-      createGigAsync(url, token as string, { arg: arg })
+      createGigAsync(url, token as string, { arg: arg }),
   );
 
   const { data: eventTypes = [] } = useSWR("/api/event-types", fetchEventTypes);
 
   const { data: categories = { count: 0, items: [] } } = useSWR(
     "/api/categories",
-    fetchCategories
+    fetchCategories,
   );
 
   useEffect(() => {
@@ -133,7 +133,7 @@ const CreateGigPage = () => {
     const { value } = event.target;
     setValue(
       "event_type_ids",
-      typeof value === "string" ? value.split(",") : value
+      typeof value === "string" ? value.split(",") : value,
     );
   };
 

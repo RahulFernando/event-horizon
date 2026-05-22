@@ -23,6 +23,7 @@ import {
 } from "@mui/icons-material";
 import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import LocalActivityOutlinedIcon from "@mui/icons-material/LocalActivityOutlined";
 import AppTitle from "../app-title";
 import AuthGuard from "@/app/guards/auth-guard";
 import { AuthContext } from "@/app/contexts/auth/auth-context";
@@ -33,6 +34,11 @@ const navigationItems = [
   { name: "Organizers", path: "/admin/organizers", icon: <VendorsIcon /> },
   { name: "Events", path: "/admin/events", icon: <EventIcon /> },
   { name: "Gigs", path: "/admin/gigs", icon: <CategoryIcon /> },
+  {
+    name: "Tickets",
+    path: "/admin/tickets",
+    icon: <LocalActivityOutlinedIcon />,
+  },
 ];
 
 const drawerWidth = 240;

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Box, Button, Grid2, Stack, TextField } from "@mui/material";
+import { Alert, Box, Button, Grid2, Stack, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 import useSWRMutation from "swr/mutation";
 import {
@@ -267,6 +267,12 @@ const TicketForm: React.FC<TicketFormProps> = ({ ticket }) => {
 
   return (
     <>
+      {ticket && ticket.status === "CLOSED" && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          This ticket is closed. You cannot add new comments or edit the ticket
+          details.
+        </Alert>
+      )}
       <form noValidate onSubmit={handleSubmit(submitHandler)}>
         <Grid2 container spacing={2}>
           <Grid2 size={{ xs: 12 }}>
@@ -352,7 +358,7 @@ const TicketForm: React.FC<TicketFormProps> = ({ ticket }) => {
             variant="contained"
             size="small"
             type="submit"
-            disabled={isCreatingComment}
+            disabled={isCreatingComment || (ticket && ticket.status !== "OPEN")}
           >
             {!isCreatingComment && "Save"}
             {isCreatingComment && "Please wait..."}

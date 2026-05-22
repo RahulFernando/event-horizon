@@ -3,14 +3,19 @@ import { getAuthUser } from "@/lib/auth-utils";
 import prisma from "@/lib/prisma";
 import { createTicketValidationSchema } from "@/lib/validations/tickets/create-validation";
 import { ValidationError } from "yup";
+import { TicketStatus } from "@prisma/client";
 
 export async function GET(req: NextRequest) {
   const userId = req.nextUrl.searchParams.get("userId");
+  const status = req.nextUrl.searchParams.get("status") as TicketStatus;
   try {
     const tickets = await prisma.ticket.findMany({
       where: {
         ...(userId && {
           user_id: userId,
+        }),
+        ...(status && {
+          status,
         }),
       },
       select: {
@@ -37,7 +42,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(
       { count: tickets.length, items: tickets },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return NextResponse.json({ errors: [error] }, { status: 500 });

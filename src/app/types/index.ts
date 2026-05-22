@@ -206,6 +206,13 @@ export interface ITicket extends Ticket {
   user: IUser;
 }
 
+export interface ITicketComment {
+  id: string;
+  body: string;
+  created_by: string;
+  created_at: string;
+}
+
 export interface IInvoice extends Invoice {
   payments: Payment[];
 }
